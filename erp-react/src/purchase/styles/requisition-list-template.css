@@ -1,0 +1,447 @@
+/* =========================================================================
+   Purchase Requisition List — exact port of the original HTML template
+   -------------------------------------------------------------------------
+   Source of truth: OLD/purchase-requisition-list.html + OLD/css/purchase.css
+   + OLD/css/procurement.css. Only the UI is replicated — every class below
+   mirrors the legacy template. LIGHT THEME ONLY (the template renders
+   light by default; no dark-mode rules exist in this stylesheet, so the
+   page always matches the HTML regardless of the app theme toggle).
+   ========================================================================= */
+
+/* ---------- PAGE SCAFFOLD (template body: #f8fafc, Inter, 1.6) ---------- */
+.purchase-page.prl-page {
+  padding: 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #374151;
+  background: #f8fafc;
+  color-scheme: light;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+@media (min-width: 768px) {
+  .purchase-page.prl-page { padding: 24px 28px 40px; }
+}
+
+/* ---------- BREADCRUMB (po-breadcrumb) ---------- */
+.purchase-page.prl-page .po-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: #6b7280; margin-bottom: 16px; flex-wrap: wrap;
+}
+.purchase-page.prl-page .po-breadcrumb a { color: #0B4A3D; text-decoration: none; font-weight: 500; }
+.purchase-page.prl-page .po-breadcrumb a:hover { text-decoration: underline; }
+.purchase-page.prl-page .po-breadcrumb i { font-size: 10px; color: #9ca3af; display: inline-flex; }
+
+/* ---------- PAGE HEADER (po-page-header) ---------- */
+.purchase-page.prl-page .po-page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 16px;
+}
+.purchase-page.prl-page .po-page-header h1 {
+  font-size: 20px; font-weight: 700; color: #111827; margin: 0;
+  display: flex; align-items: center; gap: 10px; letter-spacing: -0.2px;
+}
+.purchase-page.prl-page .po-page-header h1 svg { color: #0A4F44; }
+.purchase-page.prl-page .po-page-header-subtitle { font-size: 13px; color: #6b7280; margin: 2px 0 0 0; }
+.purchase-page.prl-page .po-page-header-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* ---------- BUTTONS (po-btn) ---------- */
+.purchase-page.prl-page .po-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 14px;
+  border-radius: 8px; font-size: 12px; font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  cursor: pointer; transition: all 0.15s; border: none; text-decoration: none; line-height: 1.2;
+}
+.purchase-page.prl-page .po-btn-primary { background: #0B4A3D; color: #fff; }
+.purchase-page.prl-page .po-btn-primary:hover { background: #083D34; }
+.purchase-page.prl-page .po-btn-primary-outline { background: transparent; color: #0B4A3D; border: 1.5px solid #0B4A3D; }
+.purchase-page.prl-page .po-btn-primary-outline:hover { background: #0B4A3D; color: #fff; }
+.purchase-page.prl-page .po-btn-ghost { background: transparent; color: #374151; border: 1px solid #e5e7eb; }
+.purchase-page.prl-page .po-btn-ghost:hover { background: #f3f4f6; border-color: #d1d5db; }
+.purchase-page.prl-page .po-btn-sm { padding: 6px 10px; font-size: 11px; }
+
+/* ---------- KPI CARDS (prm-kpi-grid — exact 5-column template row) ---------- */
+.purchase-page.prl-page .prm-kpi-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px;
+}
+@media (max-width: 1199px) { .purchase-page.prl-page .prm-kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 767px) { .purchase-page.prl-page .prm-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+.purchase-page.prl-page .prm-kpi-card {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: 18px 20px; display: flex; align-items: center; gap: 14px;
+  transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04); cursor: pointer;
+}
+.purchase-page.prl-page .prm-kpi-card:hover { border-color: #0B4A3D; box-shadow: 0 2px 8px rgba(11, 74, 61, 0.10); transform: translateY(-1px); }
+.purchase-page.prl-page .prm-kpi-card.active { border-color: #0B4A3D; background: #E8F0EE; box-shadow: 0 0 0 1.5px #0B4A3D; }
+.purchase-page.prl-page .prm-kpi-value { font-size: 22px; font-weight: 700; color: #111827; line-height: 1.2; }
+.purchase-page.prl-page .prm-kpi-label { font-size: 11px; font-weight: 500; color: #6b7280; margin-top: 2px; }
+.purchase-page.prl-page .prm-kpi-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+.purchase-page.prl-page .prm-kpi-icon.blue { background: #eef2ff; color: #0B4A3D; }
+.purchase-page.prl-page .prm-kpi-icon.amber { background: #fffbeb; color: #d97706; }
+.purchase-page.prl-page .prm-kpi-icon.green { background: #f0fdf4; color: #059669; }
+.purchase-page.prl-page .prm-kpi-icon.red { background: #fef2f2; color: #dc2626; }
+.purchase-page.prl-page .prm-kpi-icon.emerald { background: #f0fdf4; color: #16a34a; }
+.purchase-page.prl-page .prm-kpi-icon.gray { background: #f3f4f6; color: #6b7280; }
+
+/* ---------- FILTERS ROW (prm-filters) ---------- */
+.purchase-page.prl-page .prm-filters {
+  display: flex; align-items: flex-end; gap: 12px;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: 12px 16px; margin-bottom: 16px; flex-wrap: wrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.purchase-page.prl-page .prm-filter-group { display: flex; flex-direction: column; gap: 3px; min-width: 160px; }
+.purchase-page.prl-page .prm-filter-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+.purchase-page.prl-page .prm-filter-input,
+.purchase-page.prl-page .prm-filter-select {
+  height: 36px; padding: 0 10px; border: 1px solid #e5e7eb; border-radius: 8px;
+  font-size: 13px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #fff; color: #374151; outline: none; box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s; min-width: 0; width: 100%;
+  color-scheme: light;
+}
+.purchase-page.prl-page .prm-filter-select {
+  padding: 0 28px 0 10px; appearance: none; -webkit-appearance: none; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+}
+.purchase-page.prl-page .prm-filter-input:focus,
+.purchase-page.prl-page .prm-filter-select:focus { border-color: #0B4A3D; box-shadow: 0 0 0 2px rgba(11, 74, 61, 0.12); }
+.purchase-page.prl-page .prm-filter-search { min-width: 220px; flex: 1 1 200px; }
+.purchase-page.prl-page .prm-filter-actions { display: flex; gap: 6px; align-items: flex-end; }
+.purchase-page.prl-page .prm-filter-actions .po-btn { height: 36px; }
+
+/* ---------- TABS (prm-tabs) ---------- */
+.purchase-page.prl-page .prm-tabs {
+  display: flex; gap: 0; border-bottom: 2px solid #e5e7eb; margin-bottom: 20px;
+  overflow-x: auto; flex-wrap: nowrap;
+}
+.purchase-page.prl-page .prm-tab {
+  padding: 10px 20px; font-size: 13px; font-weight: 500; color: #6b7280; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s;
+  background: none; border-top: none; border-left: none; border-right: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.purchase-page.prl-page .prm-tab:hover { color: #111827; }
+.purchase-page.prl-page .prm-tab.active { color: #0B4A3D; border-bottom-color: #0B4A3D; font-weight: 600; }
+.purchase-page.prl-page .prm-tab .tab-count {
+  font-size: 10px; font-weight: 700; background: #f3f4f6; color: #6b7280;
+  border-radius: 10px; padding: 1px 7px; line-height: 1.6;
+}
+.purchase-page.prl-page .prm-tab.active .tab-count { background: #E8F0EE; color: #0B4A3D; }
+
+/* ---------- TOOLBAR (po-toolbar) ---------- */
+.purchase-page.prl-page .po-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px; margin-bottom: 12px;
+}
+.purchase-page.prl-page .po-toolbar-left,
+.purchase-page.prl-page .po-toolbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* ---------- TABLE (po-table) ---------- */
+.purchase-page.prl-page .po-table-card {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
+  overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.purchase-page.prl-page .po-table-wrap { overflow-x: auto; }
+.purchase-page.prl-page .po-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; table-layout: fixed; }
+.purchase-page.prl-page .po-table thead { position: sticky; top: 0; z-index: 10; }
+.purchase-page.prl-page .po-table thead th {
+  background: #f8fafc; color: #374151; font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.4px; padding: 10px 12px;
+  white-space: nowrap; border-bottom: 2px solid #e5e7eb; cursor: pointer;
+  user-select: none; text-align: left; height: 40px; vertical-align: middle;
+  box-sizing: border-box;
+}
+.purchase-page.prl-page .po-table thead th.po-th-check { width: 48px; text-align: center; cursor: default; }
+.purchase-page.prl-page .po-table thead th .sort-icon { opacity: 0.3; margin-left: 3px; flex-shrink: 0; }
+.purchase-page.prl-page .po-table thead th:hover .sort-icon { opacity: 0.7; }
+.purchase-page.prl-page .po-table thead th[data-sort].sorted .sort-icon,
+.purchase-page.prl-page .po-table thead th.sorted .sort-icon { opacity: 1; color: #0B4A3D; }
+.purchase-page.prl-page .po-table tbody tr { transition: background 0.15s; }
+/* Zebra rows (even rows tinted) */
+.purchase-page.prl-page .po-table tbody tr:nth-child(even) { background: #fbfcfe; }
+/* Hover — template: #f8fafc */
+.purchase-page.prl-page .po-table tbody tr:hover { background: #f8fafc; }
+.purchase-page.prl-page .po-table tbody tr.is-selected,
+.purchase-page.prl-page .po-table tbody tr.is-selected:hover { background: #E8F0EE; }
+.purchase-page.prl-page .po-table tbody td {
+  padding: 10px 12px; border-bottom: 1px solid #e5e7eb; color: #374151;
+  vertical-align: middle; overflow: hidden; text-overflow: ellipsis;
+}
+.purchase-page.prl-page .po-table .po-th-amount, .purchase-page.prl-page .po-table .po-td-amount { text-align: right; }
+.purchase-page.prl-page .po-table .po-th-center, .purchase-page.prl-page .po-table .po-td-center { text-align: center; }
+.purchase-page.prl-page .po-table .po-td-amount {
+  font-weight: 600; color: #0B4A3D; font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.purchase-page.prl-page .po-table .checkbox-cell { text-align: center; width: 48px; overflow: visible; }
+.purchase-page.prl-page .po-table .checkbox-cell input { vertical-align: middle; margin: 0; cursor: pointer; accent-color: #0B4A3D; }
+.purchase-page.prl-page .po-table .col-actions { text-align: center; width: 70px; overflow: visible; }
+.purchase-page.prl-page .po-table .pr-id-link {
+  color: #0B4A3D; font-weight: 600; text-decoration: none; white-space: nowrap;
+}
+.purchase-page.prl-page .po-table .pr-id-link:hover { text-decoration: underline; }
+.purchase-page.prl-page .po-table .pr-cell-truncate {
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;
+}
+.purchase-page.prl-page .po-table .po-cell-date { white-space: nowrap; }
+
+/* table-id-cell — document numbers never wrap */
+.purchase-page.prl-page .table-id-cell { white-space: nowrap; word-break: keep-all; overflow-wrap: normal; }
+
+/* ---------- STATUS BADGES (po-badge) ---------- */
+.purchase-page.prl-page .po-badge {
+  display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; line-height: 1.4; white-space: nowrap;
+}
+.purchase-page.prl-page .po-badge-gray { background: #f3f4f6; color: #6b7280; }
+.purchase-page.prl-page .po-badge-blue { background: #eff6ff; color: #2563eb; }
+.purchase-page.prl-page .po-badge-yellow { background: #fffbeb; color: #d97706; }
+.purchase-page.prl-page .po-badge-green { background: #f0fdf4; color: #16a34a; }
+.purchase-page.prl-page .po-badge-red { background: #fef2f2; color: #dc2626; }
+.purchase-page.prl-page .po-badge-cyan { background: #ecfeff; color: #0891b2; }
+
+/* ---------- PRIORITY CHIPS (po-priority) ---------- */
+.purchase-page.prl-page .po-priority {
+  display: inline-flex; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 600;
+}
+.purchase-page.prl-page .po-priority-critical { background: #fef2f2; color: #dc2626; }
+.purchase-page.prl-page .po-priority-high { background: #fffbeb; color: #d97706; }
+.purchase-page.prl-page .po-priority-medium { background: #f3f4f6; color: #6b7280; }
+.purchase-page.prl-page .po-priority-low { background: #f0fdf4; color: #16a34a; }
+
+/* ---------- EMPTY STATE (po-empty) ---------- */
+.purchase-page.prl-page .po-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 56px 20px; min-height: 340px;
+}
+.purchase-page.prl-page .po-empty-icon {
+  width: 72px; height: 72px; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+}
+.purchase-page.prl-page .po-empty h3 { font-size: 18px; font-weight: 700; color: #1e293b; margin: 0 0 6px; }
+.purchase-page.prl-page .po-empty p { font-size: 14px; color: #64748b; margin: 0 0 20px; max-width: 420px; }
+
+/* ---------- PAGINATION (prl-pagination) ---------- */
+.purchase-page.prl-page .prl-pagination {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; border-top: 1px solid #e5e7eb; font-size: 13px;
+  color: #6b7280; flex-wrap: wrap; gap: 8px;
+}
+.purchase-page.prl-page .prl-pagination .prl-page-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.purchase-page.prl-page .prl-pagination .prl-page-size { display: flex; align-items: center; gap: 6px; }
+.purchase-page.prl-page .prl-pagination .prl-page-size select {
+  padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; outline: none; background: #fff; cursor: pointer;
+}
+.purchase-page.prl-page .prl-page-btns { display: flex; gap: 3px; }
+.purchase-page.prl-page .prl-page-btn {
+  width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff;
+  color: #475569; cursor: pointer; font-size: 12px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: inline-flex; align-items: center; justify-content: center; transition: all 0.12s;
+}
+.purchase-page.prl-page .prl-page-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+.purchase-page.prl-page .prl-page-btn.active { background: #0B4A3D; color: #fff; border-color: #0B4A3D; box-shadow: 0 2px 8px rgba(11, 74, 61, 0.25); }
+.purchase-page.prl-page .prl-page-btn:disabled { opacity: 0.35; cursor: default; }
+
+/* ---------- BULK BAR (po-bulk-bar) ---------- */
+.purchase-page.prl-page .po-bulk-bar {
+  display: none; align-items: center; gap: 8px; padding: 8px 14px; background: #f0fdf6;
+  border: 1.5px solid #0B4A3D; border-radius: 8px; margin-bottom: 10px; font-size: 12px;
+}
+.purchase-page.prl-page .po-bulk-bar.visible { display: flex; flex-wrap: wrap; }
+.purchase-page.prl-page .po-bulk-count { font-weight: 600; color: #0B4A3D; margin-right: 6px; }
+.purchase-page.prl-page .po-bulk-actions { display: flex; gap: 4px; margin-left: auto; flex-wrap: wrap; }
+.purchase-page.prl-page .po-bulk-btn {
+  padding: 5px 10px; border-radius: 5px; font-size: 11px; font-weight: 500;
+  border: 1px solid #e5e7eb; background: #fff; color: #374151; cursor: pointer;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.purchase-page.prl-page .po-bulk-btn:hover { border-color: #0B4A3D; color: #0B4A3D; }
+.purchase-page.prl-page .po-bulk-btn-danger:hover { border-color: #dc2626; color: #dc2626; background: #fee2e2; }
+
+/* =========================================================================
+   SHARED CONTROLS (React-only features, styled in the template's light
+   design language — same po-* look: white cards, #e5e7eb borders, 8-12px
+   radii, Inter, green #0B4A3D accents). Light only.
+   ========================================================================= */
+
+/* ---------- Generic buttons (Columns button, filter Apply/Reset) ---------- */
+.purchase-page.prl-page .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 34px; padding: 0 12px; border-radius: 8px; font-size: 12px; font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; cursor: pointer;
+  transition: all 0.15s; border: 1px solid transparent; text-decoration: none; line-height: 1.2;
+  white-space: nowrap;
+}
+.purchase-page.prl-page .btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+.purchase-page.prl-page .btn-sm { height: 32px; padding: 0 10px; font-size: 11px; }
+.purchase-page.prl-page .btn-ghost { background: transparent; color: #6b7280; border-color: #e5e7eb; }
+.purchase-page.prl-page .btn-ghost:hover { background: #f3f4f6; border-color: #d1d5db; color: #374151; }
+.purchase-page.prl-page .btn-primary { background: #0B4A3D; color: #fff; border-color: #0B4A3D; }
+.purchase-page.prl-page .btn-primary:hover { background: #083D34; border-color: #083D34; }
+
+/* ---------- Collapsible extra filter panel ---------- */
+.purchase-page.prl-page .pr-filter-panel {
+  display: none; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: 16px 20px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.purchase-page.prl-page .pr-filter-panel.show { display: block; }
+.purchase-page.prl-page .pr-filter-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px; align-items: end;
+}
+.purchase-page.prl-page .filter-group { display: flex; flex-direction: column; gap: 4px; }
+.purchase-page.prl-page .filter-group .filter-label { font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+.purchase-page.prl-page .filter-group select,
+.purchase-page.prl-page .filter-group input {
+  width: 100%; height: 36px; padding: 0 10px; border: 1px solid #e5e7eb; border-radius: 8px;
+  font-size: 13px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #fff; color: #374151; outline: none; box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  color-scheme: light;
+}
+.purchase-page.prl-page .filter-group select:focus,
+.purchase-page.prl-page .filter-group input:focus { border-color: #0B4A3D; box-shadow: 0 0 0 2px rgba(11, 74, 61, 0.12); }
+.purchase-page.prl-page .filter-actions { display: flex; gap: 6px; align-items: flex-end; }
+
+/* ---------- Export dropdown ---------- */
+.purchase-page.prl-page .export-dropdown { position: relative; display: inline-block; }
+.purchase-page.prl-page .export-menu {
+  position: absolute; left: 0; top: 100%; z-index: 9999; min-width: 180px;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08); padding: 6px; margin-top: 4px; display: none;
+}
+.purchase-page.prl-page .export-dropdown.open .export-menu { display: block; }
+.purchase-page.prl-page .export-menu a {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px; font-size: 13px;
+  color: #374151; text-decoration: none; border-radius: 6px; cursor: pointer; transition: background 0.15s;
+}
+.purchase-page.prl-page .export-menu a:hover { background: #f3f4f6; }
+.purchase-page.prl-page .export-menu a svg { width: 16px; height: 16px; flex-shrink: 0; }
+.purchase-page.prl-page .export-menu a:nth-child(1) svg { color: #ef4444; }
+.purchase-page.prl-page .export-menu a:nth-child(2) svg { color: #10b981; }
+.purchase-page.prl-page .export-menu a:nth-child(3) svg { color: #3b82f6; }
+.purchase-page.prl-page .export-menu a:nth-child(4) svg { color: #6b7280; }
+
+/* ---------- Column manager ---------- */
+.purchase-page.prl-page .col-vis-menu {
+  position: absolute; right: 0; top: 100%; z-index: 9999; width: 320px;
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12); margin-top: 4px; margin-right: -4px; display: none;
+}
+.purchase-page.prl-page .col-vis-menu.show { display: block; }
+.purchase-page.prl-page .colvis-dropdown-inner { display: flex; flex-direction: column; }
+.purchase-page.prl-page .colvis-search { position: relative; padding: 10px 12px 6px; }
+.purchase-page.prl-page .colvis-search svg {
+  position: absolute; left: 22px; top: 18px; width: 13px; height: 13px; color: #9ca3af; pointer-events: none;
+}
+.purchase-page.prl-page .colvis-search-input {
+  width: 100%; padding: 7px 10px 7px 32px; border: 1px solid #d1d5db; border-radius: 8px;
+  font-size: 13px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f9fafb; color: #374151; outline: none; box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.purchase-page.prl-page .colvis-search-input:focus { border-color: #0B4A3D; box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.08); background: #fff; }
+.purchase-page.prl-page .colvis-search-input::placeholder { color: #9ca3af; }
+.purchase-page.prl-page .colvis-items-scroll { max-height: min(280px, 50vh); overflow-y: auto; overflow-x: hidden; padding: 4px 8px; }
+.purchase-page.prl-page .colvis-item {
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 13px; color: #374151; transition: background 0.1s ease; user-select: none;
+}
+.purchase-page.prl-page .colvis-item:hover { background: #E8F0EE; }
+.purchase-page.prl-page .colvis-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: #0B4A3D; cursor: pointer; flex-shrink: 0; }
+.purchase-page.prl-page .colvis-item input[type="checkbox"]:disabled { cursor: default; opacity: 0.5; }
+.purchase-page.prl-page .colvis-item span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.purchase-page.prl-page .colvis-footer { flex-shrink: 0; border-top: 1px solid #e5e7eb; padding: 8px 12px; }
+.purchase-page.prl-page .colvis-actions-row { display: flex; gap: 6px; padding-top: 4px; }
+.purchase-page.prl-page .colvis-action-btn {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 7px 10px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 12px; font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #6b7280;
+  background: #f9fafb; cursor: pointer; transition: all 0.12s ease;
+}
+.purchase-page.prl-page .colvis-action-btn svg { width: 12px; height: 12px; }
+.purchase-page.prl-page .colvis-action-btn:hover { background: #E8F0EE; border-color: #0B4A3D; color: #0B4A3D; }
+
+/* ---------- Row action menu (3-dot) ---------- */
+.purchase-page.prl-page .action-menu-wrap { display: inline-block; position: relative; }
+.purchase-page.prl-page .action-menu-btn {
+  width: 32px; height: 32px; border-radius: 6px; border: none; background: transparent;
+  color: #64748b; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.purchase-page.prl-page .action-menu-btn svg { width: 16px; height: 16px; }
+.purchase-page.prl-page .action-menu-btn:hover,
+.purchase-page.prl-page .action-menu-btn.open { background: #E8F0EE; color: #0B4A3D; }
+.purchase-page.prl-page .action-menu {
+  position: absolute; right: 0; top: calc(100% + 4px); width: 240px;
+  background: #fff; border-radius: 12px; border: 1px solid #e5e7eb;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15); padding: 8px; z-index: 99999;
+  animation: prlMenuFadeIn 0.12s ease;
+}
+@keyframes prlMenuFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.purchase-page.prl-page .action-item {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 14px;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 500;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #111827; background: none; cursor: pointer; white-space: nowrap; text-align: left;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.purchase-page.prl-page .action-item svg { width: 16px; height: 16px; flex-shrink: 0; color: #64748b; }
+.purchase-page.prl-page .action-item:hover { background: #E8F0EE; color: #0B4A3D; }
+.purchase-page.prl-page .action-item:hover svg { color: #0B4A3D; }
+.purchase-page.prl-page .action-item.text-danger { color: #dc2626; }
+.purchase-page.prl-page .action-item.text-danger svg { color: #dc2626; }
+.purchase-page.prl-page .action-item.text-danger:hover { background: #fee2e2; }
+.purchase-page.prl-page .menu-divider { height: 1px; background: #e5e7eb; margin: 6px 8px; }
+
+/* ---------- Loading skeleton ---------- */
+.purchase-page.prl-page .cpr-skeleton-row { animation: prlSkeletonFade 0.5s ease-in-out infinite alternate; }
+.purchase-page.prl-page .cpr-skeleton-bar {
+  height: 14px; border-radius: 6px;
+  background: linear-gradient(90deg, #F3F4F6 25%, #E5E7EB 50%, #F3F4F6 75%);
+  background-size: 200% 100%; animation: prl-shimmer 1.5s ease-in-out infinite;
+}
+@keyframes prl-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes prlSkeletonFade {
+  from { opacity: 0.55; }
+  to   { opacity: 1; }
+}
+
+/* ---------- Error banner ---------- */
+.purchase-page.prl-page .cpr-error-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 16px; padding: 12px 16px; border-radius: 12px;
+  border: 1px solid #fecaca; background: #fef2f2;
+}
+.purchase-page.prl-page .cpr-error-banner p { margin: 0; font-size: 12px; font-weight: 600; color: #dc2626; }
+.purchase-page.prl-page .cpr-error-retry {
+  background: none; border: none; font-size: 12px; font-weight: 700; color: #dc2626;
+  text-decoration: underline; cursor: pointer; font-family: inherit; flex-shrink: 0;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 1024px) {
+  .purchase-page.prl-page .prm-filters { align-items: stretch; }
+  .purchase-page.prl-page .prm-filter-group { min-width: 0; flex: 1 1 150px; }
+}
+@media (max-width: 768px) {
+  .purchase-page.prl-page .prl-pagination { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .purchase-page.prl-page .prl-page-btns { align-self: center; }
+  .purchase-page.prl-page .po-page-header h1 { font-size: 18px; }
+}

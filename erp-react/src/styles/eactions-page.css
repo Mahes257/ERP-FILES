@@ -1,0 +1,294 @@
+/* ==========================================================================
+   E-Actions list page — responsive layout
+   --------------------------------------------------------------------------
+   The dedicated E-Actions page (Customer Purchase Orders → E-Actions) reuses
+   the ERP list design system: `po-table-card` / `po-table` (solid dark-green
+   header), `pr-kpi-grid` summary cards, Manage Columns + drag-to-resize, and
+   the same filter controls as the other Sales lists.
+
+   The only thing the shared system does not already cover is the *reflow*:
+   the KPI breakpoints in cpr-list.css are scoped to `.cpr-page`, and this page
+   is rendered inside the Customer Purchase Orders hub content area (outside
+   that scope), while the filter bar / toolbar / pagination are inline-styled
+   flex rows with no breakpoints of their own.
+
+   So this file adds ONLY breakpoints + a couple of fixed-wrapping rules for
+   the E-Actions page. It deliberately does not restyle any shared class.
+
+   Overflow contract:
+     - the page itself never scrolls horizontally;
+     - the table scrolls horizontally INSIDE `.ea-table-wrap`
+       (`overflow-x: auto`), which lives inside the `.po-table-card` frame;
+     - no `overflow-x: hidden` anywhere on the page/body.
+   ========================================================================== */
+
+.ea-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Every direct block of the page is allowed to shrink, so a wide table can
+   never push the page wider than the viewport. */
+.ea-page > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   1. Summary cards (Total / Pending / In Progress / Completed / On Hold /
+      Cancelled) — six across on wide desktops, stepping down to two and then
+      one on phones. `.qtn-kpi-card` already sets min-width: 0 and the count
+      uses a clamp(), so the numbers/labels stay aligned at every width.
+   -------------------------------------------------------------------------- */
+.ea-kpi-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+@media (max-width: 1439px) {
+  .ea-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+}
+
+@media (max-width: 1199px) {
+  .ea-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+}
+
+@media (max-width: 767px) {
+  .ea-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+}
+
+@media (max-width: 479px) {
+  .ea-kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; margin: 10px 0; }
+}
+
+/* --------------------------------------------------------------------------
+   2. Section header — title + description on the left, "Add E-Action" on the
+      right. Wraps to a stack on small screens; the button stays full-width
+      and tappable instead of being squeezed or overflowing.
+   -------------------------------------------------------------------------- */
+.ea-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  flex-wrap: wrap;
+}
+
+.ea-head-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  /* Grow into whatever the action leaves rather than forcing a 280px basis:
+     the title/description keep the full row and the header only stacks once the
+     two blocks genuinely cannot fit side by side. */
+  flex: 1 1 auto;
+}
+
+.ea-head-text { min-width: 0; }
+
+.ea-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  /* Pin the action to the card's right edge — i.e. inside the header card at
+     its 20px padding — at every width, including the moment the header wraps,
+     so it can never drift left under the title or hang past the card. */
+  margin-left: auto;
+}
+
+@media (max-width: 767px) {
+  .ea-head { padding: 14px 16px; }
+  .ea-head-actions { flex: 1 1 100%; }
+  .ea-head-actions .po-btn { width: 100%; justify-content: center; }
+}
+
+/* --------------------------------------------------------------------------
+   3. Filter bar — flexible grid instead of hardcoded pixel widths.
+      Desktop keeps one row (Search grows, selects keep a readable width);
+      below 768px the fields wrap into rows and the buttons share a row.
+   -------------------------------------------------------------------------- */
+.ea-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.ea-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 0 1 168px;
+  min-width: 0;
+}
+
+.ea-filter-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+}
+
+.ea-filter .tv-filter-select,
+.ea-filter .tv-form-input {
+  width: 100%;
+  min-width: 0;
+}
+
+/* The CPO picker holds document numbers — give it a little more room. */
+.ea-filter--cpo { flex: 0 1 190px; }
+
+/* Search grows to fill whatever space is left on the row. */
+.ea-filter-search {
+  flex: 1 1 240px;
+  min-width: 200px;
+}
+
+.ea-filter-buttons {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1023px) {
+  .ea-filter { flex: 1 1 150px; }
+  .ea-filter--cpo { flex: 1 1 170px; }
+}
+
+@media (max-width: 767px) {
+  .ea-filters { gap: 10px; }
+  .ea-filter-search { flex: 1 1 100%; min-width: 0; }
+  .ea-filter-buttons { flex: 1 1 100%; }
+  .ea-filter-buttons .po-btn { flex: 1 1 0; justify-content: center; }
+}
+
+@media (max-width: 479px) {
+  .ea-filter { flex: 1 1 100%; }
+  .ea-filter--cpo { flex: 1 1 100%; }
+}
+
+/* --------------------------------------------------------------------------
+   4. Table toolbar (Manage Columns / bulk delete / Refresh)
+   -------------------------------------------------------------------------- */
+.ea-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #F1F5F9;
+  flex-wrap: wrap;
+}
+
+.ea-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+@media (max-width: 639px) {
+  .ea-toolbar-left { flex: 1 1 100%; }
+  .ea-toolbar-left .po-btn { flex: 1 1 auto; justify-content: center; }
+}
+
+/* --------------------------------------------------------------------------
+   5. Table — horizontal scrolling belongs to the container INSIDE the card,
+      never to the page. Columns are laid out with `table-layout: fixed` and a
+      <colgroup> carrying the (resizable, persisted) widths, so cells wrap
+      instead of overlapping or clipping.
+   -------------------------------------------------------------------------- */
+.ea-table-wrap {
+  overflow-x: auto;
+  overflow-y: visible;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.ea-table-wrap .po-table {
+  width: 100%;
+}
+
+/* Cells may wrap between words AND inside long tokens (CPO numbers, long
+   remarks) so nothing spills into the neighbouring column. */
+.ea-table-wrap .po-table tbody td,
+.ea-table-wrap .po-table thead th {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.ea-table-wrap .po-table tbody td { white-space: normal; }
+
+/* Keep the number/date/status cells from wrapping mid-token. */
+.ea-cell-nowrap { white-space: nowrap; }
+
+.ea-cell-text { white-space: pre-wrap; }
+
+/* CPO number: a real link to the Customer Purchase Order, but rendered in the
+   ERP's dark body text colour — NOT blue/link styling. */
+.ea-cpo-link {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0F172A;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.ea-cpo-link:hover { color: #0B4A3D; text-decoration: underline; }
+
+.ea-cpo-link:focus-visible {
+  outline: 2px solid #0B4A3D;
+  outline-offset: 2px;
+}
+
+.dark .ea-cpo-link { color: #E2E8F0; }
+.dark .ea-cpo-link:hover { color: #5CB8A8; }
+
+/* Row actions: compact but always at least a 32px touch target. */
+.ea-row-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.ea-row-actions .tv-action-btn {
+  min-width: 32px;
+  min-height: 32px;
+}
+
+/* --------------------------------------------------------------------------
+   6. Pagination
+   -------------------------------------------------------------------------- */
+.ea-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid #F1F5F9;
+  flex-wrap: wrap;
+}
+
+.ea-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 639px) {
+  .ea-pagination { justify-content: center; }
+  .ea-pagination-controls { width: 100%; justify-content: center; }
+}

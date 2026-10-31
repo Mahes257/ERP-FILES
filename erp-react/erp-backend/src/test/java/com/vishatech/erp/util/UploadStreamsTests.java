@@ -1,0 +1,250 @@
+package com.vishatech.erp.util;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.vishatech.erp.exception.BadRequestException;
+import java.io.ByteArrayInputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.util.HexFormat;
+import java.util.Random;
+import org.junit.jupiter.api.Test;
+import org.springframework.web.multipart.MultipartFile;
+
+/**
+ * The upload streaming contract: bytes travel in a bounded buffer and the
+ * SHA-256 is computed in the same pass.
+ *
+ * <p>The point of these tests is the memory story, not just the digest: a large
+ * upload must never be read through a single whole-file buffer. The fake upload
+ * below records the largest read it is asked for, so "streamed" is measured
+ * rather than assumed.
+ */
+class UploadStreamsTests {
+
+    private static final long TWENTY_FOUR_MB = 24L * 1024 * 1024;
+
+    @Test
+    void hashesALargeUploadWhileStreamingItInBoundedBuffers() throws IOException {
+        TrackingMultipartFile upload = new TrackingMultipartFile("assembly.step", TWENTY_FOUR_MB);
+        Path target = Files.createTempFile("upload-stream-", ".bin");
+        try {
+            UploadStreams.StoredFile stored = UploadStreams.copyWithSha256(upload, target);
+
+            assertThat(stored.size()).isEqualTo(TWENTY_FOUR_MB);
+            assertThat(Files.size(target)).isEqualTo(TWENTY_FOUR_MB);
+            assertThat(stored.sha256()).isEqualTo(independentSha256(upload.generatedBytes()));
+
+            // Streamed, not buffered: no read ever asked for the whole file, and
+            // a 24 MB upload took many reads rather than one.
+            assertThat(upload.largestReadRequested).isLessThanOrEqualTo(UploadStreams.BUFFER_BYTES);
+            assertThat(upload.readCount).isGreaterThan(1);
+        } finally {
+            Files.deleteIfExists(target);
+        }
+    }
+
+    @Test
+    void producesTheSameChecksumAsAnIndependentDigestForTheSameBytes() throws IOException {
+        TrackingMultipartFile upload = new TrackingMultipartFile("part.sldprt", 512 * 1024);
+        Path target = Files.createTempFile("upload-digest-", ".bin");
+        try {
+            assertThat(UploadStreams.copyWithSha256(upload, target).sha256())
+                    .isEqualTo(independentSha256(upload.generatedBytes()));
+        } finally {
+            Files.deleteIfExists(target);
+        }
+    }
+
+    @Test
+    void readBoundedReturnsTheWholeUploadWhenItFitsUnderTheCap() throws IOException {
+        byte[] payload = "column,value\nname,Acme\n".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        MultipartFile upload = new MockBytesFile("leads.csv", payload);
+
+        assertThat(UploadStreams.readBounded(upload, 1024, "too large")).isEqualTo(payload);
+    }
+
+    @Test
+    void readBoundedAcceptsAnUploadExactlyAtTheCap() throws IOException {
+        byte[] payload = new byte[4096];
+        new Random(7).nextBytes(payload);
+        MultipartFile upload = new MockBytesFile("leads.csv", payload);
+
+        assertThat(UploadStreams.readBounded(upload, payload.length, "too large")).isEqualTo(payload);
+    }
+
+    @Test
+    void readBoundedRefusesAnUploadAboveTheCapWithoutReadingItAll() {
+        MultipartFile upload = new TrackingMultipartFile("huge.csv", 8L * 1024 * 1024);
+
+        assertThatThrownBy(() -> UploadStreams.readBounded(upload, 256 * 1024, "Import file is too large."))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessageContaining("too large");
+    }
+
+    // ------------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------------
+
+    /** A deterministic payload generator, so the expected digest is reproducible. */
+    private static byte[] generated(long size) {
+        byte[] bytes = new byte[(int) size];
+        new Random(42).nextBytes(bytes);
+        return bytes;
+    }
+
+    private static String independentSha256(byte[] bytes) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return HexFormat.of().formatHex(digest.digest(bytes));
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /** Records how much each read asked for, which is what "streamed" means here. */
+    private static final class CountingInputStream extends FilterInputStream {
+
+        private final TrackingMultipartFile owner;
+
+        CountingInputStream(InputStream in, TrackingMultipartFile owner) {
+            super(in);
+            this.owner = owner;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            owner.recordRead(len);
+            return super.read(b, off, len);
+        }
+    }
+
+    /** A MultipartFile backed by generated bytes, counting the reads it serves. */
+    private static final class TrackingMultipartFile implements MultipartFile {
+
+        private final String name;
+        private final long size;
+        int largestReadRequested = 0;
+        int readCount = 0;
+
+        TrackingMultipartFile(String name, long size) {
+            this.name = name;
+            this.size = size;
+        }
+
+        void recordRead(int requested) {
+            largestReadRequested = Math.max(largestReadRequested, requested);
+            readCount++;
+        }
+
+        byte[] generatedBytes() {
+            return generated(size);
+        }
+
+        @Override
+        public String getName() {
+            return "file";
+        }
+
+        @Override
+        public String getOriginalFilename() {
+            return name;
+        }
+
+        @Override
+        public String getContentType() {
+            return "application/octet-stream";
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        @Override
+        public long getSize() {
+            return size;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return generatedBytes();
+        }
+
+        @Override
+        public InputStream getInputStream() {
+            return new CountingInputStream(new ByteArrayInputStream(generatedBytes()), this);
+        }
+
+        @Override
+        public void transferTo(java.io.File dest) {
+            throw new UnsupportedOperationException("not used by the streaming path");
+        }
+
+        @Override
+        public void transferTo(Path dest) {
+            throw new UnsupportedOperationException("not used by the streaming path");
+        }
+    }
+
+    private static final class MockBytesFile implements MultipartFile {
+
+        private final String name;
+        private final byte[] content;
+
+        MockBytesFile(String name, byte[] content) {
+            this.name = name;
+            this.content = content;
+        }
+
+        @Override
+        public String getName() {
+            return "file";
+        }
+
+        @Override
+        public String getOriginalFilename() {
+            return name;
+        }
+
+        @Override
+        public String getContentType() {
+            return "text/csv";
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return content.length == 0;
+        }
+
+        @Override
+        public long getSize() {
+            return content.length;
+        }
+
+        @Override
+        public byte[] getBytes() {
+            return content.clone();
+        }
+
+        @Override
+        public InputStream getInputStream() {
+            return new ByteArrayInputStream(content);
+        }
+
+        @Override
+        public void transferTo(java.io.File dest) {
+            throw new UnsupportedOperationException("not used by the streaming path");
+        }
+
+        @Override
+        public void transferTo(Path dest) {
+            throw new UnsupportedOperationException("not used by the streaming path");
+        }
+    }
+}

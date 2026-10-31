@@ -1,0 +1,132 @@
+/* ============================================================================
+   Documents module — standardized document preview (/documents/:id/preview)
+
+   Only what the shared shell cannot express with the ERP's existing utility
+   classes: the paper canvas that holds the real stored file, and the print
+   rules that put that canvas on paper without the application chrome.
+
+   Scoped to .doc-preview-root (and, for print, to the body class the page adds
+   while it is mounted) so nothing here can reach another module's pages.
+   ========================================================================== */
+
+.doc-preview-root .doc-preview-sheet {
+  /* The design workspaces' paper, measured: A4 at 96 dpi (794 × 1123 px),
+     white, borderless and shadowless, centred inside the same
+     `bg-slate-100/80` canvas card. (#salesdoc-sheet measures 794 px wide, no
+     border and no shadow on that card.) The width is FIXED rather than fluid
+     for the same reason: an A4 page keeps its real proportions, and the
+     canvas card — which already has overflow-x-auto — scrolls when the page
+     cannot fit. */
+  width: 794px;
+  max-width: none;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.doc-preview-root .doc-preview-sheet--file {
+  position: relative;
+}
+
+.doc-preview-root .doc-preview-frame {
+  display: block;
+  width: 100%;
+  /* A4 at 96 dpi ≈ 1123px tall; the document scrolls inside the frame. */
+  height: 1123px;
+  border: 0;
+  background: #FFFFFF;
+}
+
+/* Shown only while the document frame is still rendering. */
+.doc-preview-root .doc-preview-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #FFFFFF;
+}
+
+.doc-preview-root .doc-preview-sheet--image {
+  padding: 24px;
+}
+
+.doc-preview-root .doc-preview-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.doc-preview-root .doc-preview-text {
+  margin: 0;
+  padding: 28px 32px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #1E293B;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Empty / unavailable / no-file states keep the FULL A4 page footprint, so the
+   canvas always reads as a document page and never collapses or jumps while
+   the document loads. */
+.doc-preview-root .doc-preview-empty {
+  min-height: 1123px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 2px;
+  padding: 32px;
+}
+
+/* Below the xl breakpoint the right panel drops under the document. The paper
+   keeps its real A4 geometry and the canvas card (overflow-x-auto) scrolls
+   horizontally, which is exactly how the design workspaces behave — so the
+   page never gains horizontal overflow of its own. No max-width breakpoint is
+   needed: the fixed 794 px page is the A4 sheet. */
+
+/* ---------------------------------------------------------------------------
+   Print: the paper canvas only.
+
+   The class is added to <body> by the preview page while it is mounted, so the
+   chrome is hidden for THIS route only — no other page's printing changes.
+   ------------------------------------------------------------------------- */
+@media print {
+  body.doc-preview-print-scope #app-sidebar,
+  body.doc-preview-print-scope .app-topbar,
+  body.doc-preview-print-scope .pr-breadcrumb,
+  body.doc-preview-print-scope .doc-preview-bar,
+  body.doc-preview-print-scope .doc-preview-aside {
+    display: none !important;
+  }
+
+  body.doc-preview-print-scope .app-workspace-content {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.doc-preview-print-scope .doc-preview-canvas {
+    background: #FFFFFF !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.doc-preview-print-scope .doc-preview-sheet {
+    max-width: 100% !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.doc-preview-print-scope .doc-preview-frame {
+    height: 100vh !important;
+  }
+}

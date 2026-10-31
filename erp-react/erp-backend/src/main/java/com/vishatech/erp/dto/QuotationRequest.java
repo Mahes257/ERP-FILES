@@ -1,0 +1,87 @@
+package com.vishatech.erp.dto;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public record QuotationRequest(
+        String quotationNo,
+        String reference,
+        String quotationDate,
+        String validUntil,
+        String leadNo,
+        String sourceCw,
+        /**
+         * Number of the Profit Workout this quotation is created from (the save of
+         * the conversion-prefilled form: {@code /quotations/new?sourcePw=<id>}).
+         * The backend resolves it, writes the established
+         * "Generated from Profit Workout <pwNo>" reference itself and refuses a
+         * second quotation for the same Profit Workout. Null for a plain create.
+         */
+        String sourcePw,
+        String sourceCpr,
+        String referencePrNo,
+        Long cprId,
+        String fromCompany,
+        String fromName,
+        String fromAddress,
+        String fromGstin,
+        String fromPan,
+        String fromEmail,
+        String fromPhone,
+        Long clientId,
+        String clientName,
+        String contactPerson,
+        String email,
+        String phone,
+        String address,
+        String city,
+        String state,
+        String pin,
+        String country,
+        String gstin,
+        String pan,
+        String billingAddress,
+        String billingCity,
+        String billingState,
+        String billingPin,
+        Boolean shipSameAsBill,
+        String shippingAddress,
+        String shippingCity,
+        String shippingState,
+        String shippingPin,
+        String taxType,
+        String currency,
+        BigDecimal exchangeRate,
+        String baseCurrency,
+        String numberFormat,
+        String status,
+        String salesPerson,
+        String paymentTerms,
+        String remarks,
+        String terms,
+        BigDecimal discount,
+        BigDecimal charges,
+        String deliveryTerms,
+        BigDecimal freight,
+        BigDecimal insurance,
+        String signatureType,
+        String signatureLabel,
+        String hsnView,
+        String displayUnit,
+        Boolean taxSummary,
+        Boolean hidePlace,
+        Boolean hsnSummary,
+        Boolean originalImages,
+        Boolean thumbnails,
+        Boolean descFull,
+        Boolean hideSubtotal,
+        Boolean showSku,
+        Boolean serial,
+        Boolean batch,
+        String additionalInfo,
+        String contactEmail,
+        String contactPhone,
+        String customFields,
+        List<QuotationItemRequest> items
+) {
+}

@@ -1,0 +1,58 @@
+/* ============================================================
+   ModelViewerPage — Mechan-R&D viewer host.
+   Only integration glue: make the Mech R&D viewer fill the ERP
+   viewport and give its `erp-btn` action buttons a usable look
+   (those classes are otherwise defined only inside the CPR pages).
+   No viewer visuals are overridden.
+   ============================================================ */
+
+.mv3d-mr-host {
+  display: flex;
+  flex-direction: column;
+}
+
+.mv3d-mr-host > * {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.mv3d-mr-host .erp-btn,
+.mv3d-mr-host .erp-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+
+.mv3d-mr-host .erp-btn {
+  background: #ffffff;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.mv3d-mr-host .erp-btn:hover {
+  border-color: #0b7a68;
+  color: #0b7a68;
+}
+
+.mv3d-mr-host .erp-btn-primary {
+  background: #075e54;
+  color: #ffffff;
+}
+
+.mv3d-mr-host .erp-btn-primary:hover:not(:disabled) {
+  background: #0b7a68;
+}
+
+.mv3d-mr-host .erp-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

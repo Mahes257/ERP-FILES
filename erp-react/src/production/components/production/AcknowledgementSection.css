@@ -1,0 +1,181 @@
+/* ============================================================
+   Acknowledgement & Technical Verification Sections
+   ============================================================ */
+
+/* Container for multiple TV cards (one per item) */
+.tv-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ack-section,
+.tv-section {
+  margin-top: 0;
+  padding: 22px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.ack-section-head,
+.tv-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ack-section-title,
+.tv-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.ack-section-subtitle,
+.tv-section-subtitle {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+/* Status badges */
+.ack-status-badge,
+.tv-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.ack-status-pending,
+.tv-status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.ack-status-acknowledged {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.tv-status-verified {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.tv-status-rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Field grid */
+.ack-fields,
+.tv-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.ack-field,
+.tv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.ack-field-wide,
+.tv-field-wide {
+  grid-column: 1 / -1;
+}
+
+.ack-field-label,
+.tv-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.ack-field-value,
+.tv-field-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.ack-field-value.empty,
+.tv-field-value.empty {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+/* Editable inputs inside TV section */
+.tv-input,
+.tv-select,
+.tv-textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: 13px;
+  color: var(--color-text);
+  transition: border-color 0.15s ease;
+}
+
+.tv-input:focus,
+.tv-select:focus,
+.tv-textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-soft);
+}
+
+.tv-textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.tv-input:disabled,
+.tv-select:disabled {
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.tv-field-hint {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* Action bar */
+.ack-actions,
+.tv-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .ack-fields,
+  .tv-fields {
+    grid-template-columns: 1fr;
+  }
+}

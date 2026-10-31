@@ -1,0 +1,192 @@
+/* ============================================================
+   Shop floor table card — Purchase-aligned (simple white card)
+   ============================================================ */
+.sf-board-card {
+  padding: 18px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  position: relative;
+  z-index: 1;
+}
+
+.sf-board-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.sf-board-title {
+  font-size: var(--fs-section-title, 15px);
+  font-weight: var(--fw-semibold, 600);
+  color: #102A2A;
+}
+
+.sf-board-subtitle {
+  margin-top: 2px;
+  font-size: var(--fs-body, 12px);
+  font-weight: var(--fw-regular, 400);
+  color: #64748B;
+}
+
+.po-link {
+  color: #075E54;
+  font-weight: 600;
+  text-decoration: none;
+}
+.po-link:hover {
+  text-decoration: underline;
+}
+
+/* Empty state */
+.sf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.sf-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 6px;
+  border-radius: 12px;
+  background: #EAF7F3;
+  color: #075E54;
+}
+
+.sf-empty h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #102A2A;
+}
+
+.sf-empty p {
+  font-size: 12px;
+  color: #64748B;
+}
+
+.sf-empty .btn {
+  margin-top: 8px;
+}
+
+/* ============================================================
+   Stage / Status Tabs — Purchase Requisition style
+   Active: green left accent bar + bold green text
+   Inactive: gray text, no background
+   Thin horizontal divider below
+   ============================================================ */
+.sf-stage-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #E2E8F0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  position: relative;
+  z-index: 1;
+}
+.sf-stage-tabs::-webkit-scrollbar { display: none; }
+
+.sf-stage-tab {
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.sf-stage-tab:hover { color: #0B4A3D; }
+
+.sf-stage-tab.active {
+  color: #075E54;
+  border-bottom-color: #075E54;
+  font-weight: 600;
+}
+
+.sf-stage-tab-count {
+  font-size: 11px;
+  background: #F1F6F4;
+  color: #64748b;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.sf-stage-tab.active .sf-stage-tab-count {
+  background: #EAF7F3;
+  color: #075E54;
+}
+
+@media (max-width: 768px) {
+  .sf-stage-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sf-board-card {
+    padding: 12px;
+    border-radius: 10px;
+  }
+  .sf-board-head {
+    margin-bottom: 10px;
+  }
+  .sf-board-title {
+    font-size: 13px;
+  }
+  .sf-board-subtitle {
+    font-size: 11px;
+  }
+  .sf-empty {
+    padding: 32px 16px;
+  }
+  .sf-empty-icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+@media (max-width: 480px) {
+  .sf-stage-tab {
+    padding: 8px 10px;
+    font-size: 12px;
+    gap: 4px;
+  }
+  .sf-stage-tab-count {
+    min-width: 16px;
+    height: 16px;
+    font-size: 10px;
+  }
+}
+
+/* Dark mode */
+.dark .sf-stage-tabs { border-bottom-color: rgba(148,163,184,0.12); }
+.dark .sf-stage-tab { color: #94A3B8; }
+.dark .sf-stage-tab:hover { color: #5CB8A8; }
+.dark .sf-stage-tab.active { color: #5CB8A8; border-bottom-color: #5CB8A8; }
+.dark .sf-stage-tab-count { background: rgba(100,116,139,0.12); color: #94A3B8; }
+.dark .sf-stage-tab.active .sf-stage-tab-count { background: rgba(92,184,168,0.1); color: #5CB8A8; }
+
+

@@ -1,0 +1,174 @@
+/* =====================================================================
+   ERP SALES CREATE / NEW FORM — visual standard, scoped
+   ---------------------------------------------------------------------
+   Visual reference: sales_frontend (sales_frontend/sales/sales-react).
+
+   The Sales module's Create/New pages (Sales Execution, CRM Leads /
+   Clients / Follow-ups, CPR + Cost & Profit Workout and the quotation /
+   contract / order / challan / e-action document forms) opt into everything
+   in this file by carrying the `erp-create-scope` class on their page root.
+
+   Why a scope class instead of a global rule
+   ------------------------------------------
+   Both standards below exist in the reference as GLOBAL stylesheets, but the
+   classes they target (.erp-create-btn, and every <table> header) are also
+   used by modules outside this task (Marketing, Documents, Production list
+   grids). Applying them globally here would repaint those modules, so each
+   rule is scoped behind `.erp-create-scope` — the reference's visual result,
+   with the blast radius limited to the Sales Create/New forms.
+
+   Nothing in this file changes behaviour: no handler, order, label, layout,
+   padding, width, sticky positioning or binding is touched.
+
+   PART 1 — embedded tables keep the ERP green column band
+   PART 2 — footer action buttons are the solid-green ERP button
+   ===================================================================== */
+
+/* =====================================================================
+   PART 1 — ERP TABLE HEADER STANDARD (inside a Create/New form)
+   ---------------------------------------------------------------------
+   Visual reference: `index.css` in sales_frontend, which lifts EVERY data
+   table header to the ERP dark green (--purchase-table-header) with white
+   semibold text. It is unlayered CSS, so it outranks the Tailwind utilities
+   layer — a header written as `bg-slate-50 text-slate-500` is lifted to
+   green + white without touching a single component.
+
+   That is what makes the embedded tables of the reference's Create/New forms
+   read as one design system: the Linked Contacts table (Add Client), the
+   quotation Terms table, and the Sales Order / Delivery Challan / Cost
+   Workout / Profit Workout item grids all share the same green column band.
+   In erp-react that rule was never brought across, so those headers stayed
+   light grey / transparent while others (CPR, Invoice, Proforma, Credit
+   Note) were already green.
+
+   Only background / background-image / color / font-weight / border-bottom
+   are set — no layout, padding, width, sticky or sorting behaviour moves.
+
+   The green is written as a literal instead of `var(--purchase-table-header)`
+   on purpose: in erp-react that token is redefined on `:root` by the Purchase
+   module's own stylesheet (purchase/styles/design-system.css — a file the
+   reference does not have), so consuming the token here would paint these
+   headers with the Purchase green (#075E54) once that lazy chunk loads, and
+   with #0B4A3D before it does. The reference's resolved values (#0B4A3D on
+   #083D34) are hard-coded so the create forms match it unconditionally.
+   ===================================================================== */
+.erp-create-scope table:where(:not(.inv-table):not(.pl-table):not(.pi-table):not(.pl-packing-table):not(.pl-weight-summary-table)) thead tr th {
+  background: #0b4a3d;
+  background-image: none;
+  color: #ffffff;
+  font-weight: 600;
+  border-bottom: 1px solid #083d34;
+}
+
+/* Document / print design surfaces opt out — they keep their own header look.
+   Declared AFTER the standard on purpose, exactly as the reference does: a
+   class-scoped reset ties with it on specificity, so source order decides in
+   favour of the opt-out. */
+.erp-create-scope #salesdoc-sheet table thead tr th,
+.erp-create-scope #quotation-sheet table thead tr th,
+.erp-create-scope #cw-sheet table thead tr th,
+.erp-create-scope #pw-sheet table thead tr th,
+.erp-create-scope .qtn-sheet table thead tr th,
+.erp-create-scope .pl-document table thead tr th,
+.erp-create-scope .invoice-doc table thead tr th,
+.erp-create-scope .packing-list-doc table thead tr th,
+.erp-create-scope .proforma-invoice-doc table thead tr th {
+  background: transparent;
+  background-image: none;
+  color: inherit;
+  border-bottom-color: transparent;
+}
+
+/* Sort indicators sit on the green band — keep them legible on every grid. */
+.erp-create-scope table:where(:not(.inv-table):not(.pl-table):not(.pi-table)) thead tr th .sort-icon,
+.erp-create-scope table:where(:not(.inv-table):not(.pl-table):not(.pi-table)) thead tr th svg.sort-icon {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+/* =====================================================================
+   PART 2 — ERP CREATION-PAGE ACTION BUTTON
+   ---------------------------------------------------------------------
+   Visual reference: sales_frontend `src/styles/erp-creation-actions.css`.
+
+   Every bottom action bar of a Create/New form paints its buttons with ONE
+   class — `.erp-create-btn`:
+
+       LEFT                                     RIGHT
+       [<- Back to List] [x Cancel] [Save Draft]   [+ Save & New] [Save] [Submit for Approval]
+
+   36px tall, 8px radius, 12px/700, solid ERP green (#0B4A3D) with white
+   text and white icons, plus hover / active / focus / disabled states.
+
+   erp-react's components already reference `.erp-create-btn` (20 pages, via
+   `components/Common/CreationActionBar`), but the stylesheet that defines it
+   was never brought across — so every one of those buttons rendered with no
+   background, no padding, no border and no radius.
+
+   Values are copied verbatim from the reference; the only change is the
+   `.erp-create-scope` ancestor in each selector.
+
+   Colour tokens mirror index.css: --purchase-primary #0B4A3D /
+   hover #083D34.
+   ===================================================================== */
+.erp-create-scope .erp-create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #0b4a3d;
+  border-radius: 8px;
+  background: #0b4a3d;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.erp-create-scope .erp-create-btn:hover:not(:disabled) {
+  background: #083d34;
+  border-color: #083d34;
+  box-shadow: 0 2px 6px rgba(11, 74, 61, 0.22);
+}
+
+.erp-create-scope .erp-create-btn:active:not(:disabled) {
+  background: #062e28;
+  border-color: #062e28;
+  box-shadow: none;
+}
+
+.erp-create-scope .erp-create-btn:focus-visible {
+  outline: 2px solid #0b4a3d;
+  outline-offset: 2px;
+}
+
+.erp-create-scope .erp-create-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* White icon, normalised across every module footer so icon/text spacing
+   stays identical regardless of the icon component the module uses. */
+.erp-create-scope .erp-create-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* Dark theme keeps the same solid green so the white text contrast holds. */
+.dark .erp-create-scope .erp-create-btn {
+  border-color: #0b4a3d;
+  background: #0b4a3d;
+  color: #ffffff;
+}
+
+.dark .erp-create-scope .erp-create-btn:hover:not(:disabled) {
+  background: #0f5c4b;
+  border-color: #0f5c4b;
+}

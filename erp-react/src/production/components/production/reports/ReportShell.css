@@ -1,0 +1,195 @@
+/* ============================================================
+   Report shell — navigation, tabs, export bar
+   ============================================================ */
+.report-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 640px) {
+  .report-topbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .report-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.report-prevnext {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.report-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.report-nav-btn:hover {
+  color: var(--color-accent);
+  border-color: #cde6d8;
+}
+
+.report-export-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.report-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  padding: 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.report-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.report-tab:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.report-tab.active {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+
+/* Report card wrapper (summary row + table) */
+.report-section {
+  padding: 20px;
+  margin-bottom: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.report-section-title {
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.report-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+/* Horizontal comparison bar used by reports */
+.hbar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hbar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hbar-label {
+  flex: 0 0 170px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hbar-track {
+  flex: 1;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.hbar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-accent);
+}
+
+.hbar-value {
+  flex: 0 0 48px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: right;
+}
+
+/* CSV download */
+.csv-download {
+  display: none;
+}
+
+/* ---- Print ---- */
+@media print {
+  .sidebar,
+  .sidebar-backdrop,
+  .header,
+  .back-btn,
+  .report-prevnext,
+  .report-tabs,
+  .report-export-bar,
+  .report-filters,
+  .mobile-menu-btn {
+    display: none !important;
+  }
+
+  .app-main {
+    margin-left: 0 !important;
+  }
+
+  .app-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+
+  .report-section,
+  .rsc-card {
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+}

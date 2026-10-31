@@ -1,0 +1,71 @@
+/* ============================================================
+   Report summary cards
+   ============================================================ */
+.rsc-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.rsc-icon {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+.tone-neutral {
+  background: #f0f2f1;
+  color: #5b6b64;
+}
+.tone-green {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+.tone-blue {
+  background: #e9f2fb;
+  color: #2f6fb0;
+}
+.tone-amber {
+  background: #fdf3e3;
+  color: #b06f1f;
+}
+.tone-red {
+  background: #fdeaea;
+  color: #c0392b;
+}
+
+.rsc-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rsc-value {
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-text);
+}
+
+.rsc-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.rsc-sub {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

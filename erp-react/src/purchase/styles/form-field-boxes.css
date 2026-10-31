@@ -1,0 +1,49 @@
+/**
+ * purchase/styles/form-field-boxes.css
+ * ------------------------------------------------------------------
+ * Purchase form pages — restores the missing field box on the
+ * searchable dropdown/combobox triggers (EditableMasterSelect /
+ * CurrencySelect / SearchableSelect) that render as <button>s:
+ * Department, Buyer, Requester, Priority, Currency, Incoterm,
+ * Delivery Address, Payment Terms, Category/UOM pickers, etc.
+ *
+ * ROOT CAUSE
+ *   These triggers style their box with Tailwind's *layered* utilities
+ *   (.border / .border-slate-200 / .bg-white). The app-wide UNLAYERED
+ *   reset in src/production/styles/global.css:
+ *
+ *       button { font: inherit; color: inherit;
+ *                background: none; border: none; cursor: pointer; }
+ *
+ *   is outside @layer, and unlayered CSS outranks layered CSS regardless
+ *   of specificity — so the utilities lost the cascade and the trigger
+ *   rendered as bare text with no box, while its sibling fields
+ *   (.purchase-form-input — plain unlayered CSS) kept theirs.
+ *
+ * FIX (minimum change, replicated from each page's working fields)
+ *   Only `border` + `background-color` are re-declared — the exact box
+ *   the reference inputs use on every Purchase form page:
+ *   1px solid #E2E8F0 on #FFFFFF. Height, padding, radius, typography,
+ *   hover/focus, icons and behaviour are untouched.
+ *
+ * SCOPE — form pages only
+ *   .purchase-page                       → Purchase page shell (PurchasePageLayout)
+ *     .pr-form-main                      → the 9 standard form columns
+ *                                          (Requisition, Vendor, RFQ, Follow-up,
+ *                                           Quotation, GRN, Inventory, Manufacturing,
+ *                                           Shipment) — asides/summary panels excluded
+ *     .purchase-page-form-grid           → PO form, Invoice form, Adjustment Note
+ *   button[aria-haspopup='listbox']      → the dropdown/combobox triggers only
+ *
+ *   Purchase LIST pages have no such container (rule inert), non-Purchase
+ *   modules have no `.purchase-page` (rule cannot match), native inputs/
+ *   selects/checkboxes/accordion headers/action buttons are not matched,
+ *   and the portaled dropdown menu is rendered outside these containers.
+ * ------------------------------------------------------------------
+ */
+
+.purchase-page .pr-form-main button[aria-haspopup='listbox'],
+.purchase-page .purchase-page-form-grid button[aria-haspopup='listbox'] {
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+}

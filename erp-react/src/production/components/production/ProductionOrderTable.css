@@ -1,0 +1,245 @@
+/* ============================================================
+   Active Production Orders table
+   ============================================================ */
+.orders-card {
+  padding: 22px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Shared table container — see styles/table.css for base rules */
+.pt-table-card {
+  padding: 22px;
+  overflow: hidden;
+}
+
+.orders-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.orders-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.orders-subtitle {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+/* Group heading row above normal column headers */
+.status-heading-row th {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: var(--color-text);
+}
+.status-group-heading {
+  text-align: center !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  color: var(--color-accent) !important;
+  padding-bottom: 4px !important;
+  border-bottom: 2px solid var(--color-accent) !important;
+}
+.status-group-spacer {
+  border: none !important;
+  background: transparent !important;
+}
+
+.btn-view-all {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  background: var(--color-surface);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-accent);
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.btn-view-all:hover {
+  background: var(--color-accent-soft);
+  border-color: #cde6d8;
+}
+
+/* Row action buttons */
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  transition: background var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+.btn-icon:hover {
+  background: var(--color-accent-soft);
+  border-color: #cde6d8;
+  color: var(--color-accent);
+}
+.btn-icon-danger:hover {
+  background: #fdeaea;
+  border-color: #f5d2d2;
+  color: var(--color-danger);
+}
+
+.btn-view {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+.btn-view:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+/* Clickable rows for order selection */
+.clickable-row {
+  transition: background var(--transition-fast);
+}
+.clickable-row:hover {
+  background: var(--color-accent-soft, #EAF7F3);
+}
+/* Keep pending Work Order cell color on hover */
+.clickable-row.kpi-row-pending:hover td:first-child,
+.clickable-row.kpi-row-pending:hover .cell-strong {
+  background: #FFF7E6 !important;
+  color: #B45309;
+}
+
+/* Cancelled/Rejected rows — red tinted background + red left border */
+.clickable-row.kpi-row-cancelled {
+  background: #FFF5F5 !important;
+  border-left: 3px solid #DC3545;
+}
+.clickable-row.kpi-row-cancelled td:first-child {
+  color: #C62828;
+}
+.clickable-row.kpi-row-cancelled:hover,
+.clickable-row.kpi-row-cancelled:hover td:first-child,
+.clickable-row.kpi-row-cancelled:hover .cell-strong {
+  background: #FFEBEE !important;
+  color: #C62828;
+}
+
+/* Strikethrough effect on work order number for cancelled */
+.kpi-row-cancelled .cell-strong {
+  text-decoration: line-through;
+  text-decoration-color: #DC3545;
+  opacity: 0.7;
+}
+
+/* Production Rejected rows */
+.clickable-row.kpi-row-production-rejected {
+  background: #FFF5F5 !important;
+  border-left: 3px solid #DC3545;
+}
+.clickable-row.kpi-row-production-rejected td:first-child {
+  color: #C62828;
+}
+.clickable-row.kpi-row-production-rejected:hover,
+.clickable-row.kpi-row-production-rejected:hover td:first-child,
+.clickable-row.kpi-row-production-rejected:hover .cell-strong {
+  background: #FFEBEE !important;
+  color: #C62828;
+}
+.kpi-row-production-rejected .cell-strong {
+  text-decoration: line-through;
+  text-decoration-color: #DC3545;
+  opacity: 0.7;
+}
+
+/* Admin Rejected rows */
+.clickable-row.kpi-row-admin-rejected {
+  background: #FFF5F5 !important;
+  border-left: 3px solid #DC3545;
+}
+.clickable-row.kpi-row-admin-rejected td:first-child {
+  color: #C62828;
+}
+.clickable-row.kpi-row-admin-rejected:hover,
+.clickable-row.kpi-row-admin-rejected:hover td:first-child,
+.clickable-row.kpi-row-admin-rejected:hover .cell-strong {
+  background: #FFEBEE !important;
+  color: #C62828;
+}
+.kpi-row-admin-rejected .cell-strong {
+  text-decoration: line-through;
+  text-decoration-color: #DC3545;
+  opacity: 0.7;
+}
+.selected-row {
+  background: var(--color-accent-soft, #EAF7F3) !important;
+  border-left: 3px solid var(--color-accent, #075E54);
+}
+
+.is-selected {
+  background: var(--color-accent-soft, #EAF7F3) !important;
+}
+
+/* Approved tick next to Work Order number */
+.wo-approved-tick {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: var(--color-success, #075E54);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+/* Work Order number → existing detail route (/production/orders/:id).
+   Scoped to this table (NOT `.po-link`, which other Production stylesheets
+   define with their own colour and could win depending on load order). The
+   link keeps the exact appearance of the cell text it wraps — weight and
+   colour are inherited from `.cell-strong` and its status-row hover rules —
+   so only a hover underline is added as the click affordance. */
+.wo-detail-link {
+  color: inherit;
+  text-decoration: none;
+}
+.wo-detail-link:hover,
+.wo-detail-link:focus-visible {
+  text-decoration: underline;
+}
+

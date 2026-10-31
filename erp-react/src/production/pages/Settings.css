@@ -1,0 +1,37 @@
+/* Production Settings → Overview.
+   The cards themselves are the shared `.ss-status-card` (src/styles/settings-shell.css),
+   the same ones Sales Settings renders. Two small additions are needed because
+   these cards are router links and carry the section description. */
+
+a.ss-status-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+a.ss-status-card:focus-visible {
+  outline: 2px solid rgba(7, 94, 84, 0.35);
+  outline-offset: 1px;
+}
+
+/* Section description — the muted third line, same scale as the shell's hints. */
+.ss-status-desc {
+  font-size: 10.5px;
+  line-height: 1.35;
+  margin-top: 3px;
+  color: var(--ss-text-2);
+}
+
+.dark .ss-status-desc {
+  color: #94A3B8;
+}
+
+/* The shell binds the state colour to the module's accent, which is a deep teal
+   in Production. On the dark card that reads too dark, so the Production theme
+   lifts it (Sales keeps its own binding — this rule is scoped to this page). */
+.dark .production-settings .ss-status-state {
+  color: #82C9BE;
+}
+
+.dark .production-settings .ss-status-card.is-attention .ss-status-state {
+  color: #FCD34D;
+}

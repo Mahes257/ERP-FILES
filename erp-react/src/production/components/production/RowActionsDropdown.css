@@ -1,0 +1,101 @@
+/* ============================================================
+   Three-dot (⋮) row action dropdown menu
+   ============================================================ */
+.rad-container {
+  position: relative;
+  display: inline-flex;
+}
+
+.rad-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #64748B;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rad-trigger:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #102A2A;
+}
+
+.rad-menu {
+  z-index: 9999;
+  min-width: 160px;
+  max-width: 220px;
+  padding: 4px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.rad-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  font-size: var(--fs-body, 12px);
+  font-weight: var(--fw-medium, 500);
+  color: #102A2A;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
+  white-space: nowrap;
+}
+
+.rad-menu-item:hover:not(:disabled) {
+  background: #F1F5F9;
+}
+
+.rad-menu-item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.rad-menu-item.rad-danger {
+  color: #DC2626;
+}
+
+.rad-menu-item.rad-danger:hover:not(:disabled) {
+  background: #FEF2F2;
+}
+
+.rad-menu-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .rad-trigger {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  .rad-menu {
+    min-width: 140px;
+    max-width: 200px;
+  }
+  .rad-menu-item {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+}

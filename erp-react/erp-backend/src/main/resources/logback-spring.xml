@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- ================================================================== -->
+    <!-- Variables                                                          -->
+    <!-- ================================================================== -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="erp-backend"/>
+    <springProperty scope="context" name="APP_ENV"  source="ERP_METRICS_ENV"          defaultValue="local"/>
+
+    <!-- ================================================================== -->
+    <!-- Console appender with correlation ID in MDC                        -->
+    <!-- ================================================================== -->
+    <property name="LOG_FORMAT" value="${LOG_FORMAT:-json}"/>
+
+    <!-- JSON-like structured format (one line per event, machine-parseable) -->
+    <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>{"timestamp":"%d{ISO8601}","level":"%level","thread":"%thread","logger":"%logger{36}","correlationId":"%X{correlationId:-}","userId":"%X{userId:-}","app":"${APP_NAME}","env":"${APP_ENV}","message":"%msg"}%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Human-readable format for development / IDE.
+
+         Reference style (see the task's target screenshot):
+
+             2026-10-05T13:27:45.272+05:30 INFO  [erp-backend] [http-nio-8080-exec-6] [c.v.e.config.ApiRequestLoggingFilter] - [API] GET /v1/purchase/orders → 200 (12ms)
+
+         i.e. timestamp, level, application, thread, logger, message.  The
+         per-line correlation-id slot is intentionally NOT printed anymore:
+         it rendered as an empty "[]" on every non-request line and made the
+         output noisier than the reference.  The correlation id itself is
+         unchanged — it is still in the MDC and returned to the client as
+         the X-Request-Id response header, so it can be re-added here for a
+         debugging session without touching any Java code. -->
+    <appender name="CONSOLE_PLAIN" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [${APP_NAME:-erp-backend}] [%thread] [%logger{36}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- API request lines only.
+
+         Same columns as CONSOLE_PLAIN (timestamp, level, application,
+         thread) but the logger name and the generic "-" separator are
+         replaced by the literal label "API :", so a request shows as:
+
+             2026-10-05T13:27:45.272+05:30 INFO  [erp-backend] [http-nio-8080-exec-5] API : [API] GET /v1/api/purchase/orders → 200
+
+         This appender is attached ONLY to the single request-logging
+         filter via a non-additive logger (see below), so every other
+         application, WARN/ERROR and exception line keeps CONSOLE_PLAIN. -->
+    <appender name="CONSOLE_API" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [${APP_NAME:-erp-backend}] [%thread] API : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Development / non-prod: human-readable plain text.
+         Framework loggers are held at WARN so a normal run shows only
+         application events plus the single [API] request line, while every
+         Spring MVC, Tomcat, Hibernate, HikariCP, Spring Security and
+         WebSocket warning or error still reaches the console.  Only WARN/
+         ERROR are suppressed — nothing is set to OFF/ERROR wholesale. -->
+    <springProfile name="!prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE_PLAIN"/>
+        </root>
+        <logger name="com.vishatech.erp" level="INFO"/>
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.apache" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="com.zaxxer.hikari" level="WARN"/>
+        <logger name="org.eclipse.jetty" level="WARN"/>
+        <logger name="io.undertow" level="WARN"/>
+        <!-- SQL statements (DEBUG) and result sets stay off; SQL errors are
+             ERROR and therefore always visible. -->
+        <logger name="org.hibernate.SQL" level="WARN"/>
+        <logger name="SECURITY" level="INFO"/>
+        <!-- Only the [API] request logger gets the "API :" presentation;
+             additivity="false" stops the line also inheriting CONSOLE_PLAIN,
+             so exactly one line is printed per request. -->
+        <logger name="com.vishatech.erp.config.ApiRequestLoggingFilter" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE_API"/>
+        </logger>
+    </springProfile>
+
+    <!-- Spring Boot also needs the root logger active BEFORE profiles
+         are resolved (during bootstrap).  Provide a fallback appender
+         so the first log lines (including fatal startup errors) are visible. -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_PLAIN"/>
+    </root>
+
+    <springProfile name="prod">
+        <!-- Production: always structured for machine parsing -->
+        <root level="WARN">
+            <appender-ref ref="CONSOLE_JSON"/>
+        </root>
+        <logger name="com.vishatech.erp" level="INFO"/>
+        <logger name="SECURITY" level="INFO"/>
+        <logger name="org.springframework.security" level="WARN"/>
+    </springProfile>
+
+</configuration>

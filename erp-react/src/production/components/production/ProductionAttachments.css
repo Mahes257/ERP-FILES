@@ -1,0 +1,204 @@
+/* ProductionAttachments.css — Matches ERP visual language */
+
+.prod-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Drop zone */
+.prod-attach-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px 16px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafbfc;
+  color: #0B4A3D;
+}
+.prod-attach-dropzone:hover,
+.prod-attach-dropzone.drag-over {
+  border-color: #0B4A3D;
+  background: #E8F0EE;
+}
+.prod-attach-dropzone-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  margin: 0;
+}
+.prod-attach-browse {
+  color: #0B4A3D;
+  font-weight: 700;
+  text-decoration: underline;
+}
+.prod-attach-dropzone-hint {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 0;
+}
+.prod-attach-hidden-input {
+  display: none;
+}
+
+/* Upload queue */
+.prod-attach-queue {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.prod-attach-queue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #64748b;
+}
+.prod-attach-queue-info {
+  flex: 1;
+  min-width: 0;
+}
+.prod-attach-queue-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.prod-attach-queue-error {
+  display: block;
+  font-size: 10px;
+  color: #dc2626;
+  margin-top: 2px;
+}
+.prod-attach-progress-bar {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+.prod-attach-progress-fill {
+  height: 100%;
+  background: #0B4A3D;
+  border-radius: 4px;
+  transition: width 0.2s ease;
+}
+
+/* Loading */
+.prod-attach-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Empty state */
+.prod-attach-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: #94a3b8;
+  text-align: center;
+}
+.prod-attach-empty p {
+  font-size: 12px;
+  margin: 0;
+}
+
+/* Attachment list */
+.prod-attach-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.prod-attach-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: border-color 0.15s ease;
+}
+.prod-attach-item:hover {
+  border-color: #cbd5e1;
+}
+.prod-attach-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f0f0ff;
+  color: #6366f1;
+  flex-shrink: 0;
+}
+.prod-attach-item-info {
+  flex: 1;
+  min-width: 0;
+}
+.prod-attach-item-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.prod-attach-item-meta {
+  display: block;
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+.prod-attach-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.prod-attach-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.prod-attach-btn:hover {
+  background: #f1f5f9;
+  color: #0B4A3D;
+}
+.prod-attach-btn-danger:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.prod-attach-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

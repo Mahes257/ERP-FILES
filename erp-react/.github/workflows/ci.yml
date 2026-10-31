@@ -1,0 +1,362 @@
+# ============================================================
+#  Continuous Integration — frontend build + tests, backend
+#  verify, isolated live API verification
+# ============================================================
+# Validates that the repository builds and its test suites run.
+# No deployment, no Docker, no publishing.
+#
+# The backend test profile (erp-backend/src/test/resources/application.properties)
+# shadows the main configuration and runs against in-memory H2, so the
+# `frontend*` and `backend` jobs need no MySQL and no ERP_* variables.
+#
+# What each job enforces:
+#   frontend       — the production build must succeed.
+#   frontend-tests — the tests/** contract suite must pass (node's runner).
+#   frontend-unit  — the src/** vitest suite runs and is REPORTED, but the job is
+#                    `continue-on-error: true` and therefore does NOT gate merges
+#                    while its known failures stay undecided.
+#   backend        — the full tracked backend suite plus a no-silent-shrinkage
+#                    check: the executed Surefire test count is summed and fails
+#                    the job below MIN_BACKEND_TESTS (audited local baseline 693;
+#                    the 13 environment-gated live classes always report 0 tests
+#                    and are excluded by construction).
+#
+# `live-api` is the only job that needs MySQL and real configuration. It
+# provisions a THROWAWAY database (`erp_ci_live`) inside an ephemeral service
+# container, starts a dedicated backend against it, and runs the REST Assured
+# suites through a fail-closed database-target guard. Credentials come from
+# repository secrets; when they are absent the job reports that it was skipped
+# and claims no test result. The shared development database is never used and
+# does not exist in that container.
+# ============================================================
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend — install & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          # Vite 8 requires Node >= 20.19 / 22.12
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  frontend-tests:
+    name: Frontend — contract suite (tests/)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Contract suite (node's built-in test runner)
+        run: npm run test:node
+
+  frontend-unit:
+    name: Frontend — in-source unit suite (src/**) [NON-BLOCKING]
+    runs-on: ubuntu-latest    # Every test is discovered, executed and published, but the job does NOT gate
+    # merges: `continue-on-error` is still set because the 5 remaining failures
+    # are all one undecided business rule — the Quotation number format.
+    #
+    #   numberingEngine (1) · purchaseAcceptance (1) · purchaseToPayAudit (1) ·
+    #   quotationWorkflow (2) expect `QT-<FY>-<NNNN>`; the shipped code issues
+    #   `QT-001`: numberingEngine's Quotation sequence is flagged `plain` (and
+    #   migrates a stored year-based config to it), and rfq.js `nextQuotationNo`
+    #   pads the counter to three digits. Settings → Document Numbering, however,
+    #   previews `QT-<FY>-<NNNN>` for every row, like the other 14 sequences.
+    #   Both sides are in-repo, so the format is a product decision — see
+    #   CI_TEST_STABILIZATION_REPORT.md §4.2. Until it is taken, the assertions stay
+    #   as written and this job stays visibly non-blocking rather than silently
+    #   green. Remove this line once the rule is decided and the suites match it.
+
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Without this file vitest silently falls back to vite.config.js: no jsdom
+      # (45 src/** suites use localStorage), the default `include` pattern, and
+      # no VITE_PURCHASE_DATA_MODE pin. Confirm it is part of the checkout
+      # instead of discovering later that CI ran a different suite than local.
+      - name: Confirm the committed vitest configuration is present
+        run: |
+          set -eu
+          if [ ! -f vitest.config.js ]; then
+            echo "::error::vitest.config.js is missing from this checkout — vitest would fall back to vite.config.js (node environment, tests/** included, VITE_PURCHASE_DATA_MODE unset)"
+            exit 1
+          fi
+          echo "vitest.config.js present: jsdom + src/** only + VITE_PURCHASE_DATA_MODE=local are in effect"
+
+      - name: Unit suite (vitest, jsdom)
+        run: |
+          set -o pipefail
+          npm run test:unit 2>&1 | tee /tmp/vitest.log
+
+      - name: Publish the unit-suite result (informational)
+        if: always()
+        run: |
+          set -eu
+          strip_ansi() { sed -e 's/\x1b\[[0-9;]*m//g'; }
+          files=$(strip_ansi < /tmp/vitest.log | grep -E '^ *Test Files +' | tail -1 || true)
+          tests=$(strip_ansi < /tmp/vitest.log | grep -E '^ *Tests +' | tail -1 || true)
+          {
+            echo "### Frontend unit suite (vitest + jsdom)"
+            echo ""
+            echo "- \`${files:-Test Files: not reported}\`"
+            echo "- \`${tests:-Tests: not reported}\`"
+            echo ""
+          echo "**This job does not gate merges** (\`continue-on-error: true\`) while the remaining"
+          echo "failures are undecided — the Quotation number format, see CI_TEST_STABILIZATION_REPORT.md §4.2."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::warning::frontend-unit is non-blocking: ${tests:-tests not reported}. Its red state does not fail the pipeline."
+
+  backend:
+    name: Backend — verify (tests + package)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: erp-backend
+    env:
+      # No-silent-test-shrinkage floor. Audited local baseline: 693 executed tests
+      # (TEST_DEPENDENCY_AUDIT.md, §2.2). The only expected difference in CI is
+      # that the 13 environment-gated `com.vishatech.erp.api.*` REST Assured
+      # classes are DISCOVERED BUT EXECUTE 0 TESTS without ERP_API_TEST_ENABLED;
+      # they are excluded from this total by construction because the count sums
+      # the `tests=` attribute of each Surefire report. A floor (not equality) so
+      # that deliberately dropping a few tests stays possible, while the silent
+      # case — ~480 tests when test files are absent from the checkout — fails.
+      MIN_BACKEND_TESTS: '680'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Report which test files this checkout contains
+        run: |
+          set -eu
+          echo "tracked test sources: $(git ls-files 'src/test/java/**/*.java' | wc -l)"
+          echo "present test sources: $(find src/test/java -name '*.java' | wc -l)"
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: erp-backend/pom.xml
+
+      - name: Verify
+        run: ./mvnw -B verify
+
+      - name: Report and guard the executed test count
+        if: always()
+        run: |
+          set -eu
+          reports=$(find target/surefire-reports -name 'TEST-*.xml' 2>/dev/null | sort || true)
+          if [ -z "$reports" ]; then
+            echo "::error::no Surefire reports were produced — the backend suite did not run"
+            exit 1
+          fi
+          total=0
+          zero=0
+          for f in $reports; do
+            n=$(grep -o 'tests="[0-9]*"' "$f" | head -1 | tr -dc '0-9')
+            [ -n "$n" ] || n=0
+            total=$((total + n))
+            if [ "$n" -eq 0 ]; then zero=$((zero + 1)); fi
+            printf '%6s  %s\n' "$n" "$(basename "$f" .xml | sed 's/^TEST-//')"
+          done
+          echo "executed backend tests: $total"
+          echo "classes reporting 0 tests (expected for the gated live suites): $zero"
+          {
+            echo "### Backend executed test count"
+            echo ""
+            echo "- executed tests: **$total**"
+            echo "- classes reporting 0 tests (environment-gated, no ERP_API_TEST_ENABLED): $zero"
+            echo "- enforced floor: $MIN_BACKEND_TESTS — audited local baseline 693"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$total" -lt "$MIN_BACKEND_TESTS" ]; then
+            echo "::error::executed backend tests dropped to $total, below the floor of $MIN_BACKEND_TESTS — test files are missing from this checkout (see TEST_DEPENDENCY_AUDIT.md §9.1)"
+            exit 1
+          fi
+
+  live-api:
+    name: Backend — isolated live API verification
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: erp-backend
+    env:
+      # Never committed and never echoed. Without them the job skips itself.
+      ERP_CI_JWT_SECRET: ${{ secrets.ERP_CI_JWT_SECRET }}
+      ERP_CI_API_PASSWORD: ${{ secrets.ERP_CI_API_PASSWORD }}
+      # Throwaway values for the ephemeral MySQL service container below. The
+      # container is destroyed with the job and is not reachable outside it.
+      ER_CI_DB_NAME: erp_ci_live
+      ER_CI_DB_PASSWORD: ci-live-${{ github.run_id }}
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-live-${{ github.run_id }}
+          MYSQL_DATABASE: erp_ci_live
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - name: Check live-verification secrets
+        id: gate
+        run: |
+          if [ -z "${ERP_CI_JWT_SECRET}" ] || [ -z "${ERP_CI_API_PASSWORD}" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Live API verification SKIPPED — configure the repository secrets ERP_CI_JWT_SECRET and ERP_CI_API_PASSWORD to enable it. No live test result is claimed."
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.ready == 'true'
+
+      - name: Set up Java 21
+        if: steps.gate.outputs.ready == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: erp-backend/pom.xml
+
+      - name: Start a dedicated backend against the disposable database
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          ERP_PORT: '8080'
+          ERP_BASE_URL: http://127.0.0.1:8080
+          # Isolated database inside the ephemeral service container. The shared
+          # development database (erp_db) is not created here and is never named.
+          ERP_DATABASE_URL: jdbc:mysql://127.0.0.1:3306/erp_ci_live?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          ERP_DATABASE_USERNAME: root
+          ERP_DATABASE_PASSWORD: ${{ env.ER_CI_DB_PASSWORD }}
+          ERP_JWT_SECRET: ${{ env.ERP_CI_JWT_SECRET }}
+          ERP_DDL_AUTO: update
+          ERP_UPLOAD_DIR: /tmp/erp-ci-uploads
+        run: |
+          set -eu
+          mkdir -p /tmp/erp-ci-uploads
+          nohup ./mvnw -B spring-boot:run > /tmp/erp-ci-backend.log 2>&1 &
+          echo $! > /tmp/erp-ci-backend.pid
+
+      - name: Wait for the backend to answer
+        if: steps.gate.outputs.ready == 'true'
+        run: |
+          set -eu
+          for i in $(seq 1 60); do
+            if curl -fsS "http://127.0.0.1:8080/v1/health" > /dev/null 2>&1; then
+              echo "backend ready after ${i} attempt(s)"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "::error::backend did not answer /v1/health within 180s"
+          tail -n 80 /tmp/erp-ci-backend.log
+          exit 1
+
+      - name: Live API suites (isolated target, guarded)
+        if: steps.gate.outputs.ready == 'true'
+        env:
+          ERP_API_TEST_ENABLED: 'true'
+          ERP_API_TEST_BASE_URI: http://127.0.0.1:8080
+          ERP_API_TEST_BASE_PATH: /v1
+          # Fail-closed guard: a write-capable suite aborts unless the target is
+          # the disposable database. `erp_db` is rejected by the guard itself.
+          ERP_API_TEST_TARGET_DB: erp_ci_live
+          # Account created by DataSeeder in the fresh schema; the password comes
+          # from the secret above.
+          ERP_API_TEST_EMAIL: admin@vishaktech.com
+          ERP_API_TEST_PASSWORD: ${{ env.ERP_CI_API_PASSWORD }}
+          # Exercises the 403 side against a throwaway USER row written to the
+          # DISPOSABLE database only (never against the shared one).
+          ERP_API_TEST_ALLOW_REGISTER: 'true'
+        run: |
+          ./mvnw -B test \
+            -Dtest=SalesDeleteAuthorityLiveApiTest,DocumentsPaginationLiveApiTest \
+            -Dsurefire.failIfNoSpecifiedTests=false
+
+      # A `-Dtest=` filter that matches nothing would otherwise let this job report
+      # success without running a single live check. Require both suites to have
+      # produced a Surefire report with at least one executed test.
+      - name: Confirm the live suites actually executed
+        if: always() && steps.gate.outputs.ready == 'true'
+        run: |
+          set -eu
+          failed=0
+          for cls in SalesDeleteAuthorityLiveApiTest DocumentsPaginationLiveApiTest; do
+            report=$(find target/surefire-reports -name "TEST-*.$cls.xml" -print -quit 2>/dev/null || true)
+            if [ -z "$report" ]; then
+              echo "::error::$cls produced no Surefire report — it was not discovered (is the live suite part of this checkout?)"
+              failed=1
+              continue
+            fi
+            n=$(grep -o 'tests="[0-9]*"' "$report" | head -1 | tr -dc '0-9')
+            echo "$cls executed ${n:-0} test(s)"
+            if [ "${n:-0}" -eq 0 ]; then
+              echo "::error::$cls executed 0 tests — no live API result may be claimed"
+              failed=1
+            fi
+          done
+          [ "$failed" -eq 0 ]
+
+      - name: Diagnostics on failure
+        if: failure() && steps.gate.outputs.ready == 'true'
+        run: |
+          echo "--- backend log (tail) ---"
+          tail -n 120 /tmp/erp-ci-backend.log || true
+
+      - name: Stop the dedicated backend and remove job-local files
+        if: always() && steps.gate.outputs.ready == 'true'
+        run: |
+          if [ -f /tmp/erp-ci-backend.pid ]; then
+            kill "$(cat /tmp/erp-ci-backend.pid)" 2>/dev/null || true
+          fi
+          rm -rf /tmp/erp-ci-uploads /tmp/erp-ci-backend.pid
+          # Nothing else is cleaned up on purpose: the MySQL service container,
+          # its database and the throwaway account live only for this job.

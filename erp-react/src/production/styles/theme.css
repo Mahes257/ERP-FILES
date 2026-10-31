@@ -1,0 +1,81 @@
+/* ============================================================
+   Production ERP — Design tokens
+   Aligned with Purchase module design system
+   ============================================================ */
+:root {
+  /* Sidebar (Purchase-style white + green accent) */
+  --color-sidebar-bg: #ffffff;
+  --color-sidebar-bg-2: #f8faf9;
+  --color-sidebar-text: #4B5563;
+  --color-sidebar-muted: #6B7280;
+  --color-sidebar-border: #E5E7EB;
+
+  /* Active navigation (Purchase green accent) */
+  --color-active-bg-start: #075E54;
+  --color-active-bg-end: #075E54;
+  --color-active-text: #ffffff;
+
+  /* Brand / accents (Purchase green) */
+  --color-accent: #075E54;
+  --color-accent-soft: #EAF7F3;
+  --color-accent-strong: #064C44;
+
+  /* Content area (Purchase light background) */
+  --color-bg: #F7F9FA;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-border-strong: #CBD5E1;
+
+  /* Text (Purchase ink colors) */
+  --color-text: #102A2A;
+  --color-text-muted: #64748B;
+
+  /* Status accents (Purchase status tokens) */
+  --color-danger: #DC2626;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+  --color-success: #16A34A;
+
+  /* Radii (Purchase-style) */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* Shadows (Purchase-style) */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.12);
+
+  /* Layout */
+  --sidebar-width: 264px;
+  --sidebar-width-collapsed: 76px;
+  --header-height: 64px;
+
+  /* Typography (Purchase Inter font) */
+  --font-family:
+    'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+
+  /* Typography scale (Purchase-aligned) */
+  --fs-page-title: 24px;
+  --fs-page-subtitle: 13px;
+  --fs-section-title: 15px;
+  --fs-body: 12px;
+  --fs-body-sm: 11px;
+  --fs-body-lg: 13px;
+  --fs-tab: 13px;
+  --fs-badge: 11px;
+  --fs-kpi-num: 28px;
+  --fs-kpi-label: 12px;
+  --fs-table-header: 11px;
+  --fs-table-body: 12px;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Motion */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.22s ease;
+}

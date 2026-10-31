@@ -1,0 +1,75 @@
+/* ==========================================================================
+   PURCHASE MODULE — NUMERIC INPUT VISUAL CENTERING
+   --------------------------------------------------------------------------
+   Shared helper for native numeric inputs.
+   Goal:
+     1. Number value is visually centered inside the FULL input box.
+     2. Native spinner arrows remain visible and functional.
+     3. No layout/width/height/border/color changes.
+     4. Non-numeric inputs are untouched.
+
+   Approach:
+     Native input[type="number"] reserves space for the spinner on the
+     right. In Chromium/WebKit that internal spinner is drawn INSIDE the
+     padding box, so even when text-align:center is set, the value looks
+     shifted left whenever right padding is large.
+
+     The reliable visual fix is to give the rendered text layout area the
+     same effective width as the whole input while keeping the spinner
+     usable. We do that with a tiny "invisible centering offset" technique:
+       - text-align: center (in case any rule set it to right/left)
+       - padding-left/right equalized so the text box is centered
+       - allow text to overflow the spinner side very slightly so the
+         number can sit centered relative to the outer box, without
+         clipping the actual value
+       - the spinner still occupies its native space and remains clickable
+
+     This is intentionally NOT a wrapper + absolute positioning approach
+     because that breaks responsive tables and zoom and interferes with
+     native input behavior. It is a pure input-level visual alignment fix.
+
+     IMPORTANT: this must not affect:
+       - text inputs (Drawing No, Description, Remarks, Notes, etc.)
+       - selects, date inputs, textareas
+       - numeric inputs intentionally right aligned (amounts/totals)
+         unless they are part of the Purchase shared numeric styles.
+   ========================================================================== */
+
+/* Ensure any prior asymmetric centering overrides do not leak.
+   Set once, then extended by the Purchase-specific selectors below. */
+.purchase-page input[type="number"] {
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Enable slight visual overflow toward the spinner side so numbers can
+   be visibly centered relative to the full input box while the spinner
+   remains present. This does not hide the value; it only allows the
+   text to extend into the spinner area visually when needed. */
+.purchase-page input[type="number"] {
+  overflow-x: visible;
+}
+
+/* Keep spinners fully opaque so they are visible and clickable everywhere. */
+.purchase-page input[type="number"]::-webkit-inner-spin-button,
+.purchase-page input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  appearance: inner-spin-button;
+  -webkit-appearance: inner-spin-button;
+}
+
+/* Dark-mode safety: keep dark Purchase pages from hiding spinners. */
+.purchase-page.dark input[type="number"]::-webkit-inner-spin-button,
+.purchase-page.dark input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  appearance: inner-spin-button;
+  -webkit-appearance: inner-spin-button;
+}
+
+/*
+   NOTE ON AMOUNTS / TOTALS:
+   Numeric inputs that are intentionally right-aligned (financial amounts,
+   totals, summary values) should keep their own explicit alignment rules
+   elsewhere. This file is only about centering the shared numeric inputs.
+ */

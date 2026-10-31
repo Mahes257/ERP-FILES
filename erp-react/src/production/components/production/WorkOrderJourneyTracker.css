@@ -1,0 +1,536 @@
+/* ============================================================
+   Work Order Journey Tracker
+   ============================================================ */
+
+.journey-tracker {
+  margin-bottom: 24px;
+}
+
+/* ---- Header ---- */
+.journey-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.journey-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.journey-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text, #1f2937);
+  margin: 0;
+}
+
+/* ---- Tabs ---- */
+.journey-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.journey-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 20px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-muted, #6b7280);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.journey-tab:hover {
+  background: var(--color-accent-soft, #e8f5ee);
+  color: var(--color-accent, #075E54);
+}
+.journey-tab.active {
+  background: var(--color-accent, #075E54);
+  color: #fff;
+  border-color: var(--color-accent, #075E54);
+}
+.journey-tab.active .journey-tab-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.journey-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--color-accent-soft, #e8f5ee);
+  color: var(--color-accent, #075E54);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ---- Toolbar (search + status filter) ---- */
+.journey-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.journey-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 320px;
+  padding: 7px 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+  background: var(--color-surface, #fff);
+  color: var(--color-text-muted, #6b7280);
+}
+.journey-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  color: var(--color-text, #1f2937);
+  width: 100%;
+}
+.journey-search input::placeholder {
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.journey-status-select {
+  padding: 7px 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+  background: var(--color-surface, #fff);
+  font-size: 13px;
+  color: var(--color-text, #1f2937);
+  cursor: pointer;
+  min-width: 130px;
+}
+
+/* ---- Summary cards ---- */
+.journey-summary {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.journey-summary-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  border-top: 3px solid var(--color-border, #d1d5db);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.12s ease;
+}
+.journey-summary-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+.journey-summary-card.in-progress {
+  border-top-color: #f59e0b;
+}
+.journey-summary-card.completed {
+  border-top-color: var(--color-accent, #075E54);
+}
+.journey-summary-card.on-hold {
+  border-top-color: #ef4444;
+}
+.journey-summary-card.pending {
+  border-top-color: #6b7280;
+}
+.journey-summary-card.avg-progress {
+  border-top-color: #3b82f6;
+}
+
+.journey-summary-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted, #6b7280);
+  margin-bottom: 4px;
+}
+
+.journey-summary-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text, #1f2937);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.journey-summary-sub {
+  font-size: 11px;
+  color: var(--color-text-muted, #9ca3af);
+  margin-top: 2px;
+}
+
+/* ---- Orders list ---- */
+.journey-orders {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.journey-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 20px;
+  color: var(--color-text-muted, #9ca3af);
+  text-align: center;
+}
+.journey-empty p {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* ---- Single Work Order row ---- */
+.journey-row {
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  background: var(--color-surface, #fff);
+  overflow: hidden;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+}
+.journey-row:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border-color: var(--color-accent, #075E54);
+}
+.journey-row:active {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.journey-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  flex-wrap: wrap;
+}
+
+.journey-row-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.journey-row-wo {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text, #1f2937);
+}
+
+.journey-row-item {
+  font-size: 13px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.journey-row-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.journey-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.journey-row-progress {
+  font-size: 12px;
+  color: var(--color-text-muted, #6b7280);
+  letter-spacing: 0.03em;
+}
+.journey-row-progress strong {
+  color: var(--color-accent, #075E54);
+  font-size: 14px;
+}
+
+.journey-row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 6px;
+  background: var(--color-bg, #f9fafb);
+  color: var(--color-text-muted, #6b7280);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.journey-row-action:hover {
+  background: var(--color-accent-soft, #e8f5ee);
+  color: var(--color-accent, #075E54);
+  border-color: var(--color-accent, #075E54);
+}
+
+.journey-row-view-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-accent, #075E54);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.journey-row:hover .journey-row-view-hint {
+  opacity: 1;
+}
+
+/* Status badges inside the row header */
+.journey-row-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.badge-pending {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+.badge-in-progress {
+  background: #fef3c7;
+  color: #92400e;
+}
+.badge-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+.badge-hold {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.badge-cancelled {
+  background: #f3f4f6;
+  color: #9ca3af;
+}
+
+/* ---- Stage pipeline ---- */
+.journey-pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 10px 16px 14px;
+  overflow-x: auto;
+}
+
+.journey-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  min-width: 72px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+.journey-stage:hover {
+  transform: translateY(-2px);
+}
+.journey-stage:hover .journey-stage-circle {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.journey-stage-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  background: #fff;
+  color: #9ca3af;
+  transition: all 0.2s ease;
+}
+
+.journey-stage-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-muted, #6b7280);
+  text-align: center;
+  white-space: nowrap;
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Connector line between stages */
+.journey-connector {
+  flex: 1;
+  min-width: 20px;
+  height: 2px;
+  background: #d1d5db;
+  margin: 0 -1px;
+  align-self: flex-start;
+  margin-top: 15px;
+  border-radius: 1px;
+}
+.journey-connector.done {
+  background: var(--color-accent, #075E54);
+}
+
+/* Completed stage */
+.journey-stage.completed .journey-stage-circle {
+  background: var(--color-accent, #075E54);
+  border-color: var(--color-accent, #075E54);
+  color: #fff;
+}
+.journey-stage.completed .journey-stage-label {
+  color: var(--color-accent, #075E54);
+}
+
+/* Current / In Progress stage */
+.journey-stage.current .journey-stage-circle {
+  background: #f59e0b;
+  border-color: #f59e0b;
+  color: #fff;
+  animation: journey-pulse 1.8s ease infinite;
+}
+.journey-stage.current .journey-stage-label {
+  color: #92400e;
+  font-weight: 700;
+}
+
+/* Hold stage */
+.journey-stage.hold .journey-stage-circle {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+}
+.journey-stage.hold .journey-stage-label {
+  color: #991b1b;
+}
+
+/* Rejected stage (Technical Verification Rejected) */
+.journey-stage.rejected .journey-stage-circle {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #fff;
+}
+.journey-stage.rejected .journey-stage-label {
+  color: #991b1b;
+}
+
+/* Pending stage */
+.journey-stage.pending .journey-stage-circle {
+  background: #fff;
+  border-color: #d1d5db;
+  color: #9ca3af;
+}
+
+@keyframes journey-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(245, 158, 11, 0);
+  }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .journey-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .journey-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .journey-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .journey-search {
+    max-width: none;
+  }
+  .journey-row-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .journey-pipeline {
+    padding: 10px 12px 14px;
+  }
+}
+
+/* ============================================================
+   Items detail table in single-WO view
+   ============================================================ */
+.wo-items-detail-section {
+  margin-top: 10px;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: var(--radius-md, 10px);
+  padding: 12px 16px;
+}
+
+.wo-items-detail-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text, #1a1a1a);
+  margin-bottom: 8px;
+}
+
+/* ---- Casting / Fabrication: completed stages are explicitly green ----
+   The shared accent is teal; the Casting workflow asks for green completion
+   markers, so the modifier only applies to those two workflows. */
+.journey-pipeline.is-green-stages .journey-stage.completed .journey-stage-circle {
+  background: #16A34A;
+  border-color: #16A34A;
+}
+.journey-pipeline.is-green-stages .journey-stage.completed .journey-stage-label {
+  color: #15803D;
+}
+.journey-pipeline.is-green-stages .journey-connector.done {
+  background: #16A34A;
+}
+
+.stage-strip.is-green-stages .stage-node.done {
+  border-color: #BBF7D0;
+  background: #F0FDF4;
+  color: #15803D;
+}
+.stage-strip.is-green-stages .stage-node.done .stage-marker {
+  border-color: #16A34A;
+  background: #16A34A;
+}

@@ -1,0 +1,1261 @@
+﻿/* ==========================================================================
+   Enterprise Sidebar — AppLayout
+   Matches ERP reference: white sidebar, #0B4A3D green active items
+   Collapsed: 72px  |  Expanded: 260px  |  Transition: 280ms ease-in-out
+   ========================================================================== */
+
+:root {
+  --sidebar-w: 72px;
+  --sidebar-w-expanded: 260px;
+  --sidebar-transition: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- Purchase section accents (soft-green family) ----------------------- */
+.app-sidebar {
+  --sb-purchase-primary: #0B4A3D;
+  --sb-purchase-active: #E8F0EE;
+  --sb-purchase-hover: #F4FAF7;
+  --sb-purchase-muted: #6B7280;
+  --sb-chevron-hover: rgba(15, 23, 42, 0.06);
+}
+
+.dark .app-sidebar {
+  --sb-purchase-primary: #136754;
+  --sb-purchase-active: rgba(11, 74, 61, 0.24);
+  --sb-purchase-hover: rgba(11, 74, 61, 0.12);
+  --sb-purchase-muted: #9CA3AF;
+  --sb-chevron-hover: rgba(255, 255, 255, 0.10);
+}
+
+/* --- Base sidebar ------------------------------------------------------- */
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
+}
+
+/* Let the document own vertical scrolling. A fixed-height shell combined
+   with a nested workspace scroller made long ERP pages appear frozen. */
+.app-workspace-content {
+  min-height: 0;
+  overflow: visible;
+}
+
+.app-sidebar {
+  /* Theme-aware sidebar tokens — ERP reference white sidebar */
+  --sb-bg: #ffffff;
+  --sb-hover: var(--sb-purchase-hover, #EDF7F4);
+  --sb-border: var(--sb-purchase-border, #E5E7EB);
+  --sb-profile-bg: #F8FAF9;
+  --sb-active-bg: var(--sb-purchase-primary, #0B4A3D);
+  --sb-active-text: #ffffff;
+  --sb-search-bg: #F8FAF9;
+  --sb-search-border: #D1D5DB;
+  --sb-tooltip-bg: #1E293B;
+  --sb-text: #4B5563;
+  --sb-accent: var(--sb-purchase-primary, #0B4A3D);
+  --sb-accent-soft: var(--sb-purchase-primary-light, #EDF7F4);
+
+  width: var(--sidebar-w);
+  min-width: var(--sidebar-w);
+  max-width: var(--sidebar-w);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 40;
+  background: var(--sb-bg);
+  color: var(--sb-text);
+  border-right: 1px solid var(--sb-border);
+  box-shadow: 0 0 30px rgba(15, 23, 42, 0.05);
+  overflow: visible;
+  will-change: width;
+  transition: width var(--sidebar-transition), transform var(--sidebar-transition);
+}
+
+.dark .app-sidebar {
+  --sb-bg: #1A1A2E;
+  --sb-hover: var(--sb-purchase-hover, rgba(11, 74, 61, 0.18));
+  --sb-border: rgba(255, 255, 255, 0.08);
+  --sb-profile-bg: rgba(255, 255, 255, 0.04);
+  --sb-active-bg: var(--sb-purchase-primary, #136754);
+  --sb-active-text: #ffffff;
+  --sb-search-bg: rgba(255, 255, 255, 0.06);
+  --sb-search-border: rgba(255, 255, 255, 0.12);
+  --sb-tooltip-bg: #1E293B;
+  --sb-text: #9CA3AF;
+  --sb-accent: var(--sb-purchase-primary, #0B4A3D);
+  --sb-accent-soft: var(--sb-purchase-primary-light, rgba(11, 74, 61, 0.2));
+}
+
+.app-sidebar.expanded {
+  width: var(--sidebar-w-expanded);
+  min-width: var(--sidebar-w-expanded);
+  max-width: var(--sidebar-w-expanded);
+}
+
+/* --- Mobile overlay mode ------------------------------------------------- */
+.app-sidebar--mobile {
+  position: fixed;
+  inset-block: 0;
+  left: 0;
+  width: var(--sidebar-w-expanded);
+  min-width: var(--sidebar-w-expanded);
+  max-width: var(--sidebar-w-expanded);
+  transform: translateX(-100%);
+  z-index: 50;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+  transition: transform var(--sidebar-transition);
+}
+
+.app-sidebar--mobile.is-open {
+  transform: translateX(0);
+}
+
+.sb-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  animation: sb-fade var(--sidebar-transition) ease;
+}
+
+/* --- Sidebar column: header / user / search / nav -------------------------- */
+.sb-top {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Keep the utility controls outside this scroll region. */
+.sb-nav {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* --- Brand / logo --------------------------------------------------------- */
+.sb-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding-inline: 20px;
+  border-bottom: 1px solid var(--sb-border);
+  flex-shrink: 0;
+}
+
+.app-sidebar:not(.expanded) .sb-logo {
+  justify-content: center;
+  gap: 8px;
+  padding-inline: 0;
+}
+
+.sb-brand-mark {
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #0B4A3D;
+  transform: rotate(45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #EDF7F4;
+}
+
+.sb-brand-dot {
+  width: 6px;
+  height: 6px;
+  background: #0B4A3D;
+  border-radius: 9999px;
+}
+
+.sb-logo-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #111827;
+  white-space: nowrap;
+}
+
+.dark .sb-logo-text {
+  color: #F3F4F6;
+}
+
+/* --- Sidebar open/close toggle (sits at the end of the brand row) --------- */
+.sb-toggle {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #6B7280;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.sb-toggle:hover {
+  color: #0B4A3D;
+  background: var(--sb-hover);
+}
+
+.sb-toggle:focus-visible {
+  outline: 2px solid #0B4A3D;
+  outline-offset: 2px;
+}
+
+.dark .sb-toggle {
+  color: #9CA3AF;
+}
+
+.dark .sb-toggle:hover {
+  color: #F3F4F6;
+  background: var(--sb-hover);
+}
+
+/* Collapsed rail: the brand mark and the toggle share the 72px column, so the
+   toggle must give up the auto margin it uses to sit at the far right. */
+.app-sidebar:not(.expanded) .sb-toggle {
+  margin-left: 0;
+}
+
+/* --- User profile --------------------------------------------------------- */
+.sb-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--sb-border);
+  background: var(--sb-profile-bg);
+  flex-shrink: 0;
+}
+
+.app-sidebar:not(.expanded) .sb-profile {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.sb-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #0B4A3D;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.sb-profile-info {
+  display: none;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.app-sidebar.expanded .sb-profile-info {
+  display: flex;
+  animation: sb-fade-in var(--sidebar-transition) ease;
+}
+
+.sb-profile-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  white-space: nowrap;
+}
+
+.dark .sb-profile-name {
+  color: #F3F4F6;
+}
+
+.sb-profile-role {
+  font-size: 11px;
+  color: #6B7280;
+  font-weight: 500;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.dark .sb-profile-role {
+  color: #9CA3AF;
+}
+
+/* --- Menu search ---------------------------------------------------------- */
+.sb-search {
+  padding: 12px 12px 4px;
+  flex-shrink: 0;
+}
+
+.app-sidebar:not(.expanded) .sb-search {
+  display: none;
+}
+
+.sb-search-input {
+  width: 100%;
+  background: var(--sb-search-bg);
+  border: 1px solid var(--sb-search-border);
+  border-radius: 8px;
+  padding: 7px 12px 7px 36px;
+  font-size: 12.5px;
+  color: #374151;
+  outline: none;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.sb-search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.sb-search-input:focus {
+  border-color: #0B4A3D;
+  box-shadow: 0 0 0 2px rgba(11, 74, 61, 0.12);
+}
+
+.dark .sb-search-input {
+  color: #E2E8F0;
+}
+
+/* --- Navigation (the module menu owns its vertical scrolling) ------------- */
+.sb-nav {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 6px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* SALES is a static section heading above the four toggleable branches. */
+.sb-sales-root {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sb-sales-heading {
+  padding: 12px 14px 8px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--sb-border);
+}
+
+.sb-sales-heading-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9CA3AF;
+}
+
+.sb-sales-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb-nav-item {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px 9px 12px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #4B5563;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.sb-nav-item:hover {
+  background: var(--sb-hover);
+  color: #0B4A3D;
+}
+
+.sb-nav-item.is-active {
+  background: var(--sb-active-bg);
+  color: var(--sb-active-text);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(11, 74, 61, 0.25);
+}
+
+/* Subtle active indicator bar — sits inside the active pill so it can
+   never be clipped by the sidebar's scroll container */
+.sb-nav-item.is-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 55%;
+  border-radius: 0 3px 3px 0;
+  background: #fff;
+  opacity: 0.9;
+}
+
+/* Parent module group stays highlighted while any child page is active */
+.sb-nav-item.is-parent-active {
+  background: var(--sb-purchase-active);
+  color: var(--sb-purchase-primary);
+  font-weight: 600;
+}
+
+.sb-nav-item.is-parent-active .sb-group-chevron {
+  color: currentColor;
+}
+
+.sb-group--purchase > .sb-nav-item.is-parent-active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 55%;
+  border-radius: 0 3px 3px 0;
+  background: var(--sb-purchase-primary);
+}
+
+/* Circular notification indicator — Purchase orange */
+@keyframes sb-notif-wave {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.12); }
+}
+
+.sb-notif-circle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  background: #D97706;
+  margin-left: auto;
+  flex-shrink: 0;
+  animation: sb-notif-wave 2s ease-in-out infinite;
+}
+
+.sb-notif-circle:hover {
+  animation-play-state: paused;
+  filter: brightness(1.08);
+}
+
+/* Zero state — the Pending Approvals total always shows a number, but an empty
+   queue must not pulse like a new notification. */
+.sb-notif-circle.is-zero {
+  background: #94A3B8;
+  animation: none;
+}
+
+.sb-notif-count {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.sb-notif-circle--one .sb-notif-count  { font-size: 11px; }
+.sb-notif-circle--two .sb-notif-count  { font-size: 9.5px; }
+.sb-notif-circle--wide .sb-notif-count { font-size: 7px; }
+
+/* Collapsed sidebar — smaller circle */
+.app-sidebar:not(.expanded) .sb-notif-circle {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+}
+
+.app-sidebar:not(.expanded) .sb-notif-circle .sb-notif-count { font-size: 8px; }
+.app-sidebar:not(.expanded) .sb-notif-circle--one .sb-notif-count  { font-size: 8.5px; }
+.app-sidebar:not(.expanded) .sb-notif-circle--two .sb-notif-count  { font-size: 7px; }
+.app-sidebar:not(.expanded) .sb-notif-circle--wide .sb-notif-count { font-size: 5.5px; }
+
+/* Legacy alias — any remaining .sb-bell refs still render */
+.sb-bell { display: none; }
+
+/* Disabled / coming-soon items */
+.sb-nav-item.is-disabled,
+.sb-subitem.is-disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.sb-nav-item--child {
+  width: calc(100% - 40px);
+  margin-left: 40px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.sb-nav-item--child:hover {
+  color: #0B4A3D;
+  background: var(--sb-hover);
+}
+
+.sb-nav-item--child .sb-group-chevron {
+  color: #9CA3AF;
+}
+
+.sb-nav-item.is-disabled:hover,
+.sb-subitem.is-disabled:hover {
+  background: transparent;
+  color: var(--sb-text-sub);
+}
+
+.sb-subitem.is-disabled {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sb-coming-soon-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: #fef3c7;
+  color: #d97706;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.dark .sb-coming-soon-badge {
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+}
+
+.app-sidebar:not(.expanded) .sb-coming-soon-badge {
+  display: none;
+}
+
+.app-sidebar:not(.expanded) .sb-nav-item {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+/* Labels: hidden when collapsed, fade+slide in when expanded */
+.sb-label {
+  display: none;
+}
+
+.app-sidebar.expanded .sb-label {
+  display: block;
+  animation: sb-fade-in var(--sidebar-transition) ease;
+}
+
+.sb-label--flex {
+  flex: 1;
+  text-align: left;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Group chevron */
+.sb-group-chevron {
+  width: 16px;
+  height: 16px;
+  color: #9CA3AF;
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+.sb-group-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.app-sidebar:not(.expanded) .sb-group-chevron {
+  display: none;
+}
+
+/* Accordion arrow hit area */
+.sb-chevron-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: background-color 150ms ease;
+}
+
+.sb-chevron-btn:hover {
+  background: var(--sb-chevron-hover);
+}
+
+.app-sidebar:not(.expanded) .sb-chevron-btn {
+  display: none;
+}
+
+/* Collapsible submenu — animated via grid rows */
+.sb-group-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--sidebar-transition) ease, opacity var(--sidebar-transition) ease;
+}
+
+.sb-group-children-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.sb-group[data-open="true"] > .sb-group-children {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.app-sidebar:not(.expanded) .sb-group-children {
+  display: none;
+}
+
+.sb-subitem {
+  display: block;
+  /* The 40px indent must come OUT of the width, exactly as
+     .sb-nav-item--child does: with `width: 100%` every sub-item was 40px
+     wider than `.sb-group-children-inner` (overflow: hidden), so its
+     right-hand 40px — where the pending-count badge sits — was clipped and
+     never painted. The visible box is unchanged for rows without a badge. */
+  width: calc(100% - 40px);
+  text-align: left;
+  padding: 7px 12px;
+  margin-left: 40px;
+  border-radius: 7px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #6B7280;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.sb-subitem:hover {
+  color: #0B4A3D;
+  background: var(--sb-hover);
+}
+
+/* Third navigation level */
+.sb-subitem--level3 {
+  width: calc(100% - 56px);
+  margin-left: 56px;
+  padding: 6px 12px;
+  border-left: 2px solid var(--sb-border);
+  border-radius: 0 6px 6px 0;
+  font-size: 11.5px;
+  color: #9CA3AF;
+}
+
+.sb-subitem--level3:hover {
+  color: #0B4A3D;
+}
+
+/* Submenu label + pending-approval bell */
+.sb-subitem-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sb-subitem-inner .sb-bell {
+  margin-left: auto;
+}
+
+.sb-subitem.is-active {
+  color: #0B4A3D;
+  font-weight: 700;
+  background: var(--sb-accent-soft);
+}
+
+/* --- Nested sub-group (3rd level menu, e.g. Purchase categories) ---------- */
+.sb-subgroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.sb-subitem--group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sb-subitem-label {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sb-subgroup-chevron {
+  width: 16px;
+  height: 16px;
+  color: #9CA3AF;
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+.sb-subgroup-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.sb-subgroup-children {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--sidebar-transition) ease, opacity var(--sidebar-transition) ease;
+}
+
+.sb-subgroup-children-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.sb-subgroup[data-open="true"] .sb-subgroup-children {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.app-sidebar:not(.expanded) .sb-subgroup-children,
+.app-sidebar:not(.expanded) .sb-subgroup-chevron {
+  display: none;
+}
+
+.sb-leaf {
+  display: block;
+  width: auto;
+  text-align: left;
+  padding: 6px 10px 6px 12px;
+  margin-left: 36px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--sb-text);
+  white-space: normal;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.sb-leaf:hover {
+  color: #0B4A3D;
+  background: var(--sb-hover);
+}
+
+.sb-leaf.is-active {
+  color: #0B4A3D;
+  font-weight: 700;
+  background: var(--sb-accent-soft);
+}
+
+/* Leaf label takes the remaining width; wraps, never truncates */
+.sb-leaf-label {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+/* Compact notification badge for leaf items */
+.sb-count-badge {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  background: var(--sb-purchase-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.dark .sb-count-badge {
+  background: #136754;
+  color: #fff;
+}
+
+.sb-count-badge.is-overdue {
+  background: #DC2626;
+  color: #fff;
+  animation: sb-badge-pulse 2s ease-in-out infinite;
+}
+
+.dark .sb-count-badge.is-overdue {
+  background: #EF4444;
+  color: #fff;
+}
+
+.sb-count-badge.is-pending {
+  background: #D97706;
+  color: #fff;
+  animation: sb-badge-pending-pulse 1.5s ease-in-out infinite;
+}
+
+.dark .sb-count-badge.is-pending {
+  background: #FBBF24;
+  color: #fff;
+}
+
+@keyframes sb-badge-pending-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.35);
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
+    box-shadow: 0 0 0 6px rgba(217, 119, 6, 0);
+  }
+}
+
+@keyframes sb-badge-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+/* Purchase module section -----------------------------------------------
+ * Purchase deliberately uses the SHARED sidebar metrics above — the same
+ * ones Sales, Marketing and Production render with — so every module's
+ * submenu rows line up identically (indent, icon, font size/weight, row
+ * height, active background and radius).
+ *
+ * This block used to carry a `#sb-purchase` override set (16px indent,
+ * 14px text, 36px rows, 8px radius, colour-tinted hover/active with a 3px
+ * left bar) that made the Purchase rows visibly wider, taller and larger
+ * than the Sales rows next to them. It is intentionally gone: do not
+ * reintroduce per-module submenu geometry here, adjust the base rules
+ * instead so all modules stay aligned.
+ *
+ * The --sb-purchase-* colour variables (top of this file) are unchanged
+ * and still feed the shared --sb-hover / --sb-active-bg tokens.
+ */
+
+/* --- Bottom utility controls ---------------------------------------------- */
+.sb-bottom {
+  flex-shrink: 0;
+  padding: 8px 6px;
+  border-top: 1px solid var(--sb-border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sb-bottom .sb-nav-item {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6B7280;
+  padding: 8px 12px;
+}
+
+.sb-bottom .sb-nav-item + .sb-nav-item {
+  border-top: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.sb-bottom .sb-nav-item:hover {
+  color: #0B4A3D;
+}
+
+.sb-bottom .sb-nav-item.is-active {
+  background: var(--sb-active-bg);
+  color: var(--sb-active-text);
+  font-weight: 700;
+}
+
+.sb-nav-item--danger:hover {
+  background: rgba(220, 38, 38, 0.08);
+  color: #DC2626;
+}
+
+/* --- Tooltip (collapsed only) --------------------------------------------- */
+.sb-tooltip {
+  position: fixed;
+  transform: translateY(-50%);
+  z-index: 90;
+  background: var(--sb-tooltip-bg);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 7px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  animation: sb-tooltip-in 160ms ease 60ms forwards;
+}
+
+/* --- Topbar ----------------------------------------------------------------
+   The global navbar stays pinned so every page header can dock directly
+   underneath it (see styles/sticky-page-header.css). z-index 36 is above the
+   pinned page headers (32) and below the mobile drawer/backdrop (40/50), so
+   the drawer still covers the whole screen on small viewports. */
+   .app-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-inline: 20px;
+  background: linear-gradient(
+  105deg,
+  #C7E7DF 0%,
+  #E6F0E8 35%,
+  #FFF8E7 68%,
+  #F3E4C1 100%
+  );
+  border-bottom: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 36;
+}
+
+.dark .app-topbar {
+  background: #1A1A2E;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.app-topbar-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.dark .app-topbar-title {
+  color: #E2E8F0;
+}
+
+.app-topbar-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topbar-icon-btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #6B7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.topbar-icon-btn:hover {
+  background: #F3F4F6;
+  color: #0B4A3D;
+  border-color: #E5E7EB;
+}
+
+/* The Calendar control is a link (target="_blank") styled as an icon button, so
+   it must not inherit the anchor underline. */
+a.topbar-icon-btn {
+  text-decoration: none;
+}
+
+/* Calendar icon + the Today Allocated count. The button widens by exactly the
+   badge and its gap; height, radius, colours and hover stay the shared
+   .topbar-icon-btn ones, so the icon keeps its place and its behaviour — the
+   whole pill is still the same one link that opens the Calendar. */
+.topbar-calendar-btn {
+  width: auto;
+  min-width: 36px;
+  padding: 0 8px;
+  gap: 6px;
+}
+
+.topbar-calendar-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 5px;
+  border-radius: 8px;
+  background: rgba(11, 74, 61, 0.12);
+  color: #0B4A3D;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.dark .topbar-calendar-count {
+  background: rgba(255, 255, 255, 0.14);
+  color: #F3F4F6;
+}
+
+.dark .topbar-icon-btn {
+  color: #9CA3AF;
+}
+
+.dark .topbar-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #F3F4F6;
+}
+
+.topbar-notif-badge {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 8px;
+  background: #D97706;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 2px solid #fff;
+}
+
+.dark .topbar-notif-badge {
+  border-color: #1A1A2E;
+}
+
+.topbar-sep {
+  width: 1px;
+  height: 22px;
+  background: #E5E7EB;
+  margin: 0 4px;
+}
+
+.dark .topbar-sep {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Topbar user dropdown */
+.topbar-user-wrap {
+  position: relative;
+}
+
+.topbar-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px 5px 6px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.topbar-user-btn:hover {
+  background: #F3F4F6;
+  border-color: #E5E7EB;
+}
+
+.topbar-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #0B4A3D;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.topbar-user-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.dark .topbar-user-name {
+  color: #E2E8F0;
+}
+
+.topbar-user-chevron {
+  width: 13px;
+  height: 13px;
+  color: #9CA3AF;
+  transition: transform 150ms ease;
+}
+
+.topbar-user-btn[aria-expanded="true"] .topbar-user-chevron {
+  transform: rotate(180deg);
+}
+
+.topbar-user-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  width: 200px;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  z-index: 90;
+  animation: po-fade-in 0.15s ease;
+}
+
+.dark .topbar-user-menu {
+  background: #1A1A2E;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.topbar-user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #374151;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+
+.topbar-user-menu-item:hover {
+  background: #EDF7F4;
+  color: #0B4A3D;
+}
+
+.topbar-user-menu-item svg {
+  width: 15px;
+  height: 15px;
+  color: #6B7280;
+}
+
+.topbar-user-menu-item:hover svg {
+  color: #0B4A3D;
+}
+
+.topbar-user-menu-item.text-danger {
+  color: #DC2626;
+}
+
+.topbar-user-menu-item.text-danger:hover {
+  background: #FEF2F2;
+  color: #DC2626;
+}
+
+.topbar-user-menu-item.text-danger svg {
+  color: #DC2626;
+}
+
+.dark .topbar-user-menu-item {
+  color: #E2E8F0;
+}
+
+.dark .topbar-user-menu-item:hover {
+  background: rgba(11, 74, 61, 0.2);
+  color: #F3F4F6;
+}
+
+/* --- Keyframes ------------------------------------------------------------- */
+@keyframes sb-fade-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sb-tooltip-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* --- Reduced motion -------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .app-sidebar,
+  .app-sidebar--mobile,
+  .sb-backdrop,
+  .sb-label,
+  .sb-group-children,
+  .sb-group-chevron,
+  .sb-profile-info {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* @keyframes po-fade-in — topbar dropdown */
+@keyframes po-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,497 @@
+/* =====================================================================
+   Packing List A4 document — base layer.
+   ---------------------------------------------------------------------
+   The on-screen preview, the printed output and the PDF export share this
+   one stylesheet (SalesDocumentDesign captures / prints the same
+   #salesdoc-sheet DOM), so they stay pixel-identical.
+
+   The document (PackingListDocument) renders NAMED sections — masthead,
+   meta (document references), exporter, buyer/consignee, logistics totals,
+   status, commercial details, shipment, destination & terms, remarks,
+   terms, packages, items, declaration, signature, attachments, footer —
+   inside one CSS grid. packing-list-templates.css then gives each of the
+   15 Packing List templates its own `grid-template-areas` composition,
+   typography, cards, borders, tables, logistics summary, declaration,
+   signature and footer.
+
+   The letterhead stays a direct child of the sheet (above this grid) so
+   the existing print / PDF letterhead repetition keeps working. This file
+   only styles the shared base; print/PDF safety rules live in
+   sales-document-design-print.css.
+   ===================================================================== */
+
+.packing-list-doc {
+  --pl-ink: #17202a;
+  --pl-muted: #64707c;
+  --pl-faint: #9aa5b1;
+  --pl-rule: #d7dde4;
+  --pl-accent: #17365d;
+  --pl-accent-2: #b08d3f;
+  --pl-soft: #f3f6f9;
+  --pl-bg: #ffffff;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  color: var(--pl-ink);
+  font-size: 10px;
+  line-height: 1.5;
+  background: var(--pl-bg);
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+  gap: 0 5mm;
+  align-items: start;
+  padding: 2mm 1mm;
+}
+
+.packing-list-doc * {
+  box-sizing: border-box;
+}
+
+/* ---------- Grid area assignment (shared by every template) ---------- */
+.packing-list-doc .pl-masthead { grid-area: mast; }
+.packing-list-doc .pl-meta { grid-area: meta; }
+.packing-list-doc .pl-exporter { grid-area: exp; }
+.packing-list-doc .pl-buyer { grid-area: buyer; }
+.packing-list-doc .pl-totals { grid-area: totals; }
+.packing-list-doc .pl-status { grid-area: status; }
+.packing-list-doc .pl-commercial { grid-area: comm; }
+.packing-list-doc .pl-shipment { grid-area: ship; }
+.packing-list-doc .pl-destination { grid-area: dest; }
+.packing-list-doc .pl-remarks { grid-area: remarks; }
+.packing-list-doc .pl-terms { grid-area: terms; }
+.packing-list-doc .pl-packages { grid-area: pack; }
+.packing-list-doc .pl-items { grid-area: items; }
+.packing-list-doc .pl-declaration { grid-area: decl; }
+.packing-list-doc .pl-signature { grid-area: sig; }
+.packing-list-doc .pl-attachments { grid-area: att; }
+.packing-list-doc .pl-footer { grid-area: foot; }
+
+/* Timeline is a timeline-shipment-only device — hidden everywhere else so
+   it never auto-places into another template's grid. */
+.packing-list-doc .pl-timeline {
+  display: none;
+}
+
+/* ---------- Sections ---------- */
+.packing-list-doc .pl-sec {
+  min-width: 0;
+  margin-bottom: 4mm;
+}
+
+.packing-list-doc .pl-sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4mm;
+  margin-bottom: 2mm;
+}
+
+.packing-list-doc .pl-sec-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc .pl-sec-icon {
+  width: 3mm;
+  height: 3mm;
+  flex: 0 0 auto;
+}
+
+.packing-list-doc .pl-sec-sub {
+  font-size: 7.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--pl-muted);
+}
+
+.packing-list-doc .pl-sec-body {
+  min-width: 0;
+}
+
+/* ---------- Typography primitives ---------- */
+.packing-list-doc .pl-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--pl-ink);
+}
+
+.packing-list-doc .pl-addr {
+  font-size: 9.5px;
+  color: var(--pl-muted);
+  margin-top: 1.5px;
+  white-space: pre-wrap;
+}
+
+.packing-list-doc .pl-extra {
+  font-size: 9px;
+  color: var(--pl-muted);
+  margin-top: 1.5px;
+}
+
+.packing-list-doc .pl-sub-head {
+  font-size: 7px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--pl-faint);
+  border-bottom: 1px solid var(--pl-rule);
+  padding-bottom: 1px;
+  margin: 2.5mm 0 1.5mm;
+}
+
+.packing-list-doc .pl-contact-lines {
+  margin-top: 2.5px;
+}
+
+.packing-list-doc .pl-contact-line {
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+  font-size: 9px;
+  color: var(--pl-muted);
+  padding: 1px 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc .pl-contact-lbl {
+  font-size: 7px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  flex: 0 0 12mm;
+  color: var(--pl-faint);
+}
+
+.packing-list-doc .pl-contact-val {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* ---------- Label / value rows ---------- */
+.packing-list-doc .pl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4mm;
+  padding: 1.5px 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc .pl-row:last-child {
+  border-bottom: none;
+}
+
+.packing-list-doc .pl-lbl {
+  font-size: 7.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--pl-muted);
+  flex: 0 0 auto;
+  padding-top: 2px;
+}
+
+.packing-list-doc .pl-val {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--pl-ink);
+  flex: 1 1 auto;
+  text-align: right;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+
+.packing-list-doc .pl-val--wrap {
+  display: block;
+  text-align: left;
+}
+
+/* ---------- Document reference lines (meta) ---------- */
+.packing-list-doc .pl-ref-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4mm;
+  padding: 1.5px 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc .pl-ref-line:last-child {
+  border-bottom: none;
+}
+
+.packing-list-doc .pl-ref-line .pl-val {
+  font-weight: 700;
+}
+
+/* ---------- Masthead ---------- */
+.packing-list-doc .pl-masthead {
+  margin-bottom: 4mm;
+}
+
+.packing-list-doc .pl-doc-title {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .2em;
+  color: var(--pl-ink);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ---------- Logistics totals ---------- */
+.packing-list-doc .pl-log-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4mm;
+  padding: 1.5px 0;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc .pl-log-row:last-child {
+  border-bottom: none;
+}
+
+.packing-list-doc .pl-log-val {
+  font-weight: 800;
+  font-size: 10.5px;
+}
+
+.packing-list-doc .pl-status-val {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--pl-accent);
+  text-transform: capitalize;
+}
+
+/* ---------- Tables (packages + items) ---------- */
+.packing-list-doc .pl-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.packing-list-doc .pl-table th,
+.packing-list-doc .pl-table td {
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.packing-list-doc .pl-table th {
+  padding: 2.5mm 2mm;
+  font-size: 7.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  text-align: left;
+  vertical-align: bottom;
+  line-height: 1.35;
+  color: var(--pl-ink);
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc .pl-table td {
+  padding: 2mm;
+  font-size: 9.5px;
+  vertical-align: top;
+  line-height: 1.4;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc .pl-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.packing-list-doc .pl-cell-num,
+.packing-list-doc .pl-col-num {
+  text-align: right;
+}
+
+.packing-list-doc .pl-cell-total {
+  font-weight: 800;
+}
+
+.packing-list-doc .pl-cell-total-lbl {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.packing-list-doc .pl-total-row td {
+  border-top: 1.5px solid var(--pl-accent);
+}
+
+.packing-list-doc .pl-empty {
+  padding: 6mm 2mm;
+  text-align: center;
+  color: var(--pl-faint);
+}
+
+.packing-list-doc .pl-desc-main {
+  font-weight: 700;
+}
+
+.packing-list-doc .pl-desc-sub {
+  font-size: 8.5px;
+  color: var(--pl-muted);
+}
+
+.packing-list-doc .pl-add-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5mm;
+}
+
+/* ---------- Declaration ---------- */
+.packing-list-doc .pl-decl-text {
+  font-size: 9.5px;
+  line-height: 1.55;
+  color: var(--pl-ink);
+  white-space: pre-wrap;
+}
+
+.packing-list-doc .pl-decl-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 4mm;
+  margin-top: 2mm;
+  padding-top: 1.5mm;
+  border-top: 1px solid var(--pl-rule);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--pl-muted);
+}
+
+/* ---------- Terms ---------- */
+.packing-list-doc .pl-terms-text {
+  font-size: 9.5px;
+  color: var(--pl-ink);
+  white-space: pre-wrap;
+  line-height: 1.55;
+}
+
+/* ---------- Signature ---------- */
+.packing-list-doc .pl-signature-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.packing-list-doc .pl-stamp {
+  max-height: 20mm;
+  max-width: 100%;
+  object-fit: contain;
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc .pl-stamp-placeholder {
+  border: 2px dashed var(--pl-rule);
+  border-radius: 2mm;
+  color: var(--pl-faint);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6mm 8mm;
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc .pl-sign-label {
+  font-size: 7.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--pl-muted);
+  margin-top: 1.5mm;
+}
+
+.packing-list-doc .pl-sign-rule {
+  width: 100%;
+  border-top: 1px solid var(--pl-rule);
+  margin-top: 1.5mm;
+}
+
+.packing-list-doc .pl-sign-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 4mm;
+  width: 100%;
+  margin-top: 1.5mm;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--pl-muted);
+}
+
+/* ---------- Attachments ---------- */
+.packing-list-doc .pl-attachment {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  border: 1px solid var(--pl-rule);
+  background: var(--pl-soft);
+  border-radius: 1.5mm;
+  padding: 1mm 2mm;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--pl-muted);
+}
+
+/* ---------- Footer ---------- */
+.packing-list-doc .pl-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4mm;
+  margin-top: 3mm;
+  padding: 2mm 3mm;
+  border-top: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc .pl-footer span {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--pl-muted);
+}
+
+/* ---------- Edit-mode affordances ---------- */
+.packing-list-doc .pl-row input,
+.packing-list-doc .pl-row select,
+.packing-list-doc .pl-row textarea,
+.packing-list-doc .pl-signature input,
+.packing-list-doc .pl-signature select,
+.packing-list-doc .pl-signature textarea,
+.packing-list-doc .pl-cell input {
+  background: #fff;
+  border: 1px solid var(--pl-rule);
+  padding: 1.5px 2.5px;
+  border-radius: 2px;
+  font-size: 9.5px;
+}

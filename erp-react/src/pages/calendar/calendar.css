@@ -1,0 +1,1329 @@
+/* ==========================================================================
+   Standalone Calendar module (route /calendar)
+   --------------------------------------------------------------------------
+   The page renders OUTSIDE the ERP shell (no sidebar, no topbar), so it owns
+   its own page padding and scrolling.
+
+   Colours come from the app's semantic tokens (bg-app / surface / ink / line /
+   card-shadow), which already have a dark-mode counterpart in index.css, so the
+   page follows the existing Dark Mode toggle without a second theme system.
+   Per-category colours arrive as inline custom properties (--cal-accent,
+   --cal-tint, --cal-tint-dark) set by the event chip itself.
+   ========================================================================== */
+
+.cal-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 20px 30px;
+  /* The ERP's own page background — the very same token body and `.app-shell`
+     paint — so the Calendar matches the other modules in light and dark mode
+     without a second background system of its own. */
+  background: var(--bg-app);
+  color: var(--ink);
+  /* Grid surfaces use the standard card token, like every other ERP surface. */
+  --cal-canvas: var(--surface);
+}
+
+/* ------------------------------------------------------------------ *
+ * Calendar-only wheel zoom
+ * ------------------------------------------------------------------
+ * The canvas is scaled with `transform`, which the compositor applies on its own
+ * thread: no style recalc, no layout, and no repaint of the grid happens per
+ * frame — that is what keeps a continuous wheel gesture smooth. (CSS `zoom`,
+ * which this used before, re-ran layout for the whole grid on every step.)
+ *
+ * A transform is invisible to layout, so the zoomed box has to be reserved by
+ * hand: the spacer carries the scaled size (written per frame by the page) and
+ * the canvas sits inside it, scaled from the top-left corner at its natural
+ * width. That is also what keeps the page from growing sideways at high zoom —
+ * the pan element below absorbs the overflow instead. `will-change` is applied
+ * only while a gesture is actually running (`.is-zooming`), so the canvas is
+ * rasterised crisply again as soon as the gesture stops.
+ * ------------------------------------------------------------------ */
+.cal-zoom-pan {
+  position: relative;
+  /* Auto rather than visible so the zoomed-in calendar is panned here instead
+     of widening the page; the block axis is left to the page's own scroll. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  /* The page is a flex column — never shrink the zoom area to fit the viewport,
+     or a zoomed-in calendar would be panned inside a viewport-tall box. */
+  flex: 0 0 auto;
+}
+
+.cal-zoom-spacer {
+  position: relative;
+}
+
+.cal-zoom-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Replaced with the measured natural width on the first frame; until then it
+     matches the pan exactly, so the calendar never flashes at a wrong size. */
+  width: 100%;
+  transform-origin: 0 0;
+}
+
+.cal-zoom-canvas.is-zooming {
+  will-change: transform;
+}
+
+/* Form controls do not inherit the app font by default — the page's own
+   controls (and the event dialog rendered inside it) do. */
+.cal-page button,
+.cal-page input,
+.cal-page select,
+.cal-page textarea {
+  font-family: inherit;
+}
+
+/* ---------- Header ---------- */
+
+.cal-header {
+  /* Three parts: title on the left, the month navigation in its OWN centre
+     column, and the action cluster on the right. Because the two outer columns
+     are equal `1fr`, the middle column's centre is the toolbar's centre at every
+     width — the title on the left can never push the month group off-centre. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+}
+
+.cal-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  justify-self: start;
+}
+
+/* Calendar icon + the Today Allocated count, held together so the count sits
+   directly beside the icon instead of in the toolbar's right-hand cluster. */
+.cal-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.cal-brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--purchase-primary-light, #E8F0EE);
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+/* Today Allocated — the count alone. Same toggle as before (it filters the grid
+   to today's still-pending events); only its label was dropped, so the
+   accessible name and title carry the meaning. */
+.cal-allocated-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 7px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.cal-allocated-count:hover {
+  background: var(--hover);
+  border-color: var(--line-strong);
+}
+
+.cal-allocated-count.is-active,
+.cal-allocated-count.is-active:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+.cal-title {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.cal-subtitle {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-self: center;
+  gap: 6px;
+}
+
+/* ---------- Live clock ----------
+ * Time only. The ring, cyan bloom, dotted texture, card background, border and
+ * shadow are gone, so the toolbar shows the live 12-hour time straight on the
+ * animated mint canvas. Nothing is painted behind the text, and the only thing
+ * that changes each second is the text itself.
+ * ------------------------------------------------------------------------- */
+.cal-clock {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  padding: 0 4px;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+
+.cal-clock-time {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  /* Tabular figures: the toolbar never twitches as the seconds change. */
+  font-variant-numeric: tabular-nums;
+  /* Deep green ink: readable on the light mint canvas behind it. */
+  color: #0b4a3d;
+}
+
+.dark .cal-clock-time {
+  color: #f1f5f9;
+}
+
+.cal-icon-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.cal-icon-btn:hover {
+  background: var(--hover);
+  color: var(--primary);
+  border-color: var(--line-strong);
+}
+
+.cal-period {
+  min-width: 172px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cal-period small {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cal-btn {
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+
+.cal-btn:hover {
+  background: var(--hover);
+  color: var(--primary);
+  border-color: var(--line-strong);
+}
+
+.cal-btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+.cal-btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+  color: #ffffff;
+}
+
+.cal-actions {
+  display: flex;
+  align-items: center;
+  /* Right-aligned in its own column; wrapping inside the column (rather than
+     spilling out of it) is what keeps the centred month group free of overlap. */
+  justify-self: end;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  min-width: 0;
+  gap: 10px;
+}
+
+/* Segmented Month / Week / Day control */
+.cal-seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.cal-seg-btn {
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.cal-seg-btn:hover {
+  color: var(--ink);
+}
+
+.cal-seg-btn.is-active {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: var(--card-shadow);
+}
+
+/* ---------- Category legend / filter row ---------- */
+
+.cal-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Role selector + category chips share the left-hand group, so the preview note
+   keeps its place at the right edge and the chips still wrap as one unit. */
+.cal-toolbar-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Compact labelled role control — same border, radius and type scale as the
+   category chips it sits beside, so it reads as part of the existing toolbar. */
+.cal-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 4px 0 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-3);
+}
+
+.cal-role-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.cal-role-select {
+  height: 20px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--hover);
+  color: var(--ink);
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cal-role-select:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.cal-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.cal-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, opacity 0.15s;
+}
+
+.cal-chip:hover {
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+/* A chip whose category is switched off keeps its colour but fades out. */
+.cal-chip.is-off {
+  opacity: 0.45;
+}
+
+.cal-chip.is-off .cal-chip-dot {
+  background: var(--ink-3) !important;
+}
+
+.cal-chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--cal-accent);
+  flex-shrink: 0;
+}
+
+.cal-chip-count {
+  font-weight: 600;
+  color: var(--ink-3);
+}
+
+.cal-note {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The allocated filter's status strip: a surface of its own so it reads as
+   feedback rather than as another decorative caption. */
+.cal-note-allocated {
+  align-self: flex-start;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--card-shadow);
+  color: var(--ink-2);
+}
+
+.cal-note-allocated .cal-note-dim {
+  color: var(--ink-3);
+}
+
+/* ---------- Shared surface ---------- */
+
+.cal-surface {
+  background: var(--cal-canvas);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.cal-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.cal-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 46px 20px;
+  text-align: center;
+  color: var(--ink-3);
+}
+
+.cal-empty-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-2);
+  color: var(--ink-3);
+}
+
+.cal-empty-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cal-empty-text {
+  font-size: 11px;
+  max-width: 340px;
+}
+
+/* ---------- Month view ---------- */
+
+.cal-month {
+  min-width: 720px;
+}
+
+.cal-month-head,
+.cal-month-week {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.cal-month-head {
+  border-bottom: 1px solid var(--line);
+  background: var(--cal-canvas);
+}
+
+.cal-month-head-cell {
+  padding: 9px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cal-month-head-cell.is-weekend {
+  color: var(--primary);
+}
+
+.cal-month-week {
+  border-bottom: 1px solid var(--line);
+}
+
+.cal-month-week:last-child {
+  border-bottom: none;
+}
+
+.cal-day {
+  min-height: 116px;
+  padding: 6px 6px 8px;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  transition: background 0.15s;
+  /* Deliberately transparent: the canvas tint shows through the grid, so the
+     day cells sit ON the calendar background instead of hiding it. */
+  background: transparent;
+}
+
+.cal-day:last-child {
+  border-right: none;
+}
+
+.cal-day:hover {
+  background: var(--hover);
+}
+
+.cal-day.is-weekend {
+  background: rgba(15, 23, 42, 0.014);
+}
+
+.cal-day.is-outside {
+  opacity: 0.45;
+}
+
+.cal-day.is-today {
+  background: var(--purchase-primary-light, #E8F0EE);
+}
+
+.cal-day-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  padding: 0 2px;
+}
+
+.cal-day-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-2);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.cal-day-num:hover {
+  background: var(--surface-3);
+  color: var(--ink);
+}
+
+.cal-day-num.is-today {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.cal-day-num.is-today:hover {
+  background: var(--primary-hover);
+  color: #ffffff;
+}
+
+.cal-day-add {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.cal-day:hover .cal-day-add,
+.cal-day-add:focus-visible {
+  opacity: 1;
+}
+
+.cal-day-add:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.cal-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.cal-day-more {
+  border: none;
+  background: transparent;
+  padding: 2px 4px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-3);
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.cal-day-more:hover {
+  background: var(--hover);
+  color: var(--primary);
+}
+
+/* ---------- Event chips ---------- */
+
+.cal-event {
+  --cal-tint-current: var(--cal-tint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-width: 0;
+  padding: 3px 6px;
+  border: none;
+  border-left: 3px solid var(--cal-accent);
+  border-radius: 6px;
+  background: var(--cal-tint-current);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.dark .cal-event {
+  --cal-tint-current: var(--cal-tint-dark);
+}
+
+.cal-event:hover {
+  filter: brightness(0.97);
+}
+
+.dark .cal-event:hover {
+  filter: brightness(1.25);
+}
+
+.cal-event-dot {
+  display: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--cal-accent);
+  flex: 0 0 auto;
+}
+
+.cal-event-time {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--cal-accent);
+  flex-shrink: 0;
+}
+
+.dark .cal-event-time {
+  color: var(--ink-2);
+}
+
+.cal-event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* A backend-derived (read-only) entry: the dashed edge says "this is not a
+   local booking" without changing its category colour or its layout. */
+.cal-event.is-erp {
+  border-left-style: dashed;
+}
+
+.cal-event-erp {
+  margin-left: auto;
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  color: var(--cal-accent);
+}
+
+.dark .cal-event-erp {
+  color: var(--ink-2);
+}
+
+/* Positioned block used by the week / day time grids */
+.cal-event-block {
+  position: absolute;
+  z-index: 1;
+  padding: 4px 7px;
+  border-radius: 7px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.cal-event-block .cal-event-title {
+  width: 100%;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+/* ---------- Week / Day time grid ---------- */
+
+.cal-time {
+  min-width: 760px;
+}
+
+/* The Day view renders one column inside a card, so it must not force the
+   week view's horizontal minimum. */
+.cal-time.is-single {
+  min-width: 0;
+}
+
+.cal-time-head {
+  display: grid;
+  border-bottom: 1px solid var(--line);
+  background: var(--cal-canvas);
+}
+
+.cal-time-head-cell {
+  padding: 8px 8px 7px;
+  border-left: 1px solid var(--line);
+  text-align: center;
+}
+
+.cal-time-head-cell:first-child {
+  border-left: none;
+}
+
+.cal-time-head-weekday {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cal-time-head-date {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-top: 1px;
+}
+
+.cal-time-head-cell.is-today .cal-time-head-date {
+  color: var(--primary);
+}
+
+/* All-day strip above the hour grid: entries whose source record has a date
+   but no usable time (ERP due dates) are drawn here rather than being given a
+   made-up hour. */
+.cal-time-allday {
+  display: grid;
+  border-bottom: 1px solid var(--line);
+  background: var(--cal-canvas);
+}
+
+.cal-time-allday-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6px 8px;
+  border-right: 1px solid var(--line);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cal-time-allday-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding: 5px 4px;
+  border-left: 1px solid var(--line);
+}
+
+.cal-time-allday-cell:first-of-type {
+  border-left: none;
+}
+
+.cal-time-body {
+  display: grid;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+.cal-rail {
+  position: relative;
+  border-right: 1px solid var(--line);
+}
+
+.cal-rail-hour {
+  height: var(--cal-hour);
+  padding: 2px 8px 0 0;
+  text-align: right;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-3);
+  transform: translateY(-6px);
+}
+
+.cal-col {
+  position: relative;
+  border-left: 1px solid var(--line);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--line) 0,
+    var(--line) 1px,
+    transparent 1px,
+    transparent var(--cal-hour)
+  );
+}
+
+.cal-col:first-of-type {
+  border-left: none;
+}
+
+.cal-col.is-today {
+  background-color: rgba(11, 74, 61, 0.035);
+}
+
+.dark .cal-col.is-today {
+  background-color: rgba(19, 103, 84, 0.16);
+}
+
+.cal-col.is-weekend {
+  background-color: rgba(15, 23, 42, 0.014);
+}
+
+.cal-col-inner {
+  position: relative;
+}
+
+/* Invisible click target per hour: clicking a slot starts an event there. */
+.cal-slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--cal-hour);
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.cal-slot:hover {
+  background: var(--hover);
+}
+
+/* ---------- Day view ---------- */
+
+.cal-dayview {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 14px;
+  align-items: start;
+}
+
+.cal-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+}
+
+.cal-agenda-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cal-agenda-item {
+  display: flex;
+  gap: 9px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--cal-accent);
+  border-radius: 10px;
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.cal-agenda-item:hover {
+  background: var(--hover);
+}
+
+.cal-agenda-time {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--cal-accent);
+  white-space: nowrap;
+  padding-top: 1px;
+}
+
+.dark .cal-agenda-time {
+  color: var(--ink-2);
+}
+
+.cal-agenda-body {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cal-agenda-event {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cal-agenda-meta {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+/* ---------- Event form (inside the shared Modal) ---------- */
+
+.cal-input,
+.cal-select,
+.cal-textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--input-bg);
+  color: var(--ink);
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.cal-input:focus,
+.cal-select:focus,
+.cal-textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.12);
+}
+
+.cal-input.has-error,
+.cal-select.has-error,
+.cal-textarea.has-error {
+  border-color: #f43f5e;
+}
+
+.cal-textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.cal-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cal-form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid #fecdd3;
+  background: #fff1f2;
+  color: #9f1239;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.dark .cal-form-error {
+  border-color: rgba(244, 63, 94, 0.4);
+  background: rgba(244, 63, 94, 0.14);
+  color: #fda4af;
+}
+
+.cal-danger-btn {
+  background: transparent;
+  border-color: #fecdd3;
+  color: #be123c;
+}
+
+.cal-danger-btn:hover {
+  background: #fff1f2;
+  border-color: #fda4af;
+  color: #9f1239;
+}
+
+.dark .cal-danger-btn {
+  border-color: rgba(244, 63, 94, 0.4);
+  color: #fda4af;
+}
+
+.dark .cal-danger-btn:hover {
+  background: rgba(244, 63, 94, 0.14);
+}
+
+.cal-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.cal-modal-footer-right {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- Read-only ERP entry dialog ---------- */
+
+.cal-erp-readonly {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+
+.cal-erp-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cal-erp-module {
+  align-self: flex-start;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border-left: 3px solid var(--cal-accent);
+  background: var(--cal-tint);
+  color: var(--cal-accent);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.dark .cal-erp-module {
+  background: rgba(148, 163, 184, 0.16);
+  color: var(--ink-2);
+}
+
+.cal-erp-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.cal-erp-meta {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.cal-erp-meta > div {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+}
+
+.cal-erp-meta dt {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.cal-erp-meta dd {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.cal-erp-note {
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  margin: 2px 0 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.cal-erp-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.cal-note-erp {
+  flex-wrap: wrap;
+}
+
+.cal-note-error {
+  color: var(--ink-2);
+}
+
+/* ---------- Responsive ---------- */
+
+/* Below this width the action cluster no longer fits in the right-hand `1fr`
+   column next to a truly centred month group, so the toolbar restructures into
+   two rows instead of wrapping its buttons: title + actions on the first row,
+   the month group centred on the second. 1700px is the first width where the
+   whole cluster (Today · clock · view selector · Add Event)
+   fits beside the centred navigation with room to spare; just below it a single
+   row would have to wrap inside its own column. */
+@media (max-width: 1700px) {
+  /* Tighter cluster to match: the period gives back some width and the gaps
+     close slightly. The clock is time-only now, so it needs no special case. */
+  .cal-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    row-gap: 8px;
+  }
+
+  .cal-brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .cal-actions {
+    grid-column: 2;
+    grid-row: 1;
+    gap: 8px;
+  }
+
+  .cal-nav {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+  }
+
+  /* The period keeps its one-line form while giving back the width the clock
+     and the view controls need to stay on the same row. */
+  .cal-period {
+    min-width: 150px;
+    font-size: 12px;
+  }
+
+  .cal-seg-btn {
+    padding: 5px 10px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cal-dayview {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* At this width the cluster is too wide to share a row with the title (the
+     title column collapsed to almost nothing and the two boxes touched), so the
+     toolbar stacks: title, then the action cluster across the full width, then
+     the month navigation centred underneath. */
+  .cal-header {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 10px;
+  }
+
+  .cal-brand {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .cal-actions {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: stretch;
+    justify-content: flex-start;
+  }
+
+  .cal-nav {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: center;
+  }
+
+}
+
+@media (max-width: 720px) {
+  .cal-page {
+    padding: 14px 12px 24px;
+  }
+  .cal-header {
+    padding: 12px 14px;
+  }
+  /* The month group stays a single centred unit on small screens — it is never
+     stretched or re-ordered out of the previous/next pair. */
+  .cal-period {
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  /* A month cell is too narrow for titles, so the chips collapse to their
+     category colour and the day number opens the readable Day view instead. */
+  .cal-month {
+    min-width: 0;
+  }
+  .cal-day {
+    min-height: 78px;
+    padding: 4px 4px 6px;
+  }
+  .cal-event {
+    border-left-width: 0;
+    background: transparent;
+    padding: 2px;
+    justify-content: center;
+    gap: 3px;
+  }
+  .cal-event-dot {
+    display: inline-block;
+  }
+  .cal-event-time,
+  .cal-event-title {
+    display: none;
+  }
+  .cal-day-more {
+    font-size: 9px;
+  }
+}
+
+/* Touch devices have no hover, so the per-day add shortcut stays visible. */
+@media (hover: none) {
+  .cal-day-add {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,96 @@
+/* RecordOpenPopover — clean popover for opening records */
+.record-open-popover {
+  position: fixed;
+  z-index: 2147483000;
+  background: var(--surface, #fff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+  min-width: 260px;
+  max-width: 300px;
+  overflow: hidden;
+  font-family: inherit;
+}
+
+.record-open-popover-header {
+  padding: 12px 16px 4px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.record-open-popover-label {
+  padding: 0 16px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #0B4A3D;
+}
+
+.record-open-popover-options {
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.record-open-popover-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.record-open-popover-option:hover {
+  background: #f0faf7;
+}
+
+.record-open-popover-icon {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #0B4A3D;
+}
+
+.record-open-popover-option-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.record-open-popover-option-label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.record-open-popover-option-desc {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.record-open-popover-footer {
+  padding: 8px 16px 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.record-open-popover-cancel {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.record-open-popover-cancel:hover {
+  background: #f1f5f9;
+}

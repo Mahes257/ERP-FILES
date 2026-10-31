@@ -1,0 +1,72 @@
+/* ============================================================
+   Bulk action bar — appears when rows are selected
+   ============================================================ */
+.pt-bulk-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #EAF7F3;
+  border: 1px solid #B8E0D2;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  margin-bottom: 0;
+}
+
+.pt-bulk-count {
+  font-size: var(--fs-body-lg, 13px);
+  font-weight: var(--fw-semibold, 600);
+  color: #075E54;
+  white-space: nowrap;
+}
+
+.pt-bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pt-bulk-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid #D1D5DB;
+  border-radius: 6px;
+  background: #FFFFFF;
+  font-size: var(--fs-body, 12px);
+  font-weight: var(--fw-medium, 500);
+  color: #102A2A;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.pt-bulk-btn:hover {
+  background: #F7F9FA;
+  border-color: #9CA3AF;
+}
+
+.pt-bulk-btn-danger {
+  color: #DC2626;
+  border-color: #FECACA;
+}
+
+.pt-bulk-btn-danger:hover {
+  background: #FEF2F2;
+  border-color: #F87171;
+}
+
+@media (max-width: 768px) {
+  .pt-bulk-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .pt-bulk-actions {
+    flex-wrap: wrap;
+  }
+}

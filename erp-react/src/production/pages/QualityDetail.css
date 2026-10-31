@@ -1,0 +1,510 @@
+/* ============================================================
+   Inspection detail page
+   ============================================================ */
+.qd-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  margin-bottom: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.qd-hero-top {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.qd-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.qd-id {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.qd-type {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: #f0f2f1;
+  color: #5b6b64;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.qd-product {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+/* ------------------------------------------------------------
+   Action row
+
+   The status actions carry the shared `.sf-action` class, but the sheet
+   that defines that box (ShopFloorRowActions.css) is only fetched when a
+   shop-floor board renders — so on a direct load of this page the actions
+   computed to `border: 0; border-radius: 0; background: transparent`, i.e.
+   plain icon+text. The whole box is therefore defined HERE, scoped to
+   `.qd-actions`, so the row is identical whether or not that sheet happens
+   to be in the document, and no shop-floor screen is affected.
+
+   Metrics match the app's standard button (`.btn`): 36px high, 8px radius,
+   `0 14px` padding, 6px icon gap, 600 weight — so the boxed status actions
+   and the secondary "View Work Order" button line up in one row.
+   ------------------------------------------------------------ */
+.qd-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.qd-actions .sf-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-sm, 8px);
+  background: #FFFFFF;
+  font-family: inherit;
+  font-size: var(--fs-body, 12px);
+  font-weight: var(--fw-semibold, 600);
+  line-height: 1;
+  color: #102A2A;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease, filter 0.15s ease;
+}
+.qd-actions .sf-action svg { flex: 0 0 auto; }
+.qd-actions .sf-action:focus-visible {
+  outline: 2px solid #075E54;
+  outline-offset: 2px;
+}
+
+/* success — Start Inspection / Mark Passed */
+.qd-actions .sf-action-start,
+.qd-actions .sf-action-complete {
+  color: #075E54;
+  border-color: #DCE8E4;
+  background: #EAF7F3;
+}
+.qd-actions .sf-action-start:hover,
+.qd-actions .sf-action-complete:hover {
+  background: #075E54;
+  border-color: #075E54;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(11, 74, 61, 0.22);
+}
+
+/* primary — Complete Inspection (the terminal action, so it is the filled
+   primary button; same treatment as the app's .btn-primary) */
+.qd-actions .sf-action-view {
+  color: #FFFFFF;
+  border-color: #0B4A3D;
+  background-image: linear-gradient(135deg, #136754 0%, #0B4A3D 55%, #083D34 100%);
+}
+.qd-actions .sf-action-view:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 4px 12px rgba(11, 74, 61, 0.28);
+}
+
+/* danger — Mark Failed */
+.qd-actions .sf-action-reject {
+  color: #C0392B;
+  border-color: #F5D2D2;
+  background: #FDEAEA;
+}
+.qd-actions .sf-action-reject:hover {
+  background: #C0392B;
+  border-color: #C0392B;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(192, 57, 43, 0.22);
+}
+
+/* warning / neutral — Put On Hold */
+.qd-actions .sf-action-hold {
+  color: #B45309;
+  border-color: #FDE68A;
+  background: #FFFBEB;
+}
+.qd-actions .sf-action-hold:hover {
+  background: #D97706;
+  border-color: #D97706;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.22);
+}
+
+/* info — Send to Packing */
+.qd-actions .sf-action-quality {
+  color: #2563EB;
+  border-color: #BFDBFE;
+  background: #EFF6FF;
+}
+.qd-actions .sf-action-quality:hover {
+  background: #2563EB;
+  border-color: #2563EB;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+}
+
+.qd-blocked-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border: 1px solid #f5d2d2;
+  border-radius: 8px;
+  background: #fdeaea;
+  color: #c0392b;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.qd-meta {
+  padding: 20px;
+  margin-bottom: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.qd-section-title {
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.qd-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.qd-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.qd-meta-item dt {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.qd-meta-item dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.qd-meta-item .qd-remarks {
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.qd-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.qd-history {
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.qd-history .qd-section-title {
+  margin-bottom: 12px;
+}
+
+/* ============================================================
+   QC Report / MTC / Final QC sections
+   ============================================================ */
+.qd-section {
+  padding: 20px;
+  margin-bottom: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.qd-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.qd-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.qd-section-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent, #075E54);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.qd-subsection-title {
+  margin: 18px 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Report / Final QC fields grid */
+.qd-report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.qd-report-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.qd-report-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--color-text-muted);
+}
+
+.qd-auto-fill-hint {
+  font-size: 10.5px;
+  color: var(--color-accent, #075E54);
+  font-style: italic;
+}
+
+/* Dimensional inspection table */
+.qd-dim-table {
+  min-width: 800px;
+}
+
+.qd-dim-input {
+  width: 100%;
+  min-width: 70px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  font-size: 12.5px;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.qd-dim-input:focus {
+  border-color: var(--color-accent, #075E54);
+  box-shadow: 0 0 0 3px rgba(23, 128, 84, 0.12);
+}
+
+.qd-add-row-btn {
+  margin-top: 10px;
+}
+
+/* MTC grid */
+.qd-mtc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.qd-mtc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.qd-mtc-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--color-text-muted);
+}
+
+/* Save bar */
+.qd-save-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.qd-saved-msg {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-accent, #075E54);
+}
+
+@media (max-width: 900px) {
+  .qd-columns {
+    grid-template-columns: 1fr;
+  }
+  .qd-report-grid {
+    grid-template-columns: 1fr;
+  }
+  .qd-mtc-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .qd-mtc-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   QC Form — sections inside the QualityForm modal
+   ============================================================ */
+.qc-form-section {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
+}
+
+.qc-form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.qc-form-subsection {
+  margin: 16px 0 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.qc-form-dim-table {
+  min-width: 750px;
+}
+
+.qc-dim-input {
+  width: 100%;
+  min-width: 65px;
+  height: 30px;
+  padding: 0 7px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface);
+  font-size: 12px;
+  color: var(--color-text);
+  outline: none;
+}
+
+.qc-dim-input:focus {
+  border-color: var(--color-accent, #075E54);
+  box-shadow: 0 0 0 3px rgba(23, 128, 84, 0.12);
+}
+
+.qc-form-add-row {
+  margin-top: 8px;
+}
+
+/* Work Order Item selector chips */
+.qc-item-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.qc-item-chip {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.qc-item-chip:hover {
+  border-color: var(--color-accent, #075E54);
+}
+
+.qc-item-chip.active {
+  border-color: var(--color-accent, #075E54);
+  background: rgba(23, 128, 84, 0.08);
+  color: var(--color-accent, #075E54);
+}
+
+.qc-item-chip-qty {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.qc-item-chip.active .qc-item-chip-qty {
+  color: var(--color-accent, #075E54);
+}

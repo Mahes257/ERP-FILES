@@ -1,0 +1,79 @@
+/* ============================================================
+   Report views — shared page-level styles
+   ============================================================ */
+.report-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.report-empty {
+  padding: 22px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+}
+
+/* Machine status chips */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chip::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.chip-running {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border-color: #cde6d8;
+}
+
+.chip-idle {
+  background: #fdf3e3;
+  color: #b06f1f;
+  border-color: #f3ddbb;
+}
+
+.chip-maint {
+  background: #e9f2fb;
+  color: #2f6fb0;
+  border-color: #d4e4f5;
+}
+
+/* Delay days indicator */
+.delay-days {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  font-weight: 700;
+  font-size: 12.5px;
+  color: var(--color-text);
+}
+
+.delay-days-over {
+  background: #fdeaea;
+  border-color: #f5d2d2;
+  color: #c0392b;
+}

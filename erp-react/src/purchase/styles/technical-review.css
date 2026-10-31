@@ -1,0 +1,71 @@
+/**
+ * purchase/styles/technical-review.css
+ * ------------------------------------------------------------------
+ * Technical Specification Review — TSR-ONLY review visuals.
+ *
+ * Everything shared with other Purchase list pages (KPI cards, toolbar,
+ * search, filter panel, table, sorting, columns dropdown, badges,
+ * priority chips, pagination, skeleton, empty state, action menu) comes
+ * from the shared CPR design system:
+ *   - cpr-list.css + requisition-list-polish.css (list design standard)
+ *   - the shared Purchase list components (components/list)
+ *   - the shared KPI / status-badge components
+ *
+ * This file only styles the review workspace's unique pieces: the
+ * drawing / missing cells and the orange review badge. The PR No and
+ * Item cells reuse the shared cpr-list.css classes (.col-prno a /
+ * .cpr-cell-truncate), and the page consumes the exact same header,
+ * table and pagination as the Purchase Requisition list, so the page
+ * reads as another tab inside the Purchase module.
+ * ------------------------------------------------------------------
+ */
+
+/* ============================ TABLE CELL HELPERS ============================
+   PR No and Item cells reuse the shared cpr-list.css classes
+   (.col-prno a / .cpr-cell-truncate) so they render exactly like the
+   rest of the Purchase module — nothing page-specific below. */
+.cpr-page .tsr-view-drawing {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, sans-serif;
+  color: #1D4ED8;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.cpr-page .tsr-view-drawing:hover {
+  background: #DBEAFE;
+  border-color: #93C5FD;
+  color: #1E40AF;
+}
+
+.cpr-page .tsr-missing {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #DC2626;
+}
+
+/* Orange review badge — Needs Review / Returned (shared badge, review tone) */
+.cpr-page .cpr-badge-orange { background: #FFF7ED; color: #EA580C; }
+
+/* ============================ FOCUS STATES ============================ */
+.cpr-page button:focus-visible,
+.cpr-page input:focus-visible,
+.cpr-page select:focus-visible,
+.cpr-page [tabindex]:focus-visible {
+  outline: 2px solid var(--purchase-primary, #0B4A3D);
+  outline-offset: 2px;
+}
+
+/* ============================ DARK MODE ============================ */

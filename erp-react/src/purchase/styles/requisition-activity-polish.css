@@ -1,0 +1,407 @@
+/* ==========================================================================
+   PURCHASE REQUISITION ACTIVITY LOG — LIST-STYLE OVERRIDES
+   --------------------------------------------------------------------------
+   Loaded AFTER cpr-list.css + requisition-list-polish.css so these rules
+   win the cascade for equal specificity. The Activity Log page reuses the
+   Purchase Requisition List design system wholesale (.purchase-page
+   .cpr-page shell, .pr-page-header, .pr-kpi-card, .pr-toolbar, .pr-table,
+   .vt-pagination…) and only overrides what is audit-log specific:
+
+     · 5 shared KPI cards (Total Events · module counts · Last Activity)
+       with identical geometry and a never-truncated Last Activity value
+     · PR-number badge beside the title + header subtitle
+     · one-line toolbar with inline selects + date-range inputs
+     · action badges (8 tones), timeline dots, user avatar, IP badge,
+       device icon + label, muted remarks
+     · tablet: compact spacing, Remarks hidden · mobile: card layout
+
+   All rules are scoped under `.pral-page` (the page root also carries
+   `purchase-page cpr-page`).
+   ========================================================================== */
+
+/* ===== 1. PAGE HEADER — title badge + subtitle ===== */
+.pral-page .pr-page-header-title { min-width: 0; }
+.pral-page .pr-page-header-title h1 { margin: 0; }
+.pral-page .pral-pr-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: var(--purchase-primary-light, #EDF7F4);
+  border: 1px solid #BFE0D6;
+  color: var(--purchase-primary, #0B4A3D);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  margin-left: 2px;
+}
+.dark .pral-page .pral-pr-badge {
+  background: rgba(11, 74, 61, 0.25);
+  border-color: rgba(92, 184, 168, 0.4);
+  color: #6EE7B7;
+}
+.pral-page .pral-page-subtitle {
+  margin: 2px 0 0 34px; /* aligns with the h1 icon (24px icon + 10px gap) */
+  font-size: 13px;
+  font-weight: 400;
+  color: #64748b;
+}
+.dark .pral-page .pral-page-subtitle { color: #94a3b8; }
+
+/* ===== 2. KPI CARDS — 5 cards, ONE shared geometry =====
+   All five cards are identical: same height (min-height + stretch, so a
+   zero value or a wrapped value never collapses or resizes siblings),
+   same spacing, same 48px icon container, same typography, same border
+   radius and same shadow. Last Activity is the widest card (mirroring
+   the master design's wider Total Value card) so its full datetime is
+   always readable on one line. */
+.pral-page .pr-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.4fr);
+  gap: 16px;
+  margin: 12px 0 16px;
+}
+/* Mid-range desktop: Last Activity takes an even larger share. */
+@media (min-width: 1280px) and (max-width: 1599px) {
+  .pral-page .pr-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.6fr); }
+}
+/* Tablet: 3 per row */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .pral-page .pr-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+}
+/* Mobile: 2 per row */
+@media (max-width: 767px) {
+  .pral-page .pr-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 10px 0 14px; }
+}
+/* Small phones: stack to one per row */
+@media (max-width: 479px) {
+  .pral-page .pr-kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}
+
+/* Card shell — identical across every card and both Activity Log pages. */
+.pral-page .pr-kpi-card.qtn-kpi-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 100px;
+  padding: 20px;
+  box-sizing: border-box;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  cursor: default;
+  position: relative;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, background 0.18s ease;
+}
+.pral-page .pr-kpi-card.qtn-kpi-card:hover {
+  border-color: #9DC8BC;
+  box-shadow: 0 6px 18px rgba(11, 74, 61, 0.12);
+  transform: translateY(-2px);
+}
+.pral-page .pr-kpi-card.qtn-kpi-card.active {
+  border-color: var(--purchase-primary, #0B4A3D);
+  background: var(--purchase-primary-light, #EDF7F4);
+  box-shadow: 0 6px 16px rgba(11, 74, 61, 0.16);
+}
+.dark .pral-page .pr-kpi-card.qtn-kpi-card {
+  background: #141C2E;
+  border-color: rgba(148, 163, 184, 0.18);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+.dark .pral-page .pr-kpi-card.qtn-kpi-card:hover {
+  border-color: var(--purchase-primary, #136754);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+.dark .pral-page .pr-kpi-card.qtn-kpi-card.active {
+  border-color: #5CB8A8;
+  background: rgba(92, 184, 168, 0.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* Icon container — identical 48px tile on every card. */
+.pral-page .qtn-kpi-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pral-page .qtn-kpi-icon svg { width: 22px; height: 22px; }
+
+/* Body + typography — identical for all five cards. */
+.pral-page .qtn-kpi-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pral-page .qtn-kpi-count {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #0B1F1A;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
+}
+.pral-page .qtn-kpi-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #64748B;
+  margin-top: 3px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.dark .pral-page .qtn-kpi-count { color: #F8FAFC; }
+.dark .pral-page .qtn-kpi-label { color: #94A3B8; }
+
+/* Last Activity card — the datetime string is NEVER truncated: shown in
+   full (“Today 2:15 PM” / “Yesterday” / “04 Aug 2026 15:15”), no ellipsis,
+   no clipping. It wraps onto a second line only when the card is genuinely
+   too narrow (narrow mobile), and the grid keeps every card the same
+   height. */
+.pral-page .pr-kpi-card[data-filter="lastActivity"] .qtn-kpi-count,
+.pral-page .pr-kpi-card[data-filter="lastUpdated"] .qtn-kpi-count {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  max-width: 100%;
+}
+
+@media (max-width: 767px) {
+  .pral-page .pr-kpi-card.qtn-kpi-card { min-height: 92px; padding: 14px 16px; gap: 10px; }
+  .pral-page .qtn-kpi-icon { width: 40px; height: 40px; min-width: 40px; border-radius: 12px; }
+  .pral-page .qtn-kpi-icon svg { width: 19px; height: 19px; }
+  .pral-page .qtn-kpi-count { font-size: 22px; }
+  .pral-page .qtn-kpi-label { font-size: 12px; }
+  .pral-page .pr-kpi-card[data-filter="lastActivity"] .qtn-kpi-count,
+  .pral-page .pr-kpi-card[data-filter="lastUpdated"] .qtn-kpi-count { font-size: 13px; }
+}
+
+/* ===== 3. TOOLBAR — single line, inline selects + date range ===== */
+.pral-page .pr-toolbar { margin-bottom: 12px; }
+/* Search width matches the shared list standard (320px / 280px). */
+.pral-page .pr-search-input { width: 320px; }
+@media (max-width: 1200px) {
+  .pral-page .pr-search-input { width: 280px; }
+}
+.pral-page .pral-select {
+  height: 38px;
+  padding: 0 28px 0 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 9px;
+  background: #FFFFFF;
+  color: #334155;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+  max-width: 150px;
+}
+.pral-page .pral-select:hover { border-color: #C7D2DC; }
+.pral-page .pral-select:focus {
+  border-color: var(--purchase-primary, #0B4A3D);
+  box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.12);
+}
+.pral-page .pral-date {
+  padding: 0 10px;
+  max-width: 140px;
+  color-scheme: light;
+}
+/* Action filter carries full labels (e.g. "Returned to requester by …"). */
+.pral-page .pral-select.pral-select-wide { max-width: 230px; }
+:is([data-theme='dark'], .dark) .pral-page .pral-date { color-scheme: dark; }
+.dark .pral-page .pral-select {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #E2E8F0;
+}
+.dark .pral-page .pral-select:hover { border-color: rgba(255, 255, 255, 0.28); }
+.dark .pral-page .pral-select option { color: #111827; }
+
+/* ===== 4. ACTION BADGES — 8 tones ===== */
+.pral-page .pral-action-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.55;
+  white-space: nowrap;
+  letter-spacing: 0.1px;
+}
+.pral-page .pral-action-badge.created  { background: #F3F4F6; color: #6B7280; }
+.pral-page .pral-action-badge.draft    { background: #F1F5F9; color: #475569; }
+.pral-page .pral-action-badge.submitted{ background: #EFF6FF; color: #2563EB; }
+.pral-page .pral-action-badge.pending  { background: #FFFBEB; color: #D97706; }
+.pral-page .pral-action-badge.approved { background: #F0FDF4; color: #16A34A; }
+.pral-page .pral-action-badge.rejected { background: #FEF2F2; color: #DC2626; }
+.pral-page .pral-action-badge.returned { background: #F5F3FF; color: #7C3AED; }
+.pral-page .pral-action-badge.pdf      { background: #ECFEFF; color: #0891B2; }
+.pral-page .pral-action-badge.other    { background: #F8FAFC; color: #64748B; }
+.dark .pral-page .pral-action-badge.created  { background: rgba(107, 114, 128, 0.18); color: #9CA3AF; }
+.dark .pral-page .pral-action-badge.draft    { background: rgba(100, 116, 139, 0.18); color: #94A3B8; }
+.dark .pral-page .pral-action-badge.submitted{ background: rgba(37, 99, 235, 0.16); color: #60A5FA; }
+.dark .pral-page .pral-action-badge.pending  { background: rgba(217, 119, 6, 0.16); color: #FBBF24; }
+.dark .pral-page .pral-action-badge.approved { background: rgba(22, 163, 74, 0.16); color: #4ADE80; }
+.dark .pral-page .pral-action-badge.rejected { background: rgba(220, 38, 38, 0.16); color: #F87171; }
+.dark .pral-page .pral-action-badge.returned { background: rgba(124, 58, 237, 0.18); color: #A78BFA; }
+.dark .pral-page .pral-action-badge.pdf      { background: rgba(8, 145, 178, 0.16); color: #22D3EE; }
+.dark .pral-page .pral-action-badge.other    { background: rgba(100, 116, 139, 0.14); color: #94A3B8; }
+
+/* ===== 5. TIMELINE INDICATOR — colored vertical bar beside Action ===== */
+.pral-page .pral-action-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.pral-page .pral-action-dot {
+  width: 3px;
+  height: 15px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.pral-page .pral-action-dot.approved { background: #16A34A; }
+.pral-page .pral-action-dot.created  { background: #2563EB; }
+.pral-page .pral-action-dot.submitted{ background: #D97706; }
+.pral-page .pral-action-dot.rejected { background: #DC2626; }
+.pral-page .pral-action-dot.returned { background: #7C3AED; }
+.pral-page .pral-action-dot.other,
+.pral-page .pral-action-dot.draft,
+.pral-page .pral-action-dot.pending,
+.pral-page .pral-action-dot.pdf     { background: #CBD5E1; }
+
+/* ===== 6. USER CELL — avatar + name + role ===== */
+.pral-page .pral-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.pral-page .pral-avatar {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 999px;
+  background: var(--purchase-primary, #0B4A3D);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+}
+.dark .pral-page .pral-avatar { background: var(--purchase-primary, #136754); }
+.pral-page .pral-user-body { min-width: 0; line-height: 1.25; }
+.pral-page .pral-user-name {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #0F172A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dark .pral-page .pral-user-name { color: #E2E8F0; }
+.pral-page .pral-user-role {
+  display: block;
+  font-size: 10.5px;
+  color: #94A3B8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===== 7. IP — compact code badge ===== */
+.pral-page .pral-ip {
+  display: inline-block;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10.5px;
+  color: #475569;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 2px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.dark .pral-page .pral-ip {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #CBD5E1;
+}
+
+/* ===== 8. DEVICE — icon + label ===== */
+.pral-page .pral-device {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #475569;
+  white-space: nowrap;
+}
+.pral-page .pral-device svg { width: 13px; height: 13px; color: #94A3B8; flex-shrink: 0; }
+.dark .pral-page .pral-device { color: #CBD5E1; }
+.dark .pral-page .pral-device svg { color: #64748B; }
+
+/* ===== 9. REMARKS — muted, clamped ===== */
+.pral-page .pral-remarks {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #64748B;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.dark .pral-page .pral-remarks { color: #94A3B8; }
+
+/* ===== 10. TABLE — column alignment helpers ===== */
+.pral-page .pr-table td.col-date { text-align: center; }
+.pral-page .pr-table th.col-date { text-align: center; }
+
+/* ===== 11. RESPONSIVE ===== */
+/* Tablet: compact spacing, hide Remarks (least critical column) */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .pral-page .pr-table tbody td { padding: 9px 12px; }
+  .pral-page .hide-md { display: none !important; }
+}
+
+/* Mobile: keep the shared PurchaseTable's own responsive behaviour
+   (horizontal scroll) — the shared table markup has no data-label
+   attributes, so no card-layout restructure is applied here. */
+@media (max-width: 767px) {
+  .pral-page .pr-toolbar { flex-direction: column; align-items: stretch; }
+  .pral-page .pr-toolbar-left,
+  .pral-page .pr-toolbar-right { width: 100%; justify-content: flex-start; }
+  .pral-page .pr-search-input { width: 100%; max-width: none; }
+}
+
+/* ===== 12. PRINT — hide chrome (extends cpr-list print rules) ===== */
+@media print {
+  .pral-page .pral-action-dot,
+  .pral-page .pr-table thead { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

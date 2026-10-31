@@ -1,0 +1,392 @@
+/* ==========================================================================
+   PURCHASE REQUISITION APPROVAL CENTER — LIST-STYLE OVERRIDES
+   --------------------------------------------------------------------------
+   Loaded AFTER cpr-list.css + requisition-list-polish.css so these rules
+   win the cascade for equal specificity. The Approval Center reuses the
+   Purchase Requisition List design system wholesale (.purchase-page
+   .cpr-page shell, .pr-kpi-card, .pr-toolbar, .pr-tabs, .pr-table,
+   .bulk-action-bar, .vt-pagination…) and only overrides what is
+   approval-specific:
+
+     · 4 equal KPI cards at 96px height
+     · one-line toolbar with inline filter selects
+     · table without an internal vertical scrollbar (page-level sticky
+       header instead of a max-height scroll wrap)
+     · expand chevron in the PR No cell + icon row actions + row-detail
+       panel
+     · tighter vertical rhythm (~30% less whitespace)
+     · tablet: low-priority columns hidden · mobile: card layout
+
+   All rules are scoped under `.ac-page` (the Approval Center page root
+   also carries `purchase-page cpr-page`).
+   ========================================================================== */
+
+/* The shared approval-center.css defines `.ac-page` as a flex column with
+   a 12px gap (its old inner-content wrapper). Here `.ac-page` is the page
+   root that also carries the List design system classes, whose own margins
+   drive the rhythm — so flatten the flex/gap back to a plain block. */
+.ac-page { display: block; gap: 0; }
+
+/* ===== 1. PAGE HEADER — subtitle + refresh ===== */
+.ac-page .pr-page-header { margin-bottom: 14px; }
+.ac-page .pr-page-header-title { min-width: 0; }
+.ac-page .pr-page-header-title h1 { margin: 0; }
+.ac-page .ac-page-subtitle {
+  margin: 2px 0 0 34px; /* aligns with the h1 icon (24px icon + 10px gap) */
+  font-size: 13px;
+  font-weight: 400;
+  color: #64748b;
+}
+.dark .ac-page .ac-page-subtitle { color: #94a3b8; }
+
+/* ===== 2. KPI CARDS — 4 equal, 96px, one row ===== */
+.ac-page .pr-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 12px 0 16px;
+}
+.ac-page .pr-kpi-card.qtn-kpi-card {
+  height: 96px;
+  min-height: 96px;
+  padding: 16px 18px;
+  border-radius: 14px;
+}
+.ac-page .qtn-kpi-count { font-size: clamp(16px, 2.2vw, 28px); }
+.ac-page .qtn-kpi-label { font-size: 12.5px; }
+/* Mid-range desktop: keep 4 equal columns (list widens the last card). */
+@media (min-width: 1280px) and (max-width: 1599px) {
+  .ac-page .pr-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+/* Tablet: 2 per row */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .ac-page .pr-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+}
+/* Mobile: 2 per row */
+@media (max-width: 767px) {
+  .ac-page .pr-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 10px 0 14px; }
+  .ac-page .pr-kpi-card.qtn-kpi-card { height: 92px; padding: 14px 16px; }
+}
+/* Small phones: stack to one per row */
+@media (max-width: 479px) {
+  .ac-page .pr-kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+}
+
+/* ===== 3. STATUS TABS — underline tabs with count badges, tighter rhythm ===== */
+.ac-page .pr-tabs { margin-bottom: 14px; }
+
+/* ===== 4. TOOLBAR — single line, inline filter selects ===== */
+.ac-page .pr-toolbar { margin-bottom: 12px; }
+.ac-page .pr-search-input { width: 250px; }
+@media (max-width: 1200px) {
+  .ac-page .pr-search-input { width: 220px; }
+}
+.ac-page .ac-filter-select {
+  height: 38px;
+  padding: 0 28px 0 12px;
+  border: 1px solid #E5E7EB;
+  border-radius: 9px;
+  background: #FFFFFF;
+  color: #334155;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
+  max-width: 140px;
+}
+.ac-page .ac-filter-select:hover { border-color: #C7D2DC; }
+.ac-page .ac-filter-select:focus {
+  border-color: var(--purchase-primary, #0B4A3D);
+  box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.12);
+}
+.ac-page .ac-filter-date { padding: 0 10px; max-width: 138px; color-scheme: light; }
+:is([data-theme='dark'], .dark) .ac-page .ac-filter-date { color-scheme: dark; }
+.dark .ac-page .ac-filter-select {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #E2E8F0;
+}
+.dark .ac-page .ac-filter-select:hover { border-color: rgba(255, 255, 255, 0.28); }
+.dark .ac-page .ac-filter-select option { color: #111827; }
+
+/* ===== 5. TABLE — no internal vertical scrollbar, page-sticky header ===== */
+/* The List keeps the table in a 62vh scroll wrap; the Approval Center
+   instead lets the page scroll and keeps the header pinned to the app
+   scrollport, so the full table height stays visible. */
+.ac-page .pr-table-card { overflow: visible; margin-bottom: 14px; }
+.ac-page .pr-table-wrap { max-height: none; overflow: visible; }
+
+/* PR No cell — expand chevron + document link on one line */
+.ac-page .ac-prno-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.ac-page .ac-prno-wrap .ac-expand-btn { flex-shrink: 0; }
+.ac-page .ac-prno-wrap a {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.ac-page .ac-expand-btn {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: #94A3B8;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.ac-page .ac-expand-btn svg { width: 14px; height: 14px; }
+.ac-page .ac-expand-btn:hover,
+.ac-page .ac-expand-btn.open { background: var(--purchase-primary-light, #EDF7F4); color: var(--purchase-primary, #0B4A3D); }
+.dark .ac-page .ac-expand-btn { color: #94A3B8; }
+.dark .ac-page .ac-expand-btn:hover,
+.dark .ac-page .ac-expand-btn.open { background: rgba(11, 74, 61, 0.2); color: #6EE7B7; }
+
+/* Icon row actions (View · Approve · Reject · More) */
+.ac-page .pr-table th.col-actions,
+.ac-page .pr-table td.col-actions { width: 148px; min-width: 148px; }
+.ac-page .ac-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.ac-page .ac-row-icon {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748B;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.ac-page .ac-row-icon svg { width: 15px; height: 15px; }
+.ac-page .ac-row-icon:hover { background: var(--purchase-primary-light, #EDF7F4); color: var(--purchase-primary, #0B4A3D); }
+.ac-page .ac-row-icon.approve:hover { background: #F0FDF4; color: #16A34A; }
+.ac-page .ac-row-icon.reject:hover { background: #FEF2F2; color: #DC2626; }
+.dark .ac-page .ac-row-icon { color: #94A3B8; }
+.dark .ac-page .ac-row-icon:hover { background: rgba(11, 74, 61, 0.2); color: #6EE7B7; }
+.dark .ac-page .ac-row-icon.approve:hover { background: rgba(22, 163, 74, 0.15); color: #4ADE80; }
+.dark .ac-page .ac-row-icon.reject:hover { background: rgba(220, 38, 38, 0.15); color: #F87171; }
+
+/* Expanded row — soft panel under the row */
+.ac-page .pr-table tbody tr.ac-expand-tr td {
+  background: #F6FAF8 !important;
+  border-bottom: 1px solid #E2E8F0;
+  padding: 0 !important;
+}
+.dark .ac-page .pr-table tbody tr.ac-expand-tr td {
+  background: rgba(11, 74, 61, 0.08) !important;
+}
+
+/* ===== 6. ROW DETAIL PANEL — General · Commercial · Approval ===== */
+.ac-page .ac-detail-panel { padding: 16px 20px 18px; }
+.ac-page .ac-detail-head { margin-bottom: 12px; }
+.ac-page .ac-detail-sections {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.ac-page .ac-detail-section {
+  background: #FFFFFF;
+  border: 1px solid #E8EDF1;
+  border-radius: 12px;
+  padding: 13px 15px;
+}
+.dark .ac-page .ac-detail-section {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.ac-page .ac-detail-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--purchase-primary, #0B4A3D);
+  padding-bottom: 9px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #EEF2F6;
+}
+.ac-page .ac-detail-section-title svg { width: 13px; height: 13px; }
+.dark .ac-page .ac-detail-section-title { color: #6EE7B7; border-bottom-color: rgba(255, 255, 255, 0.08); }
+.ac-page .ac-detail-field {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 5.5px 0;
+  border-bottom: 1px dashed #EEF2F6;
+}
+.ac-page .ac-detail-field:last-child { border-bottom: none; }
+.ac-page .ac-detail-field-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+.ac-page .ac-detail-field-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0F172A;
+  text-align: right;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dark .ac-page .ac-detail-field-value { color: #E2E8F0; }
+.ac-page .ac-detail-comments { margin-top: 6px; }
+.ac-page .ac-detail-comment {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #475569;
+  background: #F8FAF9;
+  border: 1px solid #EEF2F6;
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+.ac-page .ac-detail-comment.muted { color: #94A3B8; background: transparent; border-style: dashed; }
+.dark .ac-page .ac-detail-comment { background: rgba(255, 255, 255, 0.04); color: #CBD5E1; border-color: rgba(255, 255, 255, 0.08); }
+
+/* ===== 7. BULK BAR — matches the List (green approval, red reject) ===== */
+.ac-page .bulk-action-bar { margin-bottom: 12px; }
+
+/* ===== 7a. DETAIL SECTIONS — collapse to one column on tablet ===== */
+@media (max-width: 1100px) {
+  .ac-page .ac-detail-sections { grid-template-columns: 1fr; }
+}
+
+/* ===== 7b. PRINT — hide approval-only controls ===== */
+@media print {
+  .ac-page .pr-table th.col-actions,
+  .ac-page .pr-table td.col-actions,
+  .ac-page .ac-expand-btn { display: none !important; }
+}
+
+/* ===== 8. RESPONSIVE ===== */
+/* Tablet: hide low-priority columns */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .ac-page .hide-md { display: none !important; }
+}
+
+/* Mobile: card layout */
+@media (max-width: 767px) {
+  .ac-page .pr-toolbar { flex-direction: column; align-items: stretch; }
+  .ac-page .pr-toolbar-left,
+  .ac-page .pr-toolbar-right { width: 100%; justify-content: flex-start; }
+  .ac-page .pr-search-input,
+  .ac-page .ac-filter-select,
+  .ac-page .ac-filter-date { width: 100%; max-width: none; }
+
+  .ac-page .pr-table-card {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    overflow: visible;
+    margin: 0 -4px 8px;
+  }
+  .ac-page .pr-table-wrap { overflow: visible; }
+  .ac-page .pr-table,
+  .ac-page .pr-table tbody { display: block; }
+  .ac-page .pr-table thead { display: none; }
+  .ac-page .pr-table tbody tr {
+    display: block;
+    margin-bottom: 14px;
+    padding: 14px;
+    position: relative;
+    border: 1px solid #E5E7EB;
+    border-radius: 14px;
+    background: #FFFFFF;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  }
+  .ac-page .pr-table tbody tr.is-selected { border-color: var(--purchase-primary, #0B4A3D); }
+  .ac-page .pr-table tbody tr:hover td { background: transparent; }
+  .ac-page .pr-table tbody tr.ac-expand-tr {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    padding: 0 0 14px;
+    margin-top: -10px;
+  }
+  .ac-page .pr-table tbody tr.ac-expand-tr td {
+    background: transparent !important;
+    border-bottom: none;
+    padding: 0 !important;
+  }
+  .ac-page .ac-detail-panel { padding: 0; }
+  .ac-page .ac-detail-head { display: none; }
+  .ac-page .ac-detail-sections { grid-template-columns: 1fr; gap: 10px; }
+  .ac-page .pr-table tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    width: 100%;
+    padding: 9px 0;
+    border-bottom: 1px dashed #EEF2F6;
+    background: transparent !important;
+    text-align: right;
+  }
+  .ac-page .pr-table tbody td::before {
+    content: attr(data-label);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #94A3B8;
+    flex-shrink: 0;
+  }
+  .ac-page .pr-table tbody td:last-child { border-bottom: none; }
+  .ac-page .pr-table tbody td.col-prno { justify-content: flex-start; }
+  .ac-page .pr-table tbody td.col-prno::before { display: none; }
+  .ac-page .pr-table tbody td.col-prno .ac-prno-wrap { flex-wrap: wrap; }
+  .ac-page .pr-table tbody td.col-prno a {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--purchase-primary, #0B4A3D);
+  }
+  .ac-page .pr-table tbody td.checkbox-cell {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: auto;
+    padding: 0;
+    border: none;
+  }
+  .ac-page .pr-table tbody td.checkbox-cell::before { display: none; }
+  .ac-page .pr-table tbody td.col-actions {
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid #EEF2F6;
+    border-bottom: none;
+    margin-top: 6px;
+  }
+  .ac-page .pr-table tbody td.col-actions::before { display: none; }
+  .ac-page .pr-table tbody td.col-actions .ac-row-actions { justify-content: flex-end; }
+}

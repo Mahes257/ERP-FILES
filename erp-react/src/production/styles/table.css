@@ -1,0 +1,182 @@
+/* ============================================================
+   Shared ERP table styles — Purchase-aligned
+   ============================================================ */
+.table-scroll {
+  overflow-x: auto;
+  border-radius: 0 0 12px 12px;
+}
+
+/* When bulk action bar is present, table scroll top corners are flat */
+.table-scroll.has-bulk-bar {
+  border-radius: 0 0 12px 12px;
+}
+
+.data-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--fs-table-body, 12px);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* When no bulk bar, the table gets full rounding from its parent */
+.table-scroll:not(.has-bulk-bar) .data-table {
+  border-radius: 12px;
+}
+
+.data-table th {
+  padding: 0 12px;
+  height: 42px;
+  text-align: left;
+  font-size: var(--fs-table-header, 11px);
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: #FFFFFF !important;
+  background: #075E54 !important;
+  background-color: #075E54 !important;
+  background-image: none !important;
+  border-bottom: 1px solid #064C44 !important;
+  white-space: nowrap;
+}
+
+/* First th gets top-left rounding, last th gets top-right rounding */
+.data-table thead tr:first-child th:first-child {
+  border-top-left-radius: 12px;
+}
+.data-table thead tr:first-child th:last-child {
+  border-top-right-radius: 12px;
+}
+
+/* Bottom rounding on last row */
+.data-table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+.data-table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+.data-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #F1F5F9;
+  color: #102A2A;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.data-table tbody tr {
+  transition: background var(--transition-fast);
+}
+.data-table tbody tr:hover {
+  background: #F8FAFC;
+}
+
+.cell-strong {
+  font-weight: 600;
+}
+.cell-muted {
+  color: #64748B;
+}
+
+/* ============================================================
+   Checkbox column
+   ============================================================ */
+.pt-checkbox-col {
+  width: 40px;
+  min-width: 40px;
+  max-width: 40px;
+  text-align: center;
+  padding: 0 8px !important;
+}
+
+.pt-checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #CBD5E1;
+  border-radius: 4px;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pt-checkbox:checked {
+  background: #075E54;
+  border-color: #075E54;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");
+  background-size: 12px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.pt-checkbox:hover:not(:checked) {
+  border-color: #075E54;
+}
+
+/* Header checkbox styling */
+.pt-checkbox-col .pt-checkbox {
+  width: 15px;
+  height: 15px;
+}
+
+/* ============================================================
+   Table container wrapper — rounded card
+   ============================================================ */
+.pt-table-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.pt-table-card .table-scroll {
+  border-radius: 0;
+}
+
+.pt-table-card .data-table {
+  border-radius: 0;
+}
+
+/* When bulk bar is present, integrate it into the card */
+.pt-table-card .pt-bulk-bar {
+  border-radius: 0;
+  border-top: none;
+  margin: 0;
+}
+
+/* ============================================================
+   Responsive table behavior
+   ============================================================ */
+@media (max-width: 767px) {
+  .pt-table-card {
+    border-radius: 10px;
+  }
+  .table-scroll {
+    border-radius: 0 0 10px 10px;
+  }
+  .data-table {
+    min-width: 600px;
+  }
+  .data-table th,
+  .data-table td {
+    padding: 6px 8px;
+    font-size: 11px;
+  }
+  .pt-checkbox-col {
+    width: 32px;
+    min-width: 32px;
+    max-width: 32px;
+    padding: 0 4px !important;
+  }
+}

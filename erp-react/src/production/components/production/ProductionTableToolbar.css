@@ -1,0 +1,138 @@
+/* ============================================================
+   Standardized table toolbar — Purchase RFQ pattern
+   
+   LEFT:  [Show Filters] [Refresh]
+   RIGHT: [Search...] [Export ▼] [Columns] [Showing X–Y of Z]
+   ============================================================ */
+.pt-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  margin-bottom: 12px;
+}
+
+.pt-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pt-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---- Toolbar buttons (Show Filters, Refresh, Export, Columns) ---- */
+.pt-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 7px;
+  background: #FFFFFF;
+  color: #4B5563;
+  font-size: var(--fs-body, 12px);
+  font-weight: var(--fw-medium, 500);
+  font-family: var(--font-family);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.pt-toolbar-btn:hover {
+  background: #F7F9FA;
+  border-color: #CBD5E1;
+  color: #102A2A;
+}
+
+.pt-toolbar-btn.active {
+  background: #EAF7F3;
+  border-color: #075E54;
+  color: #075E54;
+  font-weight: 600;
+}
+
+.pt-toolbar-btn svg {
+  flex-shrink: 0;
+}
+
+/* ---- Search field ---- */
+.pt-toolbar-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 7px;
+  background: #FFFFFF;
+  color: #64748B;
+  min-width: 200px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.pt-toolbar-search:focus-within {
+  border-color: #075E54;
+  box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.08);
+}
+
+.pt-toolbar-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-size: var(--fs-body, 12px);
+  font-weight: var(--fw-regular, 400);
+  color: #102A2A;
+  background: none;
+  font-family: var(--font-family);
+}
+
+.pt-toolbar-search input::placeholder {
+  color: #94A3B8;
+}
+
+/* ---- Record count ---- */
+.pt-toolbar-count {
+  font-size: var(--fs-body, 12px);
+  font-weight: var(--fw-medium, 500);
+  color: #64748B;
+  white-space: nowrap;
+  padding: 0 4px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .pt-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .pt-toolbar-left,
+  .pt-toolbar-right {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .pt-toolbar-search {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .pt-toolbar-btn span {
+    display: none;
+  }
+}

@@ -1,0 +1,323 @@
+/* ================================================
+   Sales Pipeline — node track (PR dashboard pattern)
+   PR reference: .pipeline-track / .pipeline-node — count-in-circle
+   nodes joined by arrows, labels below, responsive reflow. Restyled
+   with the ERP emerald tokens (--purchase-*) instead of PR palette.
+   ================================================ */
+
+.sd-pipeline-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(70px, 1fr);
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 0;
+}
+
+.sd-pipeline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  padding: 0 2px;
+}
+
+/* Arrow between stages — absolutely positioned on the right edge */
+.sd-pipeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  top: 15px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 7px solid #CBD5E1;
+  z-index: 2;
+}
+
+.sd-pipeline-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  border: 2px solid #E2E8F0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sd-pipeline-node.active {
+  background: linear-gradient(135deg, var(--purchase-primary, #0B4A3D), #0F8F78);
+  border-color: var(--purchase-primary, #0B4A3D);
+  box-shadow: 0 2px 8px rgba(11, 74, 61, 0.2);
+}
+
+.sd-pipeline-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.sd-pipeline-node.active .sd-pipeline-count {
+  color: #FFFFFF;
+}
+
+.sd-pipeline-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748B;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.sd-pipeline-item:has(.sd-pipeline-node.active) .sd-pipeline-label {
+  color: var(--purchase-primary, #0B4A3D);
+  font-weight: 700;
+}
+
+.sd-pipeline-value {
+  font-size: 10px;
+  color: #059669;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.sd-pipeline-stage-btn:focus-visible {
+  outline: 2px solid var(--purchase-primary, #0B4A3D);
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.sd-pipeline-stage-btn:hover {
+  background: rgba(11, 74, 61, 0.06) !important;
+}
+
+.sd-pipeline-stage-btn::-moz-focus-inner {
+  border: 0;
+}
+
+.dark .sd-pipeline-node {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .sd-pipeline-node.active {
+  background: linear-gradient(135deg, #0F8F78, #5CB8A8);
+  border-color: #0F8F78;
+  box-shadow: 0 2px 8px rgba(15, 143, 120, 0.3);
+}
+.dark .sd-pipeline-count { color: #94A3B8; }
+.dark .sd-pipeline-node.active .sd-pipeline-count { color: #fff; }
+.dark .sd-pipeline-label { color: #64748B; }
+.dark .sd-pipeline-item:has(.sd-pipeline-node.active) .sd-pipeline-label { color: #5CB8A8; }
+.dark .sd-pipeline-item:not(:last-child)::after { border-left-color: #475569; }
+
+/* Responsive — tablet: wrap nodes to a 2-row grid */
+@media (max-width: 1400px) {
+  .sd-pipeline-track {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 14px 0;
+  }
+  .sd-pipeline-item:not(:last-child)::after { display: none; }
+  .sd-pipeline-node { width: 38px; height: 38px; }
+  .sd-pipeline-count { font-size: 11px; }
+}
+
+@media (max-width: 900px) {
+  .sd-pipeline-track {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .sd-pipeline-node { width: 34px; height: 34px; }
+  .sd-pipeline-label { font-size: 9px; }
+}
+
+@media (max-width: 640px) {
+  .sd-pipeline-track { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ================================================
+   Sales Dashboard — section grids (responsive)
+   ================================================ */
+
+.dash-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dash-three-col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.dash-four-col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 1100px) {
+  .dash-two-col {
+    grid-template-columns: 1fr;
+  }
+  .dash-three-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dash-four-col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .dash-three-col {
+    grid-template-columns: 1fr;
+  }
+  .dash-four-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================================
+   PR Dashboard grid helpers (match PR dashboard.css)
+   ================================================ */
+
+.dashboard-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dashboard-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dashboard-grid-4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid-2col {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-grid-3col {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dashboard-grid-4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .dashboard-grid-3col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-grid-3col {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-grid-4col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================================
+   Sales Dashboard — loading skeletons & error state
+   ================================================ */
+
+@keyframes sd-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.sd-skeleton {
+  background: linear-gradient(90deg, #eef2f6 25%, #f8fafc 45%, #eef2f6 65%);
+  background-size: 800px 100%;
+  animation: sd-shimmer 1.3s ease-in-out infinite;
+  border-radius: 6px;
+  display: block;
+}
+
+.sd-skeleton-btn {
+  width: 92px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.sd-skeleton-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+.sd-skeleton-num {
+  width: 72px;
+  height: 20px;
+  border-radius: 4px;
+}
+
+.sd-skeleton-label {
+  width: 104px;
+  height: 11px;
+  margin-top: 6px;
+  border-radius: 4px;
+}
+
+.sd-skeleton-panel {
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.sd-skeleton-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 25%, rgba(248, 250, 252, 0.9) 45%, transparent 65%);
+  background-size: 800px 100%;
+  animation: sd-shimmer 1.3s ease-in-out infinite;
+}
+
+.sd-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 10px;
+  padding: 56px 24px;
+}
+
+.sd-error-state h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.sd-error-state p {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+  max-width: 520px;
+}

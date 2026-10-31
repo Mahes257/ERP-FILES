@@ -1,0 +1,21 @@
+package com.vishatech.erp.dto.production;
+
+import lombok.*;
+
+/**
+ * DTO for Model history records.
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ModelHistoryDTO {
+    private Long id;
+    private Long modelId;
+    private String action;
+    private String fromStatus;
+    private String toStatus;
+    private String performedBy;
+    private String performedAt;
+    private String remarks;
+}

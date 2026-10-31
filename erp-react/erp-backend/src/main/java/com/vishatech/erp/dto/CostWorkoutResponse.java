@@ -1,0 +1,55 @@
+package com.vishatech.erp.dto;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public record CostWorkoutResponse(
+        Long id,
+        String cwNo,
+        String cwDate,
+        String status,
+        String preparedBy,
+        String contactPerson,
+        String department,
+        String sourceLead,
+        String customerName,
+        String cprRef,
+        Long cprId,
+        String phone,
+        String email,
+        String company,
+        String gst,
+        String pan,
+        String linkedCpr,
+        String billingAddress,
+        String shippingAddress,
+        String remarks,
+        BigDecimal profitPct,
+        BigDecimal profitAmt,
+        BigDecimal sellingPrice,
+        BigDecimal discountPct,
+        BigDecimal discountAmt,
+        BigDecimal gstPct,
+        BigDecimal gstAmt,
+        BigDecimal subtotal,
+        BigDecimal grandTotal,
+        String approvedBy,
+        String rejectionReason,
+        String date,
+        String createdAt,
+        String updatedAt,
+        String archivedAt,
+        String convertedToQtn,
+        List<CostWorkoutItemResponse> items,
+        List<CostWorkoutTimelineResponse> timeline
+,
+        Integer revision,
+        Long revisionOf,
+        Boolean latestRevision,
+        String revisionDate,
+        List<RevisionInfo> revisions,
+        String convertedToPw,
+        Long convertedToPwId,
+        String itemColumnsJson
+) {
+}

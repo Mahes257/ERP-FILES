@@ -1,0 +1,767 @@
+﻿/* ============================================================
+   CRM ERP list pages (Clients / Leads / Follow-ups / Marketing)
+   Kept classes only — orphaned rules removed.
+   ============================================================ */
+
+/* Page shell — matches Purchase `.purchase-page` (20px 28px 96px). */
+.crm-erp-page {
+  padding: 20px 28px 96px;
+  font-family: var(--font, 'Inter', system-ui, -apple-system, sans-serif);
+}
+
+/* ===== Page Header (standalone — for pages NOT inside .cpr-page) =====
+   Matches PR cpr-list.css .cpr-page .pr-page-header exactly.
+   No extra margins, gaps, or wrapper styles. */
+.pr-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pr-page-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #102A2A;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  border-style: none;
+}
+.pr-page-header h1 svg {
+  color: var(--purchase-accent, #0B4A3D);
+  margin-right: 6px;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.pr-page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dark .pr-page-header h1 {
+  color: #F1F5F9;
+}
+.dark .pr-page-header h1 svg {
+  color: #5CB8A8;
+}
+.po-page-header-subtitle {
+  font-size: 13px;
+  color: var(--text-muted, #6B7280);
+  margin: 3px 0 0;
+}
+.dark .po-page-header-subtitle {
+  color: #9CA3AF;
+}
+
+/* ===== Breadcrumb ===== */
+
+/* ===== Standalone .pr-breadcrumb — for pages NOT inside .cpr-page =====
+   Matches PR PurchaseBreadcrumb.jsx + cpr-list.css .cpr-page .pr-breadcrumb */
+.pr-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #9CA3AF;
+  margin-bottom: 10px;
+  border-style: none;
+}
+.pr-breadcrumb a,
+.pr-breadcrumb button.bc-link {
+  color: #0B4A3D;
+  text-decoration: none;
+  font-weight: 500;
+  border-style: none;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+.pr-breadcrumb a:hover,
+.pr-breadcrumb button.bc-link:hover {
+  text-decoration: underline;
+}
+.pr-breadcrumb .bc-sep {
+  font-size: 10px;
+  color: #cbd5e1;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+}
+.pr-breadcrumb .bc-current {
+  color: #6B7280;
+  font-weight: 500;
+}
+.dark .pr-breadcrumb {
+  color: #6B7280;
+}
+.dark .pr-breadcrumb a,
+.dark .pr-breadcrumb button.bc-link {
+  color: #6EE7B7;
+}
+.dark .pr-breadcrumb .bc-sep {
+  color: #6B7280;
+}
+.dark .pr-breadcrumb .bc-current {
+  color: #9CA3AF;
+}
+
+
+.crm-erp-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #9CA3AF;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.crm-erp-breadcrumb a {
+  color: #0B4A3D;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font: inherit;
+  padding: 0;
+}
+.crm-erp-breadcrumb a:hover { text-decoration: underline; }
+.crm-erp-breadcrumb .sep {
+  font-size: 10px;
+  color: #cbd5e1;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+}
+.crm-erp-breadcrumb .current { color: #6B7280; font-weight: 500; }
+.dark .crm-erp-breadcrumb { color: #6B7280; }
+.dark .crm-erp-breadcrumb a { color: #6EE7B7; }
+.dark .crm-erp-breadcrumb .sep { color: #6B7280; }
+.dark .crm-erp-breadcrumb .current { color: #9CA3AF; }
+
+/* ===== Buttons ===== */
+.crm-erp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.crm-erp-btn svg { width: 14px; height: 14px; }
+.crm-erp-btn-ghost {
+  background: #fff;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+.crm-erp-btn-ghost:hover { background: #f8fafc; border-color: #d1d5db; }
+
+/* ===== Segmented control ===== */
+.crm-erp-segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  width: fit-content;
+  margin-bottom: 12px;
+}
+.crm-erp-seg-option {
+  padding: 0 20px;
+  height: 36px;
+  line-height: 36px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  color: #6B7280;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.crm-erp-seg-option:hover { background: #f3f4f6; color: #374151; border-color: #d1d5db; }
+.crm-erp-seg-option.active {
+  background: var(--purchase-primary);
+  color: #fff;
+  font-weight: 600;
+  border-color: var(--purchase-primary);
+  border-width: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.crm-erp-seg-option.active:hover { background: #083D34; color: #fff; }
+.crm-erp-seg-count {
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0 7px;
+  border-radius: 10px;
+  font-weight: 600;
+  line-height: 18px;
+}
+.crm-erp-seg-option.active .crm-erp-seg-count { background: rgba(255, 255, 255, 0.2); }
+
+/* ===== Toolbar ===== */
+.crm-erp-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.crm-erp-toolbar-left { display: flex; align-items: center; gap: 10px; }
+
+/* ===== Tab (used by FollowUps.jsx) ===== */
+.crm-erp-tab {
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: #6B7280;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.crm-erp-tab:hover { color: #334155; }
+.crm-erp-tab.active {
+  color: var(--purchase-primary);
+  font-weight: 600;
+  border-bottom-color: var(--purchase-primary);
+}
+
+/* ===== Table card (used by FollowUps.jsx) ===== */
+.crm-erp-table-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.crm-erp-table-card .crm-erp-table-wrap { overflow-x: auto; }
+.crm-erp-table-card table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.crm-erp-table-card thead th {
+  background: var(--purchase-primary);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  height: 50px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--purchase-table-header-border);
+  text-align: left;
+  white-space: nowrap;
+}
+.crm-erp-table-card tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  vertical-align: middle;
+  font-size: 13px;
+}
+.crm-erp-table-card tbody tr:hover td { background: #F3F4F6; }
+.crm-erp-table-card input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--purchase-primary);
+}
+
+/* ===== Empty state ===== */
+.crm-erp-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: #9CA3AF;
+}
+.crm-erp-empty svg { width: 40px; height: 40px; margin: 0 auto 12px; color: #cbd5e1; }
+.crm-erp-empty h4 { font-size: 15px; color: #6B7280; margin: 0 0 4px; }
+.crm-erp-empty p { font-size: 13px; margin: 0; }
+
+/* ===== Row actions menu =====
+   The three-dot trigger is the shared `.erp-row-action-btn`
+   (styles/sticky-data-grid.css): a plain icon with no surrounding box.
+   Only the portaled menu panel is styled here. ===================== */
+.crm-erp-row-actions-menu {
+  min-width: 200px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* ===== Pagination (used by Marketing.jsx) ===== */
+.crm-erp-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 18px;
+  border-top: 1px solid #F3F4F6;
+  flex-wrap: wrap;
+}
+.crm-erp-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.crm-erp-page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.crm-erp-page-btn:hover:not(:disabled) { border-color: var(--purchase-primary); color: var(--purchase-primary); }
+.crm-erp-page-btn.active { background: var(--purchase-accent); color: #fff; border-color: var(--purchase-accent); box-shadow: 0 2px 8px rgba(10,79,68,0.25); }
+.crm-erp-page-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.crm-erp-page-size {
+  padding: 6px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #475569;
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+}
+
+/* ===== Status badge ===== */
+.crm-erp-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.crm-erp-status-active { background: #dcfce7; color: #166534; }
+.crm-erp-status-inactive { background: #fef3c7; color: #92400e; }
+.crm-erp-status-archived { background: #F3F4F6; color: #475569; }
+
+/* ===== Cell helpers (used by CrmErpList renderers) ===== */
+.crm-erp-cell-main { font-weight: 600; color: #1e293b; }
+.crm-erp-cell-muted { color: #9CA3AF; }
+.crm-erp-cell-strong { font-weight: 700; color: #111827; }
+
+/* ===== Last Follow-up history dropdown (FollowUpHistoryDropdown.jsx) ===== */
+.fuh-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px 2px 2px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--purchase-primary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.fuh-trigger:hover { background: rgba(11, 74, 61, 0.06); }
+.fuh-trigger:focus-visible { outline: 2px solid #0B4A3D; outline-offset: 1px; }
+.fuh-caret {
+  width: 13px;
+  height: 13px;
+  color: var(--purchase-primary);
+  transition: transform 0.18s ease;
+  flex-shrink: 0;
+}
+.fuh-trigger[aria-expanded='true'] .fuh-caret { transform: rotate(180deg); }
+
+.fuh-menu {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.dark .fuh-menu {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.fuh-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 4px 10px 7px;
+  border-bottom: 1px solid #F3F4F6;
+  margin-bottom: 4px;
+}
+.fuh-header-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purchase-primary);
+}
+.fuh-header-count {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #9CA3AF;
+}
+.dark .fuh-header { border-bottom-color: rgba(255, 255, 255, 0.08); }
+.dark .fuh-header-name { color: #60a5fa; }
+
+.fuh-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #6B7280;
+}
+.fuh-error { color: #dc2626; }
+.fuh-spin { animation: qpo-rev-rotate 0.8s linear infinite; width: 13px; height: 13px; }
+
+.fuh-list { max-height: 320px; overflow-y: auto; }
+.fuh-entry {
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: background 0.12s ease;
+}
+.fuh-entry + .fuh-entry { border-top: 1px solid #F3F4F6; }
+.fuh-entry:hover { background: #F3F4F6; }
+.dark .fuh-entry + .fuh-entry { border-top-color: rgba(255, 255, 255, 0.08); }
+.dark .fuh-entry:hover { background: rgba(148, 163, 184, 0.08); }
+
+.fuh-entry-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+}
+.fuh-entry-date { font-weight: 700; color: #334155; white-space: nowrap; }
+.fuh-entry-time { font-weight: 600; color: #6B7280; white-space: nowrap; }
+.dark .fuh-entry-date { color: #e2e8f0; }
+.dark .fuh-entry-time { color: #9CA3AF; }
+.fuh-entry-remarks {
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #475569;
+  overflow-wrap: anywhere;
+}
+.fuh-entry-remarks-label { font-weight: 700; color: var(--purchase-primary); }
+.dark .fuh-entry-remarks { color: #cbd5e1; }
+.dark .fuh-entry-remarks-label { color: #60a5fa; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .crm-erp-page { padding: 14px 12px 40px; }
+  .crm-erp-toolbar { flex-direction: column; align-items: stretch; }
+}
+
+/* =====================================================================
+   TABLE UI — PR (Purchase Requisition) reference alignment
+   --------------------------------------------------------------------
+   These overrides bring the CRM table (pr-table inside .cpr-page) to
+   pixel-identical parity with the PR page's cpr-list.css table styling:
+   hover color, zebra stripe, checkbox accent, sticky-column shadow,
+   border color, and row height. All are scoped to .cpr-page .pr-table
+   so they never bleed into other modules.
+   ===================================================================== */
+
+/* --- Row hover: PR uses #F0FAF7 (green tint), not Tailwind's #F8FAFC --- */
+.cpr-page .pr-table tbody tr:hover td {
+  background: #F0FAF7 !important;
+}
+
+/* --- Zebra stripe: PR uses #F8FBFA for even rows --- */
+.cpr-page .pr-table tbody tr:nth-child(even) td {
+  background: #F8FBFA;
+}
+.cpr-page .pr-table tbody tr:nth-child(even):hover td {
+  background: #F0FAF7 !important;
+}
+
+/* --- Checkbox accent: PR uses #0B4A3D, not emerald-600 --- */
+.cpr-page .pr-table .checkbox-cell input[type="checkbox"] {
+  accent-color: #0B4A3D !important;
+}
+
+/* --- Sticky column shadow: PR uses larger shadow for depth --- */
+.cpr-page .pr-table tbody td.checkbox-cell,
+.cpr-page .pr-table thead th.checkbox-cell {
+  box-shadow: none !important;
+}
+.cpr-page .pr-table tbody td.col-doc-id,
+.cpr-page .pr-table thead th.col-doc-id {
+  box-shadow: 6px 0 12px -9px rgba(15, 23, 42, 0.35) !important;
+}
+.cpr-page .pr-table tbody td.col-actions,
+.cpr-page .pr-table thead th.col-actions {
+  box-shadow: -6px 0 12px -9px rgba(15, 23, 42, 0.35) !important;
+}
+
+/* --- Table border-bottom: PR uses #E2E8F0, not Tailwind's #F1F5F9 --- */
+.cpr-page .pr-table tbody td {
+  border-bottom-color: #E2E8F0 !important;
+}
+
+/* --- Row height: PR uses 44px header, 9px 14px body padding --- */
+.cpr-page .pr-table thead th {
+  height: 44px !important;
+}
+.cpr-page .pr-table tbody td {
+  padding: 9px 14px !important;
+  font-size: 12px !important;
+}
+
+/* --- Selected row: PR uses #E8F0EE green tint --- */
+.cpr-page .pr-table tbody tr.is-selected td {
+  background: #E8F0EE !important;
+}
+.cpr-page .pr-table tbody tr.is-selected td.checkbox-cell,
+.cpr-page .pr-table tbody tr.is-selected td.col-doc-id {
+  background: #E8F0EE !important;
+}
+
+/* --- Dark mode table overrides --- */
+.dark .cpr-page .pr-table tbody tr:hover td {
+  background: rgba(11,74,61,0.22) !important;
+}
+.dark .cpr-page .pr-table tbody tr:nth-child(even) td {
+  background: rgba(11,74,61,0.08);
+}
+.dark .cpr-page .pr-table tbody tr:nth-child(even):hover td {
+  background: rgba(11,74,61,0.22) !important;
+}
+.dark .cpr-page .pr-table tbody td {
+  border-bottom-color: rgba(148,163,184,0.12) !important;
+}
+.dark .cpr-page .pr-table tbody td.checkbox-cell,
+.dark .cpr-page .pr-table thead th.checkbox-cell {
+  background: #141C2E !important;
+}
+.dark .cpr-page .pr-table tbody td.col-doc-id,
+.dark .cpr-page .pr-table thead th.col-doc-id {
+  background: #141C2E !important;
+}
+.dark .cpr-page .pr-table tbody tr:nth-child(even) td.checkbox-cell,
+.dark .cpr-page .pr-table tbody tr:nth-child(even) td.col-doc-id {
+  background: #1A2438 !important;
+}
+.dark .cpr-page .pr-table tbody tr:hover td.checkbox-cell,
+.dark .cpr-page .pr-table tbody tr:hover td.col-doc-id {
+  background: #1E293B !important;
+}
+.dark .cpr-page .pr-table .checkbox-cell input[type="checkbox"] {
+  accent-color: #4ADE80 !important;
+}
+
+/* =====================================================================
+   TOOLBAR UI — PR reference alignment
+   --------------------------------------------------------------------
+   CRM toolbar uses po-toolbar/po-search-box; PR uses pr-toolbar/
+   pr-search-input. Match the PR's search input sizing and styling.
+   ===================================================================== */
+.cpr-page .po-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* =====================================================================
+   BULK BAR — PR reference alignment
+   --------------------------------------------------------------------
+   Match PR's bulk-action-bar colors and spacing.
+   ===================================================================== */
+.cpr-page .po-bulk-bar {
+  background: rgba(11,74,61,0.06);
+  border: 1.5px solid #0B4A3D;
+  border-radius: 12px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 10px 16px;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.dark .cpr-page .po-bulk-bar {
+  background: rgba(11,74,61,0.1);
+  border-color: #0B4A3D;
+  color: #6EE7B7;
+}
+
+/* ===== KPI CARDS — responsive grid + label styling (matches RFQ / PR reference) =====
+   These rules mirror the requisition-list-polish.css overrides for the
+   CRM pages so KPI cards use the same 6-col → 4-col → 3-col → 2-col
+   responsive grid at every viewport width. */
+
+/* Label text styling (matches PR reference: #64748B, 12px, tight margin) */
+.qtn-kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748B;
+  margin-top: 2px;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 100%;
+  text-align: left;
+}
+
+/* Laptop (1200–1439px): four per row — matches PR reference */
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }
+  .cpr-page .pr-kpi-card.qtn-kpi-card { padding: 14px; height: 84px; }
+}
+/* Tablet / small laptop (768–1199px): three per row */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+}
+/* Mobile (480–767px): two per row — matches PR reference */
+@media (min-width: 480px) and (max-width: 767px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+  .cpr-page .pr-kpi-card.qtn-kpi-card { height: 84px; padding: 14px; gap: 10px; }
+}
+/* Small phones (<480px): stack to one per row — matches PR reference */
+@media (max-width: 479px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; margin: 10px 0; }
+  .cpr-page .pr-kpi-card.qtn-kpi-card { height: 80px; padding: 12px 14px; gap: 10px; }
+}
+
+/* =====================================================================
+   14. CRM LIST — STICKY COLUMNS (checkbox + record No + Actions)
+   ---------------------------------------------------------------------
+   The CRM list (CrmErpList: Leads / Clients / Follow-ups) pins its
+   selection checkbox at left: 0, the record-number column (Lead No /
+   Client Code / Follow-up No) right after it, and the trailing Actions
+   column at right: 0 while the middle columns scroll horizontally.
+
+   The pinning itself (position, offsets, z-index ladder, opaque fills,
+   separators) lives in the SHARED implementation —
+   styles/sticky-data-grid.css — which every CRM / CPR / Sales /
+   Marketing list table opts into with the `sgrid` marker class. What is
+   left here is the CRM-specific part: the border trim required by
+   border-collapse: separate.
+   ===================================================================== */
+
+/* With border-collapse: separate (set on the table) the per-cell header
+   borders would double between adjacent cells (1px + 1px). Keep only the
+   right + bottom edge so separators stay exactly 1px, matching the
+   collapsed look of every other pr-table. */
+.cpr-page #crmErpTable thead th {
+  border-top: 0;
+  border-left: 0;
+}
+
+/* =====================================================================
+   SPACIOUS DATA GRID — wide ERP table layout (opt-in per page)
+   ---------------------------------------------------------------------
+   CrmErpList adds the `crm-erp-spacious` modifier when a page asks for the
+   wide grid (the Leads list does). That page also declares an explicit
+   pixel width per column, so the component renders a <colgroup> and sets
+   the table's min-width to the SUM of those widths — the grid scrolls
+   horizontally inside .pr-table-wrap and no column is ever squeezed to
+   fit the viewport. This section supplies the matching cell rhythm:
+   roomy padding on both axes, a taller header, and chips / dates that sit
+   centered in their roomier columns.
+
+   Everything is scoped to the modifier class + the table id, so Clients
+   and Follow-ups (same component, same #crmErpTable id, no modifier) keep
+   the existing 9px/14px compact rhythm and 44px header exactly as-is.
+   ===================================================================== */
+
+/* --- Header: taller, with the same gutters as the body cells --- */
+.cpr-page #crmErpTable.crm-erp-spacious thead th {
+  height: 52px !important;
+  padding: 0 20px !important;
+}
+
+/* --- Body cells: 20px gutters on both axes, so short values never crowd
+       the column edge and long values wrap only when they really must.
+       Content stays vertically centered (shared pr-table rule) and every
+       row keeps a comfortable, consistent height. --- */
+.cpr-page #crmErpTable.crm-erp-spacious tbody td {
+  padding: 20px !important;
+  font-size: 12.5px !important;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+/* --- Selection column (52px): the checkbox itself must stay centered and
+       must not be pushed out of its fixed cell by the roomy gutters. --- */
+.cpr-page #crmErpTable.crm-erp-spacious thead th.checkbox-cell,
+.cpr-page #crmErpTable.crm-erp-spacious tbody td.checkbox-cell {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  text-align: center;
+}
+
+/* --- Actions column (80px): the three-dot trigger is centered in it. --- */
+.cpr-page #crmErpTable.crm-erp-spacious thead th:last-child,
+.cpr-page #crmErpTable.crm-erp-spacious tbody td:last-child {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* The shared first/last-child padding nudges (16px) would flatten the new
+   rhythm on the two edge columns — both are fixed-width in this layout. */
+.cpr-page #crmErpTable.crm-erp-spacious thead th:first-child,
+.cpr-page #crmErpTable.crm-erp-spacious tbody td:first-child {
+  padding-left: 0 !important;
+}
+.cpr-page #crmErpTable.crm-erp-spacious thead th:last-child,
+.cpr-page #crmErpTable.crm-erp-spacious tbody td:last-child {
+  padding-right: 0 !important;
+}

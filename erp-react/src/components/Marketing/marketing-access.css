@@ -1,0 +1,269 @@
+/* ==========================================================================
+   marketing-access.css
+   --------------------------------------------------------------------------
+   Controls for Marketing Settings → Access Management.
+
+   WHY THESE ARE PLAIN, UNLAYERED CLASSES AND NOT TAILWIND UTILITIES
+   The app's global reset in `src/production/styles/global.css` (imported from
+   main.jsx) is UNLAYERED and contains:
+
+       button { font: inherit; color: inherit; background: none; border: none; }
+
+   Unlayered rules outrank every rule inside a cascade layer, and Tailwind v4
+   emits its utilities inside `@layer utilities`. A <button> whose ON/OFF state
+   is expressed with `bg-[#0B4A3D]` / `bg-slate-300` therefore loses its
+   background and border and renders completely transparent — the switch showed
+   no state at all, in both light and dark mode. The same reset also erased the
+   `bg-surface border border-slate-200` of the "Reset" buttons.
+
+   This is the same reason the working controls in this codebase are class-based
+   (`.po-btn`, `.st-toggle`, `.settings-card`). Styling the switch and the
+   secondary button through real classes here restores the surface, the border
+   and the ON/OFF colour, and keeps both themes consistent.
+   ========================================================================== */
+
+/* ---- ON/OFF switch ------------------------------------------------------ */
+
+.mk-toggle {
+  position: relative;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid #b6c2d1;
+  border-radius: 999px;
+  /* OFF: a solid slate track, clearly distinguishable from the card surface. */
+  background-color: #cbd5e1;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+
+.mk-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .35);
+  transition: transform .18s ease;
+}
+
+/* ON: the brand green, with the knob at the opposite, symmetric end. */
+.mk-toggle[aria-checked='true'] {
+  background-color: var(--primary, #0B4A3D);
+  border-color: var(--primary, #0B4A3D);
+}
+
+.mk-toggle[aria-checked='true']::after {
+  transform: translateX(18px);
+}
+
+.mk-toggle:focus-visible {
+  outline: 2px solid var(--primary, #0B4A3D);
+  outline-offset: 2px;
+}
+
+.mk-toggle:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.dark .mk-toggle {
+  background-color: rgba(255, 255, 255, .22);
+  border-color: rgba(255, 255, 255, .32);
+}
+
+.dark .mk-toggle::after {
+  background-color: #F3F4F6;
+}
+
+.dark .mk-toggle[aria-checked='true'] {
+  background-color: var(--primary, #136754);
+  border-color: var(--primary, #136754);
+}
+
+/* ---- Secondary button (Reset) ------------------------------------------- */
+/* Restores the surface + border that the global `button` reset removes. */
+
+.mk-access-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .375rem;
+  padding: .625rem .75rem;
+  border: 1px solid var(--line-strong, #cbd5e1);
+  border-radius: .5rem;
+  background-color: var(--surface, #ffffff);
+  color: var(--ink-2, #475569);
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.mk-access-btn:hover {
+  background-color: var(--surface-2, #F3F4F6);
+  border-color: var(--ink-3, #6B7280);
+  color: var(--ink, #0f172a);
+}
+
+.mk-access-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ---- Permission matrix -------------------------------------------------- */
+
+.mk-access-grid {
+  display: grid;
+  /* Responsive by construction: cards reflow instead of overflowing or
+     clipping their labels at any viewport width. */
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: .75rem;
+}
+
+.mk-access-card {
+  min-width: 0;
+  padding: .75rem;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: .75rem;
+  background-color: var(--surface, #ffffff);
+}
+
+.mk-access-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .25rem;
+  min-width: 0;
+}
+
+.mk-access-card-title {
+  min-width: 0;
+  font-size: .75rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink, #0f172a);
+  overflow-wrap: anywhere;
+}
+
+.mk-access-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: .0625rem .4rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: .5625rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  line-height: 1.5;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The badge always mirrors the area's View permission. */
+.mk-access-badge.is-on {
+  background-color: #E7F5EF;
+  border-color: #BFE0D6;
+  color: #0B4A3D;
+}
+
+.mk-access-badge.is-off {
+  background-color: var(--surface-2, #F3F4F6);
+  border-color: var(--line, #e2e8f0);
+  color: var(--ink-3, #6B7280);
+}
+
+.dark .mk-access-badge.is-on {
+  background-color: rgba(52, 211, 153, .14);
+  border-color: rgba(52, 211, 153, .35);
+  color: #6ee7b7;
+}
+
+.mk-access-rows {
+  display: flex;
+  flex-direction: column;
+  margin-top: .25rem;
+}
+
+/* label | state text | switch — one shared column grid, so every switch in
+   every card lines up and a long label wraps instead of pushing the switch. */
+.mk-access-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: .5rem;
+  min-width: 0;
+  padding: .3125rem 0;
+  border-bottom: 1px solid var(--line, #e2e8f0);
+}
+
+.mk-access-row:last-child {
+  border-bottom: 0;
+}
+
+.mk-access-row-label {
+  min-width: 0;
+  font-size: .6875rem;
+  font-weight: 600;
+  color: var(--ink-2, #475569);
+  overflow-wrap: anywhere;
+}
+
+/* The written state, so ON/OFF is unmistakable even without colour. */
+.mk-access-row-state {
+  min-width: 1.75rem;
+  font-size: .625rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-align: right;
+  text-transform: uppercase;
+  color: var(--ink-3, #6B7280);
+}
+
+.mk-access-row-state.is-on {
+  color: #0B4A3D;
+}
+
+.dark .mk-access-row-state.is-on {
+  color: #6ee7b7;
+}
+
+/* ---- Scope status banner ------------------------------------------------ */
+
+.mk-access-status {
+  padding: 1rem;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: .75rem;
+  background-color: var(--surface-2, #F3F4F6);
+}
+
+.mk-access-status.is-configured {
+  border-color: #BFE0D6;
+  background-color: #EDF7F4;
+}
+
+/* "Not configured — using role defaults" keeps its amber emphasis, so the two
+   states stay as easy to tell apart as they were before. */
+.mk-access-status.is-default {
+  border-color: #FDE68A;
+  background-color: rgba(254, 243, 199, .6);
+}
+
+.dark .mk-access-status.is-configured {
+  border-color: rgba(52, 211, 153, .35);
+  background-color: rgba(52, 211, 153, .1);
+}
+
+.dark .mk-access-status.is-default {
+  border-color: rgba(253, 230, 138, .3);
+  background-color: rgba(253, 230, 138, .08);
+}

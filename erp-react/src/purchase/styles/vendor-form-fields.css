@@ -1,0 +1,49 @@
+/**
+ * purchase/styles/vendor-form-fields.css
+ * ------------------------------------------------------------------
+ * Vendor Registration page (/purchase/vendors/new) — restores the
+ * missing field box on the searchable master/currency dropdown
+ * triggers (Status, Legal Type, MSME Type, Primary Category,
+ * Additional Category, Payment Terms, Currency, Credit Limit
+ * Currency, GST Type, Country).
+ *
+ * ROOT CAUSE
+ *   These controls render their field as a <button> (EditableMasterSelect
+ *   / CurrencySelect trigger) and style the box with Tailwind's *layered*
+ *   utilities (.border / .border-slate-200 / .bg-white). The app-wide
+ *   unlayered reset in src/production/styles/global.css:
+ *
+ *       button { font: inherit; color: inherit;
+ *                background: none; border: none; cursor: pointer; }
+ *
+ *   is not inside @layer, and unlayered CSS outranks layered CSS
+ *   regardless of specificity — so those utilities lost the cascade and
+ *   the trigger rendered borderless with a transparent background, while
+ *   its sibling fields (.purchase-form-input — plain unlayered CSS)
+ *   kept their box.
+ *
+ * FIX
+ *   Re-declare the box border + background as UNLAYERED rules (which
+ *   beat the global element reset) and scope them to this page only:
+ *
+ *     .vendor-registration              → this page's root class
+ *     .pr-form-main                     → form column only (the
+ *                                          right-side summary aside is
+ *                                          excluded)
+ *     button[aria-haspopup=listbox]     → the searchable dropdown
+ *                                          triggers only
+ *
+ * MINIMUM CHANGE
+ *   Only `border` and `background-color` are set, exactly matching the
+ *   reference fields on this page (.purchase-form-input: 1px #E2E8F0 on
+ *   white). Existing height, padding, radius, typography, hover/focus,
+ *   icons, dropdown behaviour, labels, layout and every already-boxed
+ *   field are untouched. The native checkbox and native <select>
+ *   elements are not matched.
+ * ------------------------------------------------------------------
+ */
+
+.vendor-registration .pr-form-main button[aria-haspopup='listbox'] {
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+}

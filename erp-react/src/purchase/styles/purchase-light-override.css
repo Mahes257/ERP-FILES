@@ -1,0 +1,1093 @@
+/* ==========================================================================
+   PURCHASE MODULE — FORCE LIGHT THEME
+   --------------------------------------------------------------------------
+   The Purchase module MUST always render in the professional light ERP
+   theme, regardless of global dark mode. This file overrides all dark-
+   mode styles within .purchase-page scope so that no Purchase page
+   ever shows dark backgrounds, dark cards, dark tables, or dark tabs.
+
+   Import this AFTER all other Purchase stylesheets so it wins
+   specificity. The override is scoped to .purchase-page so it never
+   affects non-Purchase pages.
+   ========================================================================== */
+
+/* ===== 1. FORCE LIGHT TOKENS inside Purchase ===== */
+.purchase-page,
+.purchase-page.dark,
+.purchase-page * {
+  color-scheme: light !important;
+}
+
+/* Override CSS custom properties to light values within Purchase */
+.purchase-page {
+  --purchase-bg: #F4F8F7 !important;
+  --purchase-card: #FFFFFF !important;
+  --purchase-border: #E2E8F0 !important;
+  --purchase-text: #102A2A !important;
+  --purchase-text-muted: #64748B !important;
+  --purchase-text-light: #94A3B8 !important;
+  --purchase-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  --purchase-table-header: #075E54 !important;
+  --purchase-table-header-border: #064C44 !important;
+
+  /* Global app tokens used by Tailwind utilities */
+  --bg-app: #F4F8F7 !important;
+  --surface: #ffffff !important;
+  --surface-2: #f1f5f9 !important;
+  --surface-3: #e5e7eb !important;
+  --ink: #102A2A !important;
+  --ink-2: #475569 !important;
+  --ink-3: #64748b !important;
+  --line: #e5e7eb !important;
+  --line-strong: #cbd5e1 !important;
+  --input-bg: #ffffff !important;
+  --table-header: #075E54 !important;
+  --hover: rgba(7, 94, 84, 0.06) !important;
+  --card-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+  --primary: #075E54 !important;
+  --primary-hover: #064C44 !important;
+  --accent: #0B7A68 !important;
+}
+
+/* ===== 2. PAGE BACKGROUND — always light ===== */
+.purchase-page,
+.purchase-page.dark {
+  background: #F4F8F7 !important;
+  background-image: radial-gradient(ellipse 80% 50% at 90% -10%, rgba(15,143,120,0.05) 0%, transparent 60%) !important;
+  color: #102A2A !important;
+}
+
+/* ===== 3. CARDS — always white ===== */
+.purchase-page .po-kpi-card,
+.purchase-page .prm-card,
+.purchase-page .po-dash-card,
+.purchase-page .purchase-form-card,
+.purchase-page .purchase-view-card,
+.purchase-page .purchase-summary-card,
+.purchase-page .pr-table-card,
+.purchase-page .prv-kpi-card,
+.purchase-page .ce-card,
+.purchase-page .po-empty {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* KPI cards glass effect — light only */
+.purchase-page .po-kpi-card {
+  background: rgba(255,255,255,0.88) !important;
+  border-color: #DCE8E4 !important;
+  box-shadow: 0 4px 18px rgba(7,94,84,0.06) !important;
+}
+
+.purchase-page .po-kpi-card::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%) !important;
+}
+
+.purchase-page .po-kpi-card.active {
+  border-color: #075E54 !important;
+  background: rgba(234,247,243,0.9) !important;
+  box-shadow: 0 0 0 1.5px #075E54, 0 4px 16px rgba(7,94,84,0.1) !important;
+}
+
+/* Hero KPI cards stay emerald gradient */
+.purchase-page .po-kpi-card[data-hero="true"] {
+  background: linear-gradient(135deg, #075E54, #0F8F78) !important;
+  border-color: rgba(15,143,120,0.3) !important;
+}
+
+/* ===== 4. KPI TEXT — always dark ===== */
+.purchase-page .po-kpi-count,
+.purchase-page.dark .po-kpi-count {
+  color: #102A2A !important;
+}
+
+.purchase-page .po-kpi-label,
+.purchase-page.dark .po-kpi-label {
+  color: #64748B !important;
+}
+
+.purchase-page .po-kpi-sub,
+.purchase-page.dark .po-kpi-sub {
+  color: #94A3B8 !important;
+}
+
+/* ===== 5. TABLE — always light ===== */
+.purchase-page .pr-table-card,
+.purchase-page .po-table-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page .pr-table thead th,
+.purchase-page .po-table thead th,
+.purchase-page .pr-item-grid .pr-item-table thead th {
+  background: #075E54 !important;
+  color: #FFFFFF !important;
+  border-bottom-color: #064C44 !important;
+}
+
+.purchase-page .pr-table tbody td,
+.purchase-page .po-table tbody td {
+  color: #102A2A !important;
+  border-bottom-color: #F1F5F9 !important;
+}
+
+.purchase-page .pr-table tbody tr:hover td,
+.purchase-page .po-table tbody tr:hover td {
+  background: #F8FAFC !important;
+}
+
+.purchase-page .pr-table tbody tr:nth-child(even) td,
+.purchase-page .po-table tbody tr.po-row-zebra:nth-child(even) td {
+  background: #FBFCFC !important;
+}
+
+/* Line item grid */
+.purchase-page .pr-item-grid .pr-item-wrap {
+  background: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-table tbody td {
+  background: #FFFFFF !important;
+  color: #374151 !important;
+  border-bottom-color: #F1F5F9 !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-table tbody td:first-child {
+  background: #FFFFFF !important;
+  color: #94A3B8 !important;
+  box-shadow: 1px 0 0 #F1F5F9 !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-table tbody tr:nth-child(even) td {
+  background: #FBFCFC !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-table tbody tr:hover td {
+  background: #F2F8F6 !important;
+}
+
+/* ===== 6. TABS — always light ===== */
+.purchase-page .pr-tabs,
+.purchase-page .po-tabs {
+  border-bottom-color: #E2E8F0 !important;
+}
+
+.purchase-page .pr-tab,
+.purchase-page .po-tab {
+  color: #64748B !important;
+}
+
+.purchase-page .pr-tab.active,
+.purchase-page .po-tab.active {
+  color: #075E54 !important;
+  border-bottom-color: #075E54 !important;
+}
+
+.purchase-page .tab-count,
+.purchase-page .po-tab-count {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+.purchase-page .pr-tab.active .tab-count,
+.purchase-page .po-tab.active .po-tab-count {
+  background: #EAF7F3 !important;
+  color: #075E54 !important;
+}
+
+/* Segmented control tabs */
+.purchase-page .segmented-control {
+  background: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page .segmented-option {
+  color: #64748B !important;
+}
+
+.purchase-page .segmented-option:hover {
+  color: #102A2A !important;
+}
+
+.purchase-page .segmented-option.active {
+  background: #FFFFFF !important;
+  color: #075E54 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+}
+
+/* ===== 7. SEARCH INPUT — always light ===== */
+.purchase-page .pr-search-input,
+.purchase-page .po-search-box input {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #102A2A !important;
+}
+
+.purchase-page .pr-search-input::placeholder,
+.purchase-page .po-search-box input::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* ===== 8. BUTTONS — always light ===== */
+.purchase-page .btn-ghost {
+  background: transparent !important;
+  color: #64748B !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page .btn-ghost:hover {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #102A2A !important;
+}
+
+.purchase-page .po-btn-secondary {
+  background: #FFFFFF !important;
+  color: #102A2A !important;
+  border-color: #D1D5DB !important;
+}
+
+.purchase-page .po-btn-secondary:hover:not(:disabled) {
+  background: #F9FAFB !important;
+  border-color: #9CA3AF !important;
+}
+
+/* ===== 9. FILTER PANEL — always light ===== */
+.purchase-page .pr-filter-panel,
+.purchase-page .prm-filters {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page .filter-group select,
+.purchase-page .filter-group input,
+.purchase-page .prm-filter-input,
+.purchase-page .prm-filter-select {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #102A2A !important;
+}
+
+.purchase-page .filter-group .filter-label,
+.purchase-page .prm-filter-label {
+  color: #64748B !important;
+}
+
+/* ===== 10. BULK ACTION BAR — always light ===== */
+.purchase-page .bulk-action-bar,
+.purchase-page .po-bulk-bar {
+  background: #EAF7F3 !important;
+  border-color: #075E54 !important;
+  color: #075E54 !important;
+}
+
+.purchase-page .bulk-action-bar .bulk-count,
+.purchase-page .po-bulk-count {
+  color: #075E54 !important;
+}
+
+.purchase-page .bulk-action-bar .bulk-actions .btn-ghost,
+.purchase-page .po-bulk-btn {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #102A2A !important;
+}
+
+/* ===== 11. PAGINATION — always light ===== */
+.purchase-page .po-pagination,
+.purchase-page .pr-pagination {
+  border-top-color: #E2E8F0 !important;
+  color: #64748B !important;
+}
+
+.purchase-page .po-page-btn {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #475569 !important;
+}
+
+.purchase-page .po-page-btn:hover:not(:disabled) {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+}
+
+.purchase-page .po-page-btn.active {
+  background: #0B7A68 !important;
+  color: #FFFFFF !important;
+  border-color: #0B7A68 !important;
+}
+
+.purchase-page .po-page-size select {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #102A2A !important;
+}
+
+/* ===== 12. FORMS — always light ===== */
+.purchase-page .purchase-form-input,
+.purchase-page .prm-input,
+.purchase-page .purchase-form-select,
+.purchase-page .prm-select,
+.purchase-page .purchase-form-textarea,
+.purchase-page .prm-textarea {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #102A2A !important;
+}
+
+.purchase-page .purchase-form-label,
+.purchase-page .dark .purchase-form-label {
+  color: #102A2A !important;
+}
+
+/* ===== 13. SECTION CARDS — always light ===== */
+.purchase-page .prm-card-header,
+.purchase-page .po-dash-card-header {
+  border-color: rgba(220,232,228,0.6) !important;
+}
+
+.purchase-page .prm-card-header h3,
+.purchase-page .prm-card-header h2,
+.purchase-page .po-dash-card-header h3 {
+  color: #102A2A !important;
+}
+
+.purchase-page .prm-card-header p {
+  color: #64748B !important;
+}
+
+/* ===== 14. VIEW PAGE — always light ===== */
+.purchase-page .purchase-view-card-header {
+  border-bottom-color: #F1F5F9 !important;
+}
+
+.purchase-page .purchase-view-card-header h3 {
+  color: #1E293B !important;
+}
+
+/* ===== 15. FORM CARD — always light ===== */
+.purchase-page .purchase-form-card-header {
+  border-bottom-color: #F1F5F9 !important;
+}
+
+.purchase-page .purchase-form-card-header h3 {
+  color: #102A2A !important;
+}
+
+.purchase-page .purchase-form-section-title {
+  color: #102A2A !important;
+}
+
+.purchase-page .purchase-form-footer {
+  background: #FFFFFF !important;
+  border-top-color: #E5E7EB !important;
+}
+
+/* ===== 16. TOTALS / SUMMARY — always light ===== */
+.purchase-page .purchase-total-row {
+  color: #374151 !important;
+  border-bottom-color: #F3F4F6 !important;
+}
+
+.purchase-page .purchase-total-row .total-label {
+  color: #6B7280 !important;
+}
+
+.purchase-page .purchase-total-row.purchase-total-grand {
+  border-top-color: #0B7A68 !important;
+  color: #111827 !important;
+}
+
+.purchase-page .purchase-total-row.purchase-total-grand .total-label {
+  color: #111827 !important;
+}
+
+.purchase-page .purchase-total-row.purchase-total-grand .total-value {
+  color: #075E54 !important;
+}
+
+.purchase-page .purchase-total-words {
+  color: #6B7280 !important;
+  border-top-color: #F3F4F6 !important;
+}
+
+/* ===== 17. TIMELINE — always light ===== */
+.purchase-page .prm-timeline-node .prm-timeline-dot {
+  background: #FFFFFF !important;
+}
+
+/* ===== 18. DETAIL SECTIONS — always light ===== */
+.purchase-page .prm-detail-section {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* ===== 19. VENDOR PAGE — always light ===== */
+.purchase-page .prv-kpi-card {
+  background: rgba(255,255,255,0.88) !important;
+  border-color: #DCE8E4 !important;
+}
+
+.purchase-page .prv-more-menu {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page .prv-chat-bubble {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page .prv-empty-attach-ring {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* ===== 20. PURCHASE VIEW TOOLBAR — always light ===== */
+.purchase-page .purchase-view-toolbar {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* ===== 21. ACTION FOOTER — always light ===== */
+.purchase-page .erp-action-footer {
+  background: #FFFFFF !important;
+  border-top-color: #E5E7EB !important;
+  box-shadow: 0 -2px 12px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* ===== 22. SUMMARY CARD — always light ===== */
+.purchase-page .purchase-summary-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* ===== 23. STATUS BADGES — keep light backgrounds ===== */
+.purchase-page .po-badge-gray {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+.purchase-page .po-badge-blue {
+  background: #EFF6FF !important;
+  color: #3B82F6 !important;
+}
+
+.purchase-page .po-badge-green {
+  background: #EAF7F3 !important;
+  color: #08785F !important;
+}
+
+.purchase-page .po-badge-red {
+  background: #FEF2F2 !important;
+  color: #B91C1C !important;
+}
+
+.purchase-page .po-badge-yellow {
+  background: #FFFBEB !important;
+  color: #D97706 !important;
+}
+
+.purchase-page .po-badge-orange {
+  background: #FFF7E6 !important;
+  color: #B45309 !important;
+}
+
+.purchase-page .po-badge-cyan {
+  background: #ECFEFF !important;
+  color: #0891B2 !important;
+}
+
+.purchase-page .po-badge-purple {
+  background: #F5F3FF !important;
+  color: #7C3AED !important;
+}
+
+.purchase-page .po-badge-indigo {
+  background: #EEF2FF !important;
+  color: #4F46E5 !important;
+}
+
+/* ===== 24. PRIORITY BADGES — keep light backgrounds ===== */
+.purchase-page .po-priority-critical {
+  background: #FEF2F2 !important;
+  color: #DC2626 !important;
+}
+
+.purchase-page .po-priority-high {
+  background: #FFF7E6 !important;
+  color: #B45309 !important;
+}
+
+.purchase-page .po-priority-medium {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+.purchase-page .po-priority-low {
+  background: #EAF7F3 !important;
+  color: #08785F !important;
+}
+
+/* ===== 25. SCROLLBAR — light theme ===== */
+.purchase-page .cpr-page-scroll-content::-webkit-scrollbar-thumb {
+  background-color: #CBD5E1 !important;
+}
+
+/* ===== 26. ACTIVE FILTER TAGS ===== */
+.purchase-page .po-active-tag {
+  background: #F1F5F9 !important;
+  color: #102A2A !important;
+}
+
+/* ===== 27. ITEM GRID ADD BUTTON ===== */
+.purchase-page .pr-item-grid .pr-item-add {
+  background: linear-gradient(135deg, #136754 0%, #0B4A3D 55%, #003930 100%) !important;
+}
+
+/* ===== 28. ITEM GRID SUMMARY ===== */
+.purchase-page .pr-item-grid .pr-item-summary {
+  background: #EAF7F3 !important;
+  border-color: #BFE0D6 !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-summary .sum-label {
+  color: #5A8C80 !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-summary .sum-value {
+  color: #075E54 !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-summary .sum-block.sum-grand .sum-value {
+  color: #083D34 !important;
+}
+
+/* ===== 29. ITEM GRID ACTIONS ===== */
+.purchase-page .pr-item-grid .pr-item-action {
+  background: #FFFFFF !important;
+  border-color: #E5E7EB !important;
+  color: #94A3B8 !important;
+}
+
+.purchase-page .pr-item-grid .pr-item-action:hover:not(:disabled) {
+  border-color: #075E54 !important;
+  color: #075E54 !important;
+  background: #EAF7F3 !important;
+}
+
+/* ===== 29b. PURCHASE MODULE NUMERIC INPUT VISUAL CENTERING =====
+   This section is the authoritative shared alignment rule for numeric
+   inputs in the Purchase module. It is intentionally placed OUTSIDE the
+   item-grid section so it also applies in forms, settings, RFQ,
+   quotation, purchase order, invoice and logistics screens.
+
+   IMPORTANT:
+     - text-align:center alone is NOT enough when right/left padding is
+       asymmetric because the native spinner occupies space on the right.
+     - We therefore explicitly balance the centering behavior on the
+       shared numeric input classes and also allow slight visual overflow
+       so the value can be centered relative to the FULL input box while
+       the spinner remains usable.
+     - Numeric amount/total fields that are intentionally right-aligned
+       keep their own explicit right-alignment rules below.
+   ========================================================================== */
+
+/* Base numeric input centering for the shared Purchase form controls. */
+.purchase-form-input[type="number"],
+.prm-input[type="number"] {
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow-x: visible;
+}
+
+/* Quotation item grid inputs (Required Qty / Quoted Qty / Rate / Disc % / Tax %). */
+.qtn-items-table input[type="number"] {
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow-x: visible;
+}
+
+/* Purchase order / invoice edit inputs. */
+.po-table input[type="number"],
+.inv-edit-input--num,
+.inv-edit-input--c[type="number"] {
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow-x: visible;
+}
+
+/* Settings numeric inputs (st-* controls). */
+.st-num-input[type="number"],
+.st-input-xs[type="number"],
+.st-td-right input[type="number"],
+.st-td-center input[type="number"],
+[data-label] input[type="number"] {
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow-x: visible;
+}
+
+/* Numeric table columns: center header + cell content by default. */
+.qtn-items-table th.num,
+.qtn-items-table td.num,
+.po-table th.num,
+.po-table td.num,
+.ce-items-table th.num,
+.ce-items-table td.num,
+.approval-drawer-table th.num,
+.approval-drawer-table td.num,
+.inv-line-table th.text-right,
+.inv-line-table td.text-right {
+  text-align: center;
+}
+
+/* Amount/total columns intentionally remain right-aligned; keep them
+   explicit rather than auto-centering every numeric column. */
+.inv-edit-input--c,
+.st-num-input-right[type="number"],
+.st-td-right input[type="number"],
+.qtn-cell-amount,
+.purchase-total-row .total-value,
+.text-right.tabular-nums {
+  text-align: right;
+}
+
+/* Keep numeric spinners visible and functional across browsers. */
+.purchase-page input[type="number"]::-webkit-inner-spin-button,
+.purchase-page input[type="number"]::-webkit-outer-spin-button,
+.purchase-form-input[type="number"]::-webkit-inner-spin-button,
+.prm-input[type="number"]::-webkit-inner-spin-button,
+.qtn-items-table input[type="number"]::-webkit-inner-spin-button,
+.po-table input[type="number"]::-webkit-inner-spin-button {
+  opacity: 1;
+  appearance: inner-spin-button;
+  -webkit-appearance: inner-spin-button;
+}
+
+/* Dark-mode safety: keep spinners visible in Purchase dark scope. */
+.purchase-page.dark input[type="number"]::-webkit-inner-spin-button,
+.purchase-page.dark input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  appearance: inner-spin-button;
+  -webkit-appearance: inner-spin-button;
+}
+
+/* Extended mode: TOTAL column stays right-aligned (financial convention). */
+.purchase-page .pr-item-grid.show-ext .pr-item-table td[data-col="8"] {
+  text-align: right;
+}
+
+.purchase-page .pr-item-grid.show-ext .pr-item-table td[data-col="8"].pr-amt-cell {
+  text-align: right;
+}
+
+/* Mobile card layout: ensure numeric cells stay centered. */
+@media (max-width: 767px) {
+  .purchase-page .pr-item-grid .pr-item-table tbody td.pr-num-cell,
+  .purchase-page .pr-item-grid .pr-item-table tbody td[data-col="6"],
+  .purchase-page .pr-item-grid .pr-item-table tbody td[data-col="7"],
+  .purchase-page .pr-item-grid .pr-item-table tbody td[data-col="8"],
+  .purchase-page .pr-item-grid .pr-item-table tbody td[data-col="9"],
+  .purchase-page .pr-item-grid.show-ext .pr-item-table tbody td[data-col="4"],
+  .purchase-page .pr-item-grid.show-ext .pr-item-table tbody td[data-col="6"] {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .purchase-page .pr-item-grid .pr-item-table tbody td.pr-amt-cell,
+  .purchase-page .pr-item-grid .pr-item-table tbody td[data-col="10"],
+  .purchase-page .pr-item-grid.show-ext .pr-item-table tbody td[data-col="8"] {
+    justify-content: flex-end;
+    text-align: right;
+  }
+}
+
+/* ===== 30. ENSURE TAILWIND UTILITIES WORK ===== */
+/* Override Tailwind dark: variant utilities within Purchase */
+.purchase-page.dark .bg-app { background-color: #F4F8F7 !important; }
+.purchase-page.dark .bg-surface { background-color: #FFFFFF !important; }
+.purchase-page.dark .bg-surface-2 { background-color: #F1F5F9 !important; }
+.purchase-page.dark .bg-surface-3 { background-color: #E5E7EB !important; }
+.purchase-page.dark .bg-input { background-color: #FFFFFF !important; }
+.purchase-page.dark .bg-header { background-color: #075E54 !important; }
+.purchase-page.dark .text-ink { color: #102A2A !important; }
+.purchase-page.dark .text-ink-2 { color: #475569 !important; }
+.purchase-page.dark .text-ink-3 { color: #64748B !important; }
+.purchase-page.dark .border-line { border-color: #E5E7EB !important; }
+.purchase-page.dark .border-line-strong { border-color: #CBD5E1 !important; }
+.purchase-page.dark .bg-hover { background-color: rgba(7, 94, 84, 0.06) !important; }
+.purchase-page.dark .bg-primary { background-color: #075E54 !important; }
+.purchase-page.dark .bg-primary-hover { background-color: #064C44 !important; }
+.purchase-page.dark .bg-accent { background-color: #0B7A68 !important; }
+
+/* Override slate color palette for Purchase dark scope */
+.purchase-page.dark .bg-slate-50 { background-color: #f8fafc !important; }
+.purchase-page.dark .bg-slate-100 { background-color: #f1f5f9 !important; }
+.purchase-page.dark .bg-slate-200 { background-color: #e5e7eb !important; }
+.purchase-page.dark .text-slate-50 { color: #f8fafc !important; }
+.purchase-page.dark .text-slate-100 { color: #f1f5f9 !important; }
+.purchase-page.dark .text-slate-200 { color: #e5e7eb !important; }
+.purchase-page.dark .text-slate-300 { color: #cbd5e1 !important; }
+.purchase-page.dark .text-slate-400 { color: #94a3b8 !important; }
+.purchase-page.dark .text-slate-500 { color: #64748b !important; }
+.purchase-page.dark .text-slate-600 { color: #475569 !important; }
+.purchase-page.dark .text-slate-700 { color: #334155 !important; }
+.purchase-page.dark .text-slate-800 { color: #1e293b !important; }
+.purchase-page.dark .text-slate-900 { color: #0f172a !important; }
+.purchase-page.dark .border-slate-100 { border-color: #f1f5f9 !important; }
+.purchase-page.dark .border-slate-200 { border-color: #e5e7eb !important; }
+.purchase-page.dark .border-slate-300 { border-color: #cbd5e1 !important; }
+.purchase-page.dark .hover\\:bg-slate-50:hover { background-color: #f8fafc !important; }
+.purchase-page.dark .hover\\:bg-slate-100:hover { background-color: #f1f5f9 !important; }
+.purchase-page.dark .hover\\:text-slate-700:hover { color: #334155 !important; }
+.purchase-page.dark .hover\\:text-slate-800:hover { color: #1e293b !important; }
+.purchase-page.dark .hover\\:text-slate-900:hover { color: #0f172a !important; }
+.purchase-page.dark .hover\\:border-slate-300:hover { border-color: #cbd5e1 !important; }
+.purchase-page.dark .hover\\:border-slate-400:hover { border-color: #94a3b8 !important; }
+.purchase-page.dark .focus\\:border-slate-300:focus { border-color: #cbd5e1 !important; }
+.purchase-page.dark .focus\\:border-slate-400:focus { border-color: #94a3b8 !important; }
+
+/* Override emerald palette to stay green-tinted */
+.purchase-page.dark .bg-emerald-50 { background-color: #f0fdf4 !important; }
+.purchase-page.dark .bg-emerald-100 { background-color: #dcfce7 !important; }
+.purchase-page.dark .text-emerald-600 { color: #16a34a !important; }
+.purchase-page.dark .text-emerald-700 { color: #15803d !important; }
+.purchase-page.dark .border-emerald-200 { border-color: #bbf7d0 !important; }
+.purchase-page.dark .border-emerald-300 { border-color: #86efac !important; }
+
+/* Override rose/red palette */
+.purchase-page.dark .bg-rose-50 { background-color: #fff1f2 !important; }
+.purchase-page.dark .bg-rose-100 { background-color: #ffe4e6 !important; }
+.purchase-page.dark .text-rose-600 { color: #e11d48 !important; }
+.purchase-page.dark .text-rose-700 { color: #be123c !important; }
+
+/* Override sky/blue palette */
+.purchase-page.dark .bg-sky-50 { background-color: #f0f9ff !important; }
+.purchase-page.dark .bg-sky-100 { background-color: #e0f2fe !important; }
+.purchase-page.dark .text-sky-600 { color: #0284c7 !important; }
+.purchase-page.dark .text-sky-700 { color: #0369a1 !important; }
+
+/* Override amber/yellow palette */
+.purchase-page.dark .bg-amber-50 { background-color: #fffbeb !important; }
+.purchase-page.dark .bg-amber-100 { background-color: #fef3c7 !important; }
+.purchase-page.dark .text-amber-500 { color: #f59e0b !important; }
+.purchase-page.dark .text-amber-600 { color: #d97706 !important; }
+.purchase-page.dark .text-amber-700 { color: #b45309 !important; }
+
+/* Override white backgrounds */
+.purchase-page.dark .bg-white { background-color: #FFFFFF !important; }
+
+/* Override shadow utilities */
+.purchase-page.dark .shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important; }
+.purchase-page.dark .shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06) !important; }
+.purchase-page.dark .shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06) !important; }
+.purchase-page.dark .shadow-lg { box-shadow: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05) !important; }
+
+/* ===== 31. MODAL / DIALOG OVERRIDES ===== */
+/* Modals are portaled to body but Purchase modals should stay light */
+.purchase-page .modal-content,
+.purchase-page [role="dialog"] {
+  background: #FFFFFF !important;
+  color: #102A2A !important;
+}
+
+/* ===== 32. ENSURE NO DARK NAVY BACKGROUNDS LEAK ===== */
+/* Reset any hardcoded dark navy that might exist in component styles */
+/* Note: Tailwind dark: variant classes are overridden by the .dark scope rules above */
+
+/* ===== 33. ENSURE PURCHASE-SPECIFIC DARK OVERRIDES ARE RESET ===== */
+/* These target the .dark .cpr-page rules in cpr-list.css and design-system.css */
+.purchase-page.dark .cpr-page .pr-table-card,
+.purchase-page.dark .cpr-page .po-table-card {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page.dark .cpr-page .pr-table thead th,
+.purchase-page.dark .cpr-page .po-table thead th {
+  background: #075E54 !important;
+  color: #FFFFFF !important;
+}
+
+.purchase-page.dark .cpr-page .pr-table tbody td,
+.purchase-page.dark .cpr-page .po-table tbody td {
+  color: #102A2A !important;
+  border-bottom-color: #F1F5F9 !important;
+}
+
+.purchase-page.dark .cpr-page .pr-table tbody tr:hover td,
+.purchase-page.dark .cpr-page .po-table tbody tr:hover td {
+  background: #F8FAFC !important;
+}
+
+.purchase-page.dark .cpr-page .pr-kpi-card.qtn-kpi-card {
+  background: rgba(255,255,255,0.88) !important;
+  border-color: #DCE8E4 !important;
+}
+
+.purchase-page.dark .cpr-page .qtn-kpi-count {
+  color: #102A2A !important;
+}
+
+.purchase-page.dark .cpr-page .qtn-kpi-label {
+  color: #64748B !important;
+}
+
+.purchase-page.dark .cpr-page .pr-tab {
+  color: #64748B !important;
+}
+
+.purchase-page.dark .cpr-page .pr-tab.active {
+  color: #075E54 !important;
+  border-bottom-color: #075E54 !important;
+}
+
+.purchase-page.dark .cpr-page .pr-tab .tab-count {
+  background: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+.purchase-page.dark .cpr-page .segmented-control {
+  background: #F1F5F9 !important;
+}
+
+.purchase-page.dark .cpr-page .segmented-option {
+  color: #64748B !important;
+}
+
+.purchase-page.dark .cpr-page .segmented-option.active {
+  background: #FFFFFF !important;
+  color: #075E54 !important;
+}
+
+.purchase-page.dark .cpr-page .pr-search-input {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #102A2A !important;
+}
+
+.purchase-page.dark .cpr-page .btn-ghost {
+  background: transparent !important;
+  color: #64748B !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page.dark .cpr-page .btn-ghost:hover {
+  background: #F1F5F9 !important;
+  color: #102A2A !important;
+}
+
+.purchase-page.dark .cpr-page .pr-filter-panel {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+.purchase-page.dark .cpr-page .filter-group select,
+.purchase-page.dark .cpr-page .filter-group input {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #102A2A !important;
+}
+
+.purchase-page.dark .cpr-page .filter-group .filter-label {
+  color: #64748B !important;
+}
+
+.purchase-page.dark .cpr-page .bulk-action-bar {
+  background: #EAF7F3 !important;
+  border-color: #075E54 !important;
+}
+
+.purchase-page.dark .cpr-page .bulk-action-bar .bulk-count {
+  color: #075E54 !important;
+}
+
+.purchase-page.dark .cpr-page .bulk-action-bar .bulk-actions .btn-ghost {
+  background: transparent !important;
+  color: #64748B !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* ===== 34. OVERRIDE INLINE TAILWIND dark: VARIANT CLASSES ===== */
+/* These target specific Tailwind dark: variant utilities used in Purchase components */
+.purchase-page.dark .dark\\:bg-\\[\\#141C2E\\] { background-color: #FFFFFF !important; }
+.purchase-page.dark .dark\\:bg-\\[\\#1f2937\\] { background-color: #FFFFFF !important; }
+.purchase-page.dark .dark\\:bg-\\[\\#1A1A2E\\] { background-color: #FFFFFF !important; }
+.purchase-page.dark .dark\\:bg-\\[\\#0F172A\\] { background-color: #F4F8F7 !important; }
+.purchase-page.dark .dark\\:bg-\\[\\#1E293B\\] { background-color: #FFFFFF !important; }
+.purchase-page.dark .dark\\:border-white\\/10 { border-color: #E2E8F0 !important; }
+.purchase-page.dark .dark\\:text-slate-100 { color: #102A2A !important; }
+.purchase-page.dark .dark\\:text-slate-200 { color: #102A2A !important; }
+.purchase-page.dark .dark\\:text-slate-400 { color: #64748B !important; }
+.purchase-page.dark .dark\\:hover\\:bg-white\\/10:hover { background-color: #F1F5F9 !important; }
+.purchase-page.dark .dark\\:\\[color-scheme\\:dark\\] { color-scheme: light !important; }
+
+/* ===== 35. ENSURE PURCHASE COMPONENTS STAY LIGHT ===== */
+/* Target key component backgrounds that might inherit dark styles */
+.purchase-page.dark .prm-card,
+.purchase-page.dark .po-dash-card,
+.purchase-page.dark .purchase-form-card,
+.purchase-page.dark .purchase-view-card,
+.purchase-page.dark .purchase-summary-card,
+.purchase-page.dark .prv-kpi-card,
+.purchase-page.dark .prv-more-menu,
+.purchase-page.dark .prv-chat-bubble,
+.purchase-page.dark .prv-empty-attach-ring,
+.purchase-page.dark .prm-detail-section,
+.purchase-page.dark .purchase-view-toolbar,
+.purchase-page.dark .erp-action-footer {
+  background: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+/* ==========================================================================
+   36. FORCE LIGHT SIDEBAR & TOPBAR WHEN PURCHASE ROUTES ARE ACTIVE
+   --------------------------------------------------------------------------
+   When PurchaseLayout mounts, it adds .purchase-active to <html>.
+   These rules override the .dark sidebar/topbar styles so the app
+   shell stays in light mode while the user is in the Purchase module.
+   Non-Purchase routes are unaffected (no .purchase-active class).
+   ========================================================================== */
+
+/* --- Sidebar tokens: reset to light defaults --- */
+.purchase-active.dark .app-sidebar {
+  --sb-bg: #ffffff !important;
+  --sb-hover: var(--purchase-hover, #EDF7F4) !important;
+  --sb-border: var(--purchase-border, #E5E7EB) !important;
+  --sb-profile-bg: #F8FAF9 !important;
+  --sb-active-bg: var(--purchase-primary, #0B4A3D) !important;
+  --sb-active-text: #ffffff !important;
+  --sb-search-bg: #F8FAF9 !important;
+  --sb-search-border: #D1D5DB !important;
+  --sb-tooltip-bg: #1E293B !important;
+  --sb-text: #4B5563 !important;
+  --sb-accent: var(--purchase-primary, #0B4A3D) !important;
+  --sb-accent-soft: var(--purchase-primary-light, #EDF7F4) !important;
+  --sb-purchase-primary: #0F5B4C !important;
+  --sb-purchase-active: #EAF7F2 !important;
+  --sb-purchase-hover: #F4FAF7 !important;
+  --sb-purchase-muted: #6B7280 !important;
+  --sb-chevron-hover: rgba(15, 23, 42, 0.06) !important;
+  background: #ffffff !important;
+  border-right-color: #E5E7EB !important;
+  color: #4B5563 !important;
+}
+
+/* --- Sidebar sub-components --- */
+.purchase-active.dark .sb-logo-text {
+  color: #102A2A !important;
+}
+
+.purchase-active.dark .sb-profile-name {
+  color: #102A2A !important;
+}
+
+.purchase-active.dark .sb-profile-role {
+  color: #64748B !important;
+}
+
+.purchase-active.dark .sb-search-input {
+  background: #F8FAF9 !important;
+  border-color: #D1D5DB !important;
+  color: #102A2A !important;
+}
+
+.purchase-active.dark .sb-search-input::placeholder {
+  color: #94A3B8 !important;
+}
+
+.purchase-active.dark .sb-count-badge {
+  background: #FEF3C7 !important;
+  color: #92400E !important;
+}
+
+.purchase-active.dark .sb-count-badge.is-overdue {
+  background: #FEE2E2 !important;
+  color: #991B1B !important;
+}
+
+.purchase-active.dark .sb-count-badge.is-pending {
+  background: #DBEAFE !important;
+  color: #1E40AF !important;
+}
+
+/* --- Topbar --- */
+.purchase-active.dark .app-topbar {
+  background: #ffffff !important;
+  border-bottom-color: #E5E7EB !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+}
+
+.purchase-active.dark .app-topbar-title {
+  color: #374151 !important;
+}
+
+.purchase-active.dark .topbar-icon-btn {
+  color: #6B7280 !important;
+}
+
+.purchase-active.dark .topbar-icon-btn:hover {
+  background: #F3F4F6 !important;
+  color: #0B4A3D !important;
+}
+
+.purchase-active.dark .topbar-notif-badge {
+  background: #EF4444 !important;
+  color: #ffffff !important;
+}
+
+.purchase-active.dark .topbar-sep {
+  background: #E5E7EB !important;
+}
+
+.purchase-active.dark .topbar-user-name {
+  color: #374151 !important;
+}
+
+.purchase-active.dark .topbar-user-menu {
+  background: #ffffff !important;
+  border-color: #E5E7EB !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.purchase-active.dark .topbar-user-menu-item {
+  color: #374151 !important;
+}
+
+.purchase-active.dark .topbar-user-menu-item:hover {
+  background: #F3F4F6 !important;
+  color: #0B4A3D !important;
+}
+
+/* --- Global tokens for the app shell within Purchase context --- */
+.purchase-active.dark {
+  --bg-app: #F4F8F7 !important;
+  --surface: #ffffff !important;
+  --surface-2: #f1f5f9 !important;
+  --surface-3: #e5e7eb !important;
+  --ink: #102A2A !important;
+  --ink-2: #475569 !important;
+  --ink-3: #64748b !important;
+  --line: #e5e7eb !important;
+  --line-strong: #cbd5e1 !important;
+  --primary: #075E54 !important;
+  --primary-hover: #064C44 !important;
+  color-scheme: light !important;
+}
+
+/* --- Scrollbar overrides for Purchase context --- */
+.purchase-active.dark *::-webkit-scrollbar-thumb {
+  background: #CBD5E1 !important;
+}
+
+.purchase-active.dark *::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8 !important;
+}

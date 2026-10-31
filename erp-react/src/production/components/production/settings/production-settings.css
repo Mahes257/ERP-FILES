@@ -1,0 +1,127 @@
+/* ==========================================================================
+   PRODUCTION SETTINGS — MODULE THEME
+   --------------------------------------------------------------------------
+   The settings shell itself (rail, cards, fields, tables, sticky save bar,
+   banners) lives in src/styles/settings-shell.css and is shared with the
+   Sales Settings module. This file binds that shell to the Production palette
+   and adapts the module's own page/card chrome to the shell's column, so the
+   existing section pages keep working unchanged.
+   ========================================================================== */
+
+.production-settings {
+  --ss-primary: var(--color-accent, #075E54);
+  --ss-primary-hover: #064C44;
+  --ss-primary-light: var(--color-accent-soft, #EAF7F3);
+  --ss-primary-soft: #E4F3EE;
+  --ss-primary-border: #C4E2D8;
+  --ss-text: #102A2A;
+  --ss-text-2: #64748B;
+  --ss-muted: #94A3B8;
+  --ss-border: var(--color-border, #E2E8F0);
+  --ss-border-strong: #CBD5E1;
+  --ss-card: var(--color-surface, #FFFFFF);
+  --ss-danger: #DC2626;
+  --ss-danger-light: #FEF2F2;
+  --ss-danger-border: #FCA5A5;
+  --ss-focus-ring: 0 0 0 3px rgba(7, 94, 84, 0.16);
+  min-width: 0;
+}
+
+.production-settings > .po-breadcrumb {
+  margin-bottom: 10px;
+}
+
+/* ── The section heading ───────────────────────────────────────────
+   Every section page renders the module's PageHeader. Inside the shell it is
+   the PDE SECTION heading (PDE: 17px title + 13px description above the card
+   stack), not a second sticky page header — the shell already owns the page
+   heading, so the sticky positioning and the page padding are turned off and
+   the type scale is tuned to the shell's heading. */
+.production-settings .page-header {
+  position: static;
+  z-index: auto;
+  background: transparent;
+  border-bottom: 0;
+  padding: 0;
+  margin-bottom: 18px;
+  align-items: flex-start;
+}
+
+.production-settings .page-title {
+  font-size: 17px;
+  letter-spacing: -0.1px;
+  line-height: 1.3;
+}
+
+.production-settings .page-subtitle {
+  max-width: none;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* A section page is the shell's content column, never a nested page: it only
+   needs the overflow guards the old `.page` root used to provide. */
+.ss-section {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.ss-section > * {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* ── Section card chrome ───────────────────────────────────────────
+   The managers render their list inside `.settings-page-card` with a
+   `.settings-page-head` on top. Re-shape that pair into the shell's card
+   (title band + flush body) without touching the table's sticky-column CSS:
+   the padding moves to the card's edges, and only the non-table children
+   (empty states) get it back. */
+.production-settings .settings-page-card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.production-settings .settings-page-head {
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+  min-height: 44px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #EEF2F1;
+  background: #FBFCFC;
+}
+
+.production-settings .settings-page-title {
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.production-settings .settings-page-subtitle {
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.production-settings .settings-page-card > .sf-empty {
+  padding: 28px 16px;
+}
+
+/* ── Status master category pills ──────────────────────────────────
+   The module already renders a segmented control for the status areas; give
+   it the shell's tab-pill look so it matches the PDE segmented control. */
+.production-settings .status-cat-btn {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .production-settings .page-header {
+    padding: 0;
+  }
+}

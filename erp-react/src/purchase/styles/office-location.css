@@ -1,0 +1,284 @@
+/* ==========================================================================
+   OFFICE LOCATION SECTION — map, pin, search dropdown, map tools
+   --------------------------------------------------------------------------
+   Scoped under .ol-section so it never leaks into other Purchase pages.
+   Leaflet's own panes sit at z-index ≤ 1000, so every overlay above the
+   map (search dropdown, coordinate chip, tools, banners) uses z-index
+   ≥ 1001. Matches the Purchase design system (same greys, green #0A4F44
+   accent, radii, shadows) — no custom colors.
+   ========================================================================== */
+
+/* Coordinate inputs — monospaced so lat/lng align across rows. */
+.ol-section .ol-coord-input {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+  letter-spacing: 0.2px;
+}
+/* Search input with leading icon — the shared .purchase-form-input
+   padding is unlayered CSS, so Tailwind utilities cannot override it;
+   scoping here (higher specificity) keeps the icon clear of the text. */
+.ol-section .ol-search-input { padding-left: 34px; padding-right: 34px; }
+
+/* ---- Map shell ---- */
+.ol-section .ol-map-wrap {
+  position: relative;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #EAF0F3;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.ol-section .ol-map {
+  height: 420px;          /* desktop */
+  width: 100%;
+  z-index: 0;
+}
+@media (max-width: 1199px) {
+  .ol-section .ol-map { height: 350px; }  /* tablet */
+}
+@media (max-width: 767px) {
+  .ol-section .ol-map { height: 280px; }  /* mobile */
+}
+.dark .ol-section .ol-map-wrap { border-color: rgba(148, 163, 184, 0.18); }
+
+/* ---- Fullscreen map ---- */
+.ol-section .ol-map-wrap:fullscreen {
+  border: none;
+  border-radius: 0;
+  background: #0F172A;
+}
+.ol-section .ol-map-wrap:fullscreen .ol-map { height: 100vh !important; }
+
+/* ---- Leaflet marker wrapper — keep transparent (overrides divIcon) ---- */
+.ol-section .ol-pin-container {
+  background: transparent;
+  border: none;
+}
+.ol-section .ol-pin {
+  filter: drop-shadow(0 3px 4px rgba(15, 23, 42, 0.35));
+  animation: ol-pin-drop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: 50% 100%;
+}
+@keyframes ol-pin-drop {
+  0%   { transform: translateY(-26px); opacity: 0; }
+  60%  { transform: translateY(4px);   opacity: 1; }
+  100% { transform: translateY(0);     opacity: 1; }
+}
+
+/* ---- Leaflet popup (themed to the ERP design system) ---- */
+.ol-section .leaflet-popup-content-wrapper,
+.ol-section .leaflet-popup-tip {
+  background: #FFFFFF;
+  color: #0F172A;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+}
+.ol-section .leaflet-popup-content { margin: 0; }
+.ol-section .ol-popup {
+  min-width: 224px;
+  padding: 12px 14px;
+  font-family: inherit;
+}
+.ol-section .ol-popup-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #0A4F44;
+}
+.ol-section .ol-popup-title::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #0E6B58;
+}
+.ol-section .ol-popup-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 3px 0;
+  font-size: 11.5px;
+}
+.ol-section .ol-popup-row span { color: #64748B; font-weight: 600; }
+.ol-section .ol-popup-row b {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-weight: 600;
+  color: #0F172A;
+}
+.ol-section .ol-popup-addr {
+  margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px dashed #E2E8F0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #64748B;
+}
+.ol-section .ol-popup-addr-muted { font-style: italic; color: #94A3B8; }
+.dark .ol-section .leaflet-popup-content-wrapper,
+.dark .ol-section .leaflet-popup-tip { background: #141C2E; color: #E2E8F0; }
+.dark .ol-section .ol-popup-row span { color: #94A3B8; }
+.dark .ol-section .ol-popup-row b { color: #F1F5F9; }
+.dark .ol-section .ol-popup-addr { border-top-color: rgba(148, 163, 184, 0.2); color: #94A3B8; }
+
+/* ---- Leaflet scale control (dark) ---- */
+.dark .ol-section .leaflet-control-scale-line {
+  background: rgba(20, 28, 46, 0.85);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #94A3B8;
+  font-size: 10px;
+}
+
+/* ---- Search results dropdown (above the map panes) ---- */
+.ol-section .ol-search-results {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 1001;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  max-height: 240px;
+  overflow-y: auto;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+}
+.ol-section .ol-search-results li + li { border-top: 1px solid #F1F5F9; }
+.ol-section .ol-search-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.ol-section .ol-search-result:hover { background: #EDF7F4; }
+.ol-section .ol-search-result:focus-visible { outline: 2px solid #0A4F44; outline-offset: -1px; }
+.dark .ol-section .ol-search-results { background: #141C2E; border-color: rgba(148, 163, 184, 0.18); }
+.dark .ol-section .ol-search-results li + li { border-top-color: rgba(148, 163, 184, 0.12); }
+.dark .ol-section .ol-search-result:hover { background: rgba(11, 74, 61, 0.22); }
+
+.ol-section .ol-search-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #94A3B8;
+}
+
+/* ---- Map overlays ---- */
+.ol-section .ol-coords-chip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1001;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(11, 74, 61, 0.92);
+  color: #FFFFFF;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.28);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.ol-section .ol-pin-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  z-index: 1001;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #0F172A;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.3);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.ol-section .ol-map-banner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  display: block;
+  padding: 6px 14px;
+  background: rgba(254, 243, 199, 0.95);
+  color: #92400E;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-align: center;
+  border-top: 1px solid #FDE68A;
+  pointer-events: none;
+}
+.dark .ol-section .ol-map-banner { background: rgba(146, 64, 14, 0.85); color: #FDE68A; border-top-color: rgba(253, 230, 138, 0.4); }
+
+/* ---- Map tools (fullscreen / locate me) — match Leaflet control chrome ---- */
+.ol-section .ol-map-tools {
+  position: absolute;
+  top: 44px;
+  right: 10px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ol-section .ol-map-tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #475569;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+.ol-section .ol-map-tool:hover { background: #F0FDF9; color: #0A4F44; }
+.ol-section .ol-map-tool:active { transform: scale(0.94); }
+.ol-section .ol-map-tool:focus-visible { outline: 2px solid #0A4F44; outline-offset: 1px; }
+.ol-section .ol-map-tool:disabled { opacity: 0.6; cursor: default; }
+.dark .ol-section .ol-map-tool { background: #141C2E; border-color: rgba(148, 163, 184, 0.25); color: #94A3B8; }
+.dark .ol-section .ol-map-tool:hover { background: rgba(11, 74, 61, 0.35); color: #8FDDCB; }
+
+/* ---- Validation strip ---- */
+.ol-section .ol-validation {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.dark .ol-section .ol-validation { background: rgba(185, 28, 28, 0.16); border-color: rgba(248, 113, 113, 0.4); color: #FCA5A5; }

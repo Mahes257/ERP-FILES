@@ -1,0 +1,41 @@
+/* ============================================================================
+   Documents module — shared badge/chip styles.
+
+   Used by the Documents list (pages/Documents.jsx) AND the standardized
+   document preview (pages/DocumentPreview.jsx) so a document's status and
+   visibility chips look identical in both. Moved here from the list page's
+   inline <style> block.
+
+   The base geometry below is duplicated from the Purchase Document
+   Repository's design system (purchase/styles/document-repository.css
+   `.doc-badge`) because the two pages load in different orders: a buyer who
+   opens the Sales Documents page loads BOTH stylesheets, so whichever base is
+   declared later wins for chips on both pages. The values are therefore kept
+   byte-identical to the design system (10px/700/99px) instead of being
+   restyled here — that is what keeps the Sales, preview and reference chips
+   the same size no matter which page is visited first.
+
+   Only the colour variants live here; the reference has its own stage
+   variants (.doc-badge.pr, .doc-badge.po, …).
+   ========================================================================== */
+
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.doc-badge-amber { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+.doc-badge-blue { background: #DBEAFE; color: #1E40AF; border-color: #BFDBFE; }
+.doc-badge-green { background: #D1FAE5; color: #065F46; border-color: #A7F3D0; }
+.doc-badge-gray { background: #F3F4F6; color: #374151; border-color: #E5E7EB; }
+.doc-badge-red { background: #FEE2E2; color: #991B1B; border-color: #FECACA; }
+.doc-badge-purple { background: #EDE9FE; color: #5B21B6; border-color: #DDD6FE; }
+.doc-badge-cyan { background: #CFFAFE; color: #155E75; border-color: #A5F3FC; }
+.doc-badge-orange { background: #FFEDD5; color: #9A3412; border-color: #FDBA74; }

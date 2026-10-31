@@ -1,0 +1,112 @@
+/* ============================================================
+   Summary Cards — Production Orders KPI style (exact match)
+   ============================================================ */
+.sf-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+  width: 100%;
+  max-width: 100%;
+  padding: 16px 16px 0;
+}
+@media (min-width: 1440px) {
+  .sf-summary-grid { grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 1199px) {
+  .sf-summary-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 899px) {
+  .sf-summary-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 599px) {
+  .sf-summary-grid { grid-template-columns: 1fr; }
+}
+
+.sf-summary-card {
+  background: rgba(255,255,255,0.88);
+  border: 1px solid #DCE8E4;
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  min-height: 96px;
+  min-width: 0;
+  box-shadow: 0 4px 18px rgba(7,94,84,0.06);
+  position: relative;
+  overflow: visible;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.sf-summary-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 60%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.sf-summary-card:hover {
+  border-color: #075E54;
+  box-shadow: 0 8px 28px rgba(7,94,84,0.12);
+  transform: translateY(-2px);
+}
+
+/* Icon + Number in a row */
+.sf-summary-icon-num {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sf-summary-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.sf-summary-icon.tone-neutral { background: rgba(10,79,68,0.08); color: #0A4F44; }
+.sf-summary-icon.tone-green { background: rgba(22,163,74,0.10); color: #16A34A; }
+.sf-summary-icon.tone-blue { background: rgba(59,130,246,0.08); color: #3B82F6; }
+.sf-summary-icon.tone-amber { background: rgba(217,119,6,0.10); color: #D97706; }
+.sf-summary-icon.tone-gray { background: rgba(100,116,139,0.08); color: #64748B; }
+.sf-summary-icon.tone-red { background: rgba(220,38,38,0.08); color: #DC2626; }
+
+.sf-summary-num {
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 700;
+  color: #102A2A;
+  line-height: 1.15;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.sf-summary-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748B;
+  margin: 0;
+  margin-left: 52px;
+  border-style: none;
+  position: relative;
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}

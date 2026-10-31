@@ -1,0 +1,47 @@
+[Unit]
+Description=Vishak Tech ERP backend (Spring Boot)
+Documentation=file:/opt/erp/README.md
+After=network-online.target mysql.service
+Wants=network-online.target
+# If MySQL runs on another host, drop mysql.service from After=.
+
+[Service]
+Type=simple
+User=erp
+Group=erp
+WorkingDirectory=/opt/erp/backend
+
+# Secrets and environment values live in this file, mode 0600, owned by erp.
+# See docs/environment-configuration.md for every variable.
+EnvironmentFile=/opt/erp/backend/.env
+
+# Bind to loopback; nginx is the only public entry point.
+Environment=ERP_PORT=8080
+
+# JVM sizing for a single 100-user node. Set Xmx to roughly 50-60% of RAM and
+# leave the rest for the OS page cache (MySQL and uploads benefit from it).
+Environment="JAVA_OPTS=-Xms2g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/urandom"
+
+# Graceful shutdown: SIGTERM lets Spring finish in-flight requests
+# (server.shutdown=graceful, 30s phase timeout). TimeoutStopSec must exceed it.
+ExecStart=/bin/sh -c 'exec /usr/bin/java $JAVA_OPTS -jar /opt/erp/backend/erp-backend.jar'
+SuccessExitStatus=143
+TimeoutStopSec=45
+KillSignal=SIGTERM
+
+Restart=on-failure
+RestartSec=5
+
+# File descriptors for concurrent uploads/WebSockets and MySQL connections.
+LimitNOFILE=65536
+LimitNPROC=4096
+
+# Basic hardening (the app only needs its working directory and upload volume).
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/erp/backend/uploads
+
+[Install]
+WantedBy=multi-user.target

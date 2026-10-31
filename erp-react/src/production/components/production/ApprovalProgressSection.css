@@ -1,0 +1,346 @@
+/* ============================================================
+   Approval Progress Section — workflow pipeline above the table
+   ============================================================ */
+.approval-progress-section {
+  padding: 22px;
+  margin-bottom: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.approval-progress-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.approval-progress-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--color-accent, #075E54);
+  text-transform: uppercase;
+}
+
+.approval-progress-order-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--color-accent-soft, #EAF7F3);
+  color: var(--color-accent, #075E54);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.approval-progress-completed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--color-success, #075E54);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Empty state when no order is selected */
+.approval-progress-empty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  background: var(--color-bg, #f8f9fa);
+  border: 1px dashed var(--color-border, #e0e0e0);
+  border-radius: 10px;
+  color: var(--color-text-muted, #888);
+  font-size: 13px;
+}
+
+/* Pipeline container */
+.approval-progress-pipeline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 12px 0;
+  flex-wrap: wrap;
+}
+
+/* Individual stage */
+.approval-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 120px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.approval-stage-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.approval-stage-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Stage states */
+.approval-stage--completed .approval-stage-icon {
+  background: var(--color-success, #075E54);
+  color: #ffffff;
+}
+.approval-stage--completed .approval-stage-label {
+  color: var(--color-success, #075E54);
+}
+
+.approval-stage--current .approval-stage-icon {
+  background: var(--color-accent);
+  color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(23, 128, 84, 0.18);
+}
+.approval-stage--current .approval-stage-label {
+  color: var(--color-accent, #075E54);
+  font-weight: 700;
+}
+
+.approval-stage--future .approval-stage-icon {
+  background: var(--color-bg, #f0f0f0);
+  color: var(--color-text-muted, #aaa);
+  border: 2px solid var(--color-border, #e0e0e0);
+}
+.approval-stage--future .approval-stage-label {
+  color: var(--color-text-muted, #aaa);
+}
+
+/* Connector arrows between stages */
+.approval-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.approval-connector--completed {
+  color: var(--color-success, #075E54);
+}
+
+.approval-connector--inactive {
+  color: var(--color-border, #d0d0d0);
+}
+
+/* Action button area */
+.approval-progress-action {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border, #eee);
+}
+
+/* No access message for non-Admin users */
+.approval-progress-no-access {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--color-warning-soft, #fff8e1);
+  border: 1px solid var(--color-warning, #ffa000);
+  border-radius: 8px;
+  color: var(--color-warning-dark, #e65100);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.approval-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.approval-action-btn--primary {
+  background: var(--color-accent);
+  color: #ffffff;
+}
+.approval-action-btn--primary:hover {
+  background: #146a45;
+  box-shadow: 0 2px 8px rgba(23, 128, 84, 0.3);
+}
+
+.approval-action-btn--final {
+  background: var(--color-success, #075E54);
+  color: #ffffff;
+}
+.approval-action-btn--final:hover {
+  background: #127a4a;
+  box-shadow: 0 2px 8px rgba(23, 128, 84, 0.35);
+}
+
+.approval-action-btn--reject {
+  background: var(--color-danger, #dc3545);
+  color: #ffffff;
+}
+.approval-action-btn--reject:hover {
+  background: #c82333;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Rejected stage state */
+.approval-stage--rejected .approval-stage-icon {
+  background: var(--color-danger, #dc3545);
+  color: #ffffff;
+}
+.approval-stage--rejected .approval-stage-label {
+  color: var(--color-danger, #dc3545);
+  font-weight: 700;
+}
+
+/* ─── Full Work Order Details ─── */
+.approval-order-details {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border, #eee);
+}
+
+.approval-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px 24px;
+}
+
+.approval-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.approval-detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.approval-detail-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #333);
+}
+
+/* Items section */
+.approval-items-section {
+  margin-top: 18px;
+}
+
+.approval-items-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #333);
+  margin-bottom: 10px;
+}
+
+.approval-items-table-wrap {
+  border: 1px solid var(--color-border, #e0e0e0);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.approval-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.approval-items-table thead th {
+  background: var(--color-accent);
+  color: #ffffff;
+  padding: 8px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.approval-items-table tbody td {
+  padding: 8px 12px;
+  border-top: 1px solid var(--color-border, #eee);
+  color: var(--color-text, #333);
+}
+
+.approval-items-table tbody tr:hover {
+  background: var(--color-accent-soft, #f0faf4);
+}
+
+.approval-items-table .cell-strong {
+  font-weight: 600;
+}
+
+/* Approval info section */
+.approval-info-section {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border, #eee);
+}
+
+.approval-info-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text, #333);
+  margin-bottom: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .approval-progress-pipeline {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .approval-connector {
+    transform: rotate(90deg);
+    width: auto;
+    height: 24px;
+  }
+
+  .approval-stage {
+    min-width: 0;
+    flex-direction: row;
+    width: 100%;
+    padding: 8px 12px;
+  }
+
+  .approval-stage-label {
+    text-align: left;
+  }
+}

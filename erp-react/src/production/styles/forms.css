@@ -1,0 +1,94 @@
+/* ============================================================
+   Shared form styles — Purchase-aligned
+   ============================================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.form-field-wide {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #102A2A;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #102A2A;
+  font-size: 12px;
+  font-family: var(--font-family);
+  height: 36px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #075E54;
+  box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.1);
+}
+
+.form-textarea {
+  height: auto;
+  min-height: 72px;
+  resize: vertical;
+}
+
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid #f5d2d2;
+  border-radius: 10px;
+  background: #fdeaea;
+  color: #b3261e;
+  font-size: 13px;
+}
+
+.form-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  color: #94A3B8;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   Responsive forms
+   ============================================================ */
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .form-field-wide {
+    grid-column: 1;
+  }
+  .form-input,
+  .form-select,
+  .form-textarea {
+    font-size: 14px; /* prevent iOS zoom on focus */
+  }
+}

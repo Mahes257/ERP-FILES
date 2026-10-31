@@ -1,0 +1,65 @@
+/* ============================================================
+   Page Header — Purchase-aligned
+   ============================================================ */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.page-heading {
+  min-width: 0;
+}
+
+.page-title {
+  font-size: var(--fs-page-title, 24px);
+  font-weight: var(--fw-bold, 700);
+  color: #102A2A;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.25;
+}
+
+.page-subtitle {
+  margin-top: 4px;
+  max-width: 640px;
+  font-size: var(--fs-page-subtitle, 13px);
+  font-weight: var(--fw-regular, 400);
+  color: #64748B;
+  line-height: 1.5;
+}
+
+.page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 767px) {
+  .page-title {
+    font-size: 19px;
+  }
+  .page-subtitle {
+    font-size: 12px;
+    max-width: 100%;
+  }
+  .page-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 480px) {
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .page-actions {
+    flex-wrap: wrap;
+  }
+}

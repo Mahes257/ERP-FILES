@@ -1,0 +1,3116 @@
+/* ==========================================================================
+   PURCHASE DOCUMENT REPOSITORY — UNIFIED ERP DESIGN SYSTEM
+   --------------------------------------------------------------------------
+   Single design system for the Document Repository page.
+   All KPI cards, folder chips, filter bar, table, grid view, dialogs,
+   bulk toolbar, pagination, drawers and detail panels share one consistent
+   visual language matching the SAP/Oracle/Dynamics ERP aesthetic.
+
+   Design tokens consumed from :root / .dark via var() fallbacks.
+   ========================================================================== */
+
+/* ===================================================================
+   0. PAGE SHELL — .doc-repo
+   =================================================================== */
+.doc-repo {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+/* Override parent's excessive bottom padding */
+.purchase-page .doc-repo {
+  padding-bottom: 0;
+}
+.purchase-page.cpr-page {
+  padding-bottom: 32px;
+}
+
+/* Header styling is provided by the shared cpr-list system (the same
+   page header every Purchase list page renders). */
+
+/* ===================================================================
+   1a. SECTION HEADINGS — shared
+   =================================================================== */
+.doc-section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.doc-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748B;
+  margin: 0;
+}
+.doc-section-sub {
+  font-size: 11px;
+  color: #94A3B8;
+  font-weight: 500;
+}
+.dark .doc-section-title { color: #94A3B8; }
+
+/* ===================================================================
+   1. KPI ROW — Metrics Cards (compact)
+   =================================================================== */
+.doc-metrics {
+  margin-bottom: 16px;
+}
+.doc-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (max-width: 1023px) {
+  .doc-kpi-row { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 640px) {
+  .doc-kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+.doc-kpi {
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: var(--purchase-radius, 10px);
+  background: var(--purchase-card, #fff);
+  box-shadow: none;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+  min-height: 68px;
+}
+.doc-kpi:hover {
+  border-color: rgba(11,74,61,0.2);
+}
+.doc-kpi-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+/* Semantic icon treatments */
+.doc-kpi.neutral .doc-kpi-icon  { background: #F1F5F9; color: #64748B; }
+.doc-kpi.info .doc-kpi-icon     { background: #EFF6FF; color: #2563EB; }
+.doc-kpi.positive .doc-kpi-icon { background: #ECFDF5; color: #059669; }
+.doc-kpi.warning .doc-kpi-icon  { background: #FFFBEB; color: #D97706; }
+.doc-kpi.muted .doc-kpi-icon    { background: #F3F4F6; color: #9CA3AF; }
+.doc-kpi-body {
+  min-width: 0;
+  flex: 1;
+}
+.doc-kpi-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #94A3B8;
+  line-height: 1.2;
+}
+.doc-kpi-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--purchase-text, #102A2A);
+  margin-top: 1px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.doc-kpi-sub {
+  font-size: 9px;
+  color: #B0BEC5;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dark .doc-kpi {
+  background: var(--purchase-card);
+  border-color: rgba(255,255,255,0.08);
+}
+.dark .doc-kpi-value { color: #E2E8F0; }
+.dark .doc-kpi-sub { color: #64748B; }
+
+/* ===================================================================
+   2. WORKFLOW MODULE NAVIGATION — compact horizontal tabs
+   =================================================================== */
+.doc-nav-row {
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--purchase-border, #E8ECEF);
+}
+.doc-nav-track {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.doc-nav-track::-webkit-scrollbar { display: none; }
+.doc-nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  border-radius: 0;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.doc-nav-item:hover { color: #0B4A3D; background: rgba(244,248,247,0.7); }
+.doc-nav-item .doc-nav-icon { opacity: 0.6; width: 14px; height: 14px; }
+.doc-nav-item.active {
+  color: #075E54;
+  border-bottom-color: #075E54;
+  font-weight: 700;
+}
+.doc-nav-item.active .doc-nav-icon { opacity: 1; }
+.doc-nav-count {
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #E8ECF0;
+  color: #64748B;
+  font-variant-numeric: tabular-nums;
+}
+.doc-nav-item.active .doc-nav-count {
+  background: #0B4A3D;
+  color: #fff;
+}
+.dark .doc-nav-item { color: #94A3B8; }
+.dark .doc-nav-item.active { color: #4FD1B0; border-bottom-color: #4FD1B0; }
+.dark .doc-nav-row { border-bottom-color: rgba(255,255,255,0.08); }
+.dark .doc-nav-item:hover { background: rgba(255,255,255,0.03); }
+
+/* ===================================================================
+   3. DOCUMENT EXPLORER — compact control bar
+   =================================================================== */
+.doc-explorer {
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: var(--purchase-radius, 10px);
+  background: var(--purchase-card, #fff);
+  box-shadow: none;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+}
+.doc-explorer-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.doc-explorer-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.doc-explorer-hint {
+  font-size: 11px;
+  color: #94A3B8;
+  font-weight: 400;
+}
+.doc-explorer-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.doc-global-search {
+  flex: 3 1 0;
+  min-width: 0;
+}
+.doc-global-search .po-search-box,
+.doc-global-search input,
+.doc-global-search .po-search-box input {
+  width: 100%;
+}
+.doc-explorer-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.doc-filter-count-badge {
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #075E54;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+.doc-explorer-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: flex-end;
+}
+.doc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.doc-field-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #94A3B8;
+}
+.doc-filter-input-sm,
+.doc-filter-select {
+  height: 32px;
+  padding: 0 8px;
+  font-size: 12px;
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 6px;
+  background: #fff;
+  color: #1F2937;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.doc-filter-input-sm {
+  width: 150px;
+}
+.doc-filter-input-sm.w-130 { width: 150px; }
+.doc-filter-input-sm:focus,
+.doc-filter-select:focus {
+  border-color: #075E54;
+  box-shadow: 0 0 0 2px rgba(7,94,84,0.1);
+}
+.doc-filter-select {
+  width: 160px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+.dark .doc-explorer { background: var(--purchase-card); border-color: rgba(255,255,255,0.08); }
+.dark .doc-explorer-hint { color: #64748B; }
+.dark .doc-filter-input-sm,
+.dark .doc-filter-select { background: #1E293B; color: #E2E8F0; border-color: rgba(255,255,255,0.12); }
+.dark .doc-field-label { color: #64748B; }
+
+/* 3b. Advanced filters — minimal when collapsed */
+.doc-advanced {
+  margin-top: 8px;
+}
+.doc-advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #0B4A3D;
+  background: none;
+  border: none;
+  padding: 3px 0;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.doc-advanced-toggle:hover { color: #075E54; }
+.doc-advanced-chevron {
+  transition: transform 0.2s ease;
+  color: #94A3B8;
+}
+.doc-advanced-chevron.open { transform: rotate(180deg); }
+.doc-advanced-body {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.2s ease, opacity 0.2s ease, padding 0.2s ease;
+  padding-top: 0;
+}
+.doc-advanced.open .doc-advanced-body {
+  max-height: 320px;
+  opacity: 1;
+  padding-top: 10px;
+}
+.doc-advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.doc-advanced-grid .doc-filter-select { width: 100%; }
+
+/* 3c. Active filter chips */
+.doc-filter-chips {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+.doc-filter-chips-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.doc-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: #EDF7F4;
+  color: #0B4A3D;
+  border: 1px solid rgba(11,74,61,0.12);
+  white-space: nowrap;
+}
+.doc-filter-chip .doc-filter-chip-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: rgba(11,74,61,0.1);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.doc-filter-chip .doc-filter-chip-x:hover { background: rgba(11,74,61,0.25); }
+.doc-filter-chip-clear {
+  font-size: 10px;
+  font-weight: 600;
+  color: #0B4A3D;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ===================================================================
+   4. WORKSPACE — table/grid header bar (compact)
+   =================================================================== */
+.doc-workspace {
+  margin-bottom: 0;
+}
+.doc-workspace-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 0;
+  padding: 10px 16px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.doc-workspace-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.doc-workspace-title-wrap .doc-section-title {
+  font-size: 12px;
+}
+.doc-workspace-sub {
+  font-size: 11px;
+  color: #94A3B8;
+  font-weight: 500;
+}
+.doc-workspace-head .doc-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ===================================================================
+   5. TABLE WRAPPER
+   =================================================================== */
+.doc-table-wrap {
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 0 0 10px 10px;
+  background: var(--purchase-card, #fff);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+/* --- Table toolbar --- */
+.doc-table-toolbar {
+  padding: 8px 16px;
+  border-bottom: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.doc-table-info {
+  font-size: 11px;
+  color: #64748B;
+}
+.doc-table-folder-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0B4A3D;
+  background: #EDF7F4;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-left: 8px;
+}
+.doc-table-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- View mode toggle --- */
+.doc-view-toggle {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.doc-view-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 9px;
+  font-size: 10px;
+  font-weight: 700;
+  transition: all 0.15s;
+  cursor: pointer;
+  border: none;
+  background: #F8FAFC;
+  color: #475569;
+}
+.doc-view-toggle button.active {
+  background: #0B4A3D;
+  color: #fff;
+}
+.doc-view-toggle button:not(.active):hover {
+  background: #F1F5F9;
+}
+
+/* --- Page size select --- */
+.doc-page-size {
+  padding: 4px 6px;
+  font-size: 10px;
+  background: #F8FAFC;
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 6px;
+  color: #475569;
+  outline: none;
+  cursor: pointer;
+}
+
+/* --- Table scroll container --- */
+.doc-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --- Table itself --- */
+.doc-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+  text-align: left;
+}
+.doc-table thead tr {
+  background: #F8FAFC;
+  color: #94A3B8;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--purchase-border, #E2E8F0);
+}
+.doc-table thead th {
+  padding: 8px 14px;
+  white-space: nowrap;
+  user-select: none;
+  vertical-align: middle;
+}
+.doc-table thead th.sortable {
+  cursor: pointer;
+}
+.doc-table thead th.sortable:hover {
+  color: #475569;
+}
+.doc-table thead th.sticky-left {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background: #F8FAFC;
+}
+.doc-table thead th.sticky-right {
+  position: sticky;
+  right: 0;
+  z-index: 10;
+  background: #F8FAFC;
+}
+
+/* --- Table body --- */
+.doc-table tbody tr {
+  transition: background 0.1s ease;
+  cursor: pointer;
+}
+.doc-table tbody tr:hover {
+  background: rgba(244,248,247,0.6);
+}
+.doc-table tbody tr.selected {
+  background: rgba(237,247,244,0.5);
+}
+.doc-table tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #F4F6F8;
+  vertical-align: middle;
+  background: transparent;
+}
+.doc-table tbody td.sticky-left {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: var(--purchase-card, #fff);
+}
+.doc-table tbody td.sticky-right {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background: var(--purchase-card, #fff);
+}
+.doc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- Sort indicator --- */
+.doc-sort-indicator {
+  margin-left: 4px;
+  color: #64748B;
+}
+
+/* ===================================================================
+   5. TABLE CELLS — Document-specific
+   =================================================================== */
+.doc-cell-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 200px;
+}
+.doc-file-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.doc-name-body {
+  min-width: 0;
+  flex: 1;
+}
+.doc-name-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--purchase-text, #102A2A);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.doc-name-sub {
+  font-size: 11px;
+  color: #94A3B8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+.doc-confidential-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 8px;
+  font-weight: 700;
+  color: #E11D48;
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  flex-shrink: 0;
+}
+
+.doc-cell-link {
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #0B4A3D;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.doc-cell-link:hover {
+  color: #083D34;
+}
+.doc-cell-mono {
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--purchase-text, #102A2A);
+}
+.doc-cell-text {
+  font-size: 12px;
+  color: #475569;
+}
+.doc-cell-text-sm {
+  font-size: 10px;
+  color: #475569;
+}
+.doc-cell-whitespace {
+  white-space: nowrap;
+}
+.doc-cell-muted {
+  color: #CBD5E1;
+}
+.doc-cell-bold {
+  font-weight: 600;
+}
+.doc-cell-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 160px;
+}
+.doc-cell-tabular {
+  font-variant-numeric: tabular-nums;
+}
+.doc-cell-pending {
+  font-size: 10px;
+  color: #D97706;
+  font-weight: 700;
+}
+.doc-cell-xs { font-size: 9px; }
+.doc-cell-strong { font-weight: 600; }
+.doc-cell-gray { color: #64748B; }
+
+/* ===================================================================
+   6. BADGES — Stage, Source, Status
+   =================================================================== */
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid;
+  white-space: nowrap;
+}
+.doc-badge.pr     { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+.doc-badge.rfq    { background: #F5F3FF; color: #6D28D9; border-color: #DDD6FE; }
+.doc-badge.quotation { background: #F0FDFA; color: #0F766E; border-color: #99F6E4; }
+.doc-badge.pcs    { background: #ECFEFF; color: #0E7490; border-color: #A5F3FC; }
+.doc-badge.negotiation { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+.doc-badge.nfa    { background: #EEF2FF; color: #4338CA; border-color: #C7D2FE; }
+.doc-badge.selection { background: #FAF5FF; color: #7C3AED; border-color: #DDD6FE; }
+.doc-badge.po     { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+.doc-badge.grn    { background: #FFF7ED; color: #C2410C; border-color: #FED7AA; }
+.doc-badge.invoice { background: #FFF1F2; color: #BE123C; border-color: #FECDD3; }
+.doc-badge.payment { background: #F0FDF4; color: #15803D; border-color: #BBF7D0; }
+
+.doc-badge.source-system {
+  background: #ECFDF5;
+  color: #047857;
+  border-color: #A7F3D0;
+}
+.doc-badge.source-uploaded {
+  background: #F0F9FF;
+  color: #0369A1;
+  border-color: #BAE6FD;
+}
+
+.doc-badge-source { font-size: 9px; }
+.doc-badge-icon {
+  width: 10px;
+  height: 10px;
+}
+.doc-badge.default {
+  background: #F8FAFC;
+  color: #475569;
+  border-color: #E2E8F0;
+}
+
+/* --- Status badges --- */
+.doc-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 9px;
+  font-weight: 700;
+  border: 1px solid;
+}
+.doc-status.success  { background: #ECFDF5; color: #047857; border-color: #A7F3D0; }
+.doc-status.draft  { background: #F8FAFC; color: #64748B; border-color: #E2E8F0; }
+.doc-status.generated { background: #F0F9FF; color: #0369A1; border-color: #BAE6FD; }
+.doc-status.pending { background: #FFFBEB; color: #B45309; border-color: #FDE68A; }
+.doc-status.approved { background: #EFF6FF; color: #1D4ED8; border-color: #BFDBFE; }
+.doc-status.cancelled { background: #FFF1F2; color: #BE123C; border-color: #FECDD3; }
+.doc-status.rejected { background: #FEF2F2; color: #B91C1C; border-color: #FECACA; }
+.doc-status.archived { background: #F3F4F6; color: #6B7280; border-color: #D1D5DB; }
+.doc-status.default  { background: #F8FAFC; color: #475569; border-color: #E2E8F0; }
+
+/* ===================================================================
+   7. GRID VIEW
+   =================================================================== */
+.doc-grid {
+  padding: 12px;
+}
+.doc-grid-inner {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (min-width: 640px) {
+  .doc-grid-inner { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .doc-grid-inner { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1280px) {
+  .doc-grid-inner { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.doc-grid-card {
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: var(--purchase-radius, 10px);
+  background: var(--purchase-card, #fff);
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.doc-grid-card:hover {
+  border-color: rgba(11,74,61,0.25);
+  box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+}
+.doc-grid-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.doc-grid-card-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 12px;
+  row-gap: 6px;
+  font-size: 10px;
+}
+.doc-grid-card-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.doc-grid-card-field-label {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+.doc-grid-card-field-value {
+  font-weight: 600;
+  color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.doc-grid-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #F1F5F9;
+}
+
+/* ===================================================================
+   8. ACTION BUTTONS — Shared (compact)
+   =================================================================== */
+.doc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.doc-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.doc-btn-primary {
+  background: #0B4A3D;
+  color: #fff;
+  border-color: #0B4A3D;
+}
+.doc-btn-primary:hover:not(:disabled) {
+  background: #083D34;
+}
+.doc-btn-secondary {
+  background: #F8FAFC;
+  color: #475569;
+  border-color: var(--purchase-border, #E2E8F0);
+}
+.doc-btn-secondary:hover:not(:disabled) {
+  background: #F1F5F9;
+}
+.doc-btn-ghost {
+  background: transparent;
+  color: #475569;
+  border-color: transparent;
+}
+.doc-btn-ghost:hover:not(:disabled) {
+  background: #F1F5F9;
+}
+.doc-btn-danger {
+  background: #fff;
+  color: #DC2626;
+  border-color: #FECACA;
+}
+.doc-btn-danger:hover:not(:disabled) {
+  background: #FEF2F2;
+}
+.doc-btn-warning {
+  background: #fff;
+  color: #B45309;
+  border-color: #FDE68A;
+}
+.doc-btn-warning:hover:not(:disabled) {
+  background: #FFFBEB;
+}
+.doc-btn-success-solid {
+  background: #0B4A3D;
+  color: #fff;
+  border-color: #0B4A3D;
+}
+.doc-btn-success-solid:hover:not(:disabled) {
+  background: #083D34;
+}
+.doc-btn-sm {
+  padding: 4px 8px;
+  font-size: 10px;
+}
+.doc-btn-xs {
+  padding: 4px 6px;
+  font-size: 9px;
+  border-radius: 6px;
+}
+
+/* ===================================================================
+   9. ROW ACTIONS MENU
+   =================================================================== */
+.doc-row-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.doc-row-menu-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #94A3B8;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.doc-row-menu-btn:hover {
+  background: #F1F5F9;
+  color: #475569;
+}
+.doc-row-dropdown {
+  position: fixed;
+  z-index: 9999;
+  background: var(--purchase-card, #fff);
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.12);
+  padding: 6px 0;
+  width: 192px;
+}
+.doc-row-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-align: left;
+}
+.doc-row-dropdown-item:hover {
+  background: #F8FAFC;
+}
+.doc-row-dropdown-item.pending {
+  color: #CBD5E1;
+  cursor: not-allowed;
+}
+.doc-row-dropdown-item.danger {
+  color: #DC2626;
+}
+.doc-row-dropdown-item.danger:hover {
+  background: #FEF2F2;
+}
+.doc-row-dropdown-divider {
+  margin: 4px 0;
+  border: none;
+  border-top: 1px solid #F1F5F9;
+}
+.doc-row-dropdown-icon {
+  width: 14px;
+  height: 14px;
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+.doc-row-dropdown-item.pending .doc-row-dropdown-icon,
+.doc-row-dropdown-item.pending {
+  color: #CBD5E1;
+}
+
+/* ===================================================================
+   10. BULK TOOLBAR
+   =================================================================== */
+.doc-bulk-bar {
+  border: 1px solid rgba(11,74,61,0.2);
+  border-radius: var(--purchase-radius, 10px);
+  background: #EDF7F4;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+}
+.doc-bulk-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.doc-bulk-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0B4A3D;
+}
+.doc-bulk-select-all {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0B4A3D;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.doc-bulk-select-all:hover {
+  color: #083D34;
+}
+.doc-bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.doc-bulk-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(11,74,61,0.2);
+  margin: 0 2px;
+}
+
+/* --- Bulk progress --- */
+.doc-bulk-progress {
+  border: 1px solid rgba(11,74,61,0.2);
+  border-radius: var(--purchase-radius, 12px);
+  background: #EDF7F4;
+  padding: 12px 20px;
+  margin-bottom: 16px;
+}
+.doc-bulk-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.doc-bulk-progress-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0B4A3D;
+}
+.doc-bulk-progress-pct {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0B4A3D;
+}
+.doc-bulk-progress-track {
+  height: 8px;
+  border-radius: 99px;
+  background: #fff;
+  overflow: hidden;
+  border: 1px solid rgba(11,74,61,0.1);
+}
+.doc-bulk-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: #0B4A3D;
+  transition: width 0.3s ease;
+}
+
+/* --- Bulk report --- */
+.doc-bulk-report {
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: var(--purchase-radius, 12px);
+  background: var(--purchase-card, #fff);
+  padding: 12px 20px;
+  margin-bottom: 16px;
+}
+.doc-bulk-report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.doc-bulk-report-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purchase-text, #102A2A);
+}
+.doc-bulk-report-close {
+  padding: 4px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.doc-bulk-report-close:hover {
+  background: #F1F5F9;
+}
+.doc-bulk-report-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 11px;
+}
+.doc-bulk-report-ok { font-weight: 700; color: #059669; }
+.doc-bulk-report-fail { font-weight: 700; color: #DC2626; }
+.doc-bulk-report-miss { font-weight: 700; color: #D97706; }
+.doc-bulk-report-errors {
+  margin-top: 8px;
+  font-size: 10px;
+  color: #DC2626;
+  line-height: 1.6;
+}
+.doc-bulk-report-misses {
+  margin-top: 8px;
+  font-size: 10px;
+  color: #D97706;
+  line-height: 1.6;
+}
+
+/* ===================================================================
+   11. PAGINATION (compact)
+   =================================================================== */
+.doc-pagination {
+  padding: 8px 16px;
+  border-top: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.doc-pagination-info {
+  font-size: 11px;
+  color: #94A3B8;
+}
+.doc-pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.doc-page-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  background: #F8FAFC;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.doc-page-btn:hover:not(:disabled):not(.active) {
+  background: #F1F5F9;
+}
+.doc-page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.doc-page-btn.active {
+  background: #0B4A3D;
+  border-color: #0B4A3D;
+  color: #fff;
+}
+
+/* ===================================================================
+   12. DIALOGS — Modal Confirmations
+   =================================================================== */
+.doc-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.doc-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.3);
+}
+.doc-dialog {
+  position: relative;
+  background: var(--purchase-card, #fff);
+  border-radius: var(--purchase-radius, 10px);
+  box-shadow: 0 16px 48px rgba(15,23,42,0.18);
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  width: 100%;
+  max-width: 400px;
+  margin: 0 16px;
+  padding: 16px;
+}
+.doc-dialog-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.doc-dialog-icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 99px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.doc-dialog-icon-circle.danger { background: #FEF2F2; }
+.doc-dialog-icon-circle.warning { background: #FFFBEB; }
+.doc-dialog-icon-circle.danger svg,
+.doc-dialog-icon-circle.warning svg { width: 20px; height: 20px; }
+.doc-dialog-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--purchase-text, #102A2A);
+}
+.doc-dialog-subtitle {
+  font-size: 11px;
+  color: #94A3B8;
+  margin-top: 2px;
+}
+.doc-dialog-body {
+  font-size: 12px;
+  color: #64748B;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.doc-dialog-preview {
+  background: #F8FAFC;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.doc-dialog-preview-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purchase-text, #102A2A);
+}
+.doc-dialog-preview-sub {
+  font-size: 10px;
+  color: #94A3B8;
+  margin-top: 2px;
+}
+.doc-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ===================================================================
+   13. DRAWER — Slide-in Panels
+   =================================================================== */
+.doc-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+}
+.doc-drawer-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+}
+.doc-drawer {
+  position: relative;
+  width: 100%;
+  background: var(--purchase-card, #fff);
+  box-shadow: -4px 0 24px rgba(15,23,42,0.1);
+  border-left: 1px solid var(--purchase-border, #E2E8F0);
+  display: flex;
+  flex-direction: column;
+}
+.doc-drawer.max-w-md { max-width: 448px; }
+.doc-drawer.max-w-lg { max-width: 576px; }
+
+.doc-drawer-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.doc-drawer-header-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--purchase-text, #102A2A);
+}
+.doc-drawer-header-sub {
+  font-size: 11px;
+  color: #94A3B8;
+  margin-top: 2px;
+}
+.doc-drawer-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.doc-drawer-close {
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #94A3B8;
+  transition: all 0.15s;
+}
+.doc-drawer-close:hover {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.doc-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+/* --- Compare bar in version drawer --- */
+.doc-compare-bar {
+  padding: 10px 20px;
+  background: #F8FAFC;
+  border-bottom: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.doc-compare-bar-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+}
+.doc-compare-bar-run {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0B4A3D;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.doc-compare-bar-run:hover {
+  text-decoration: underline;
+}
+
+/* --- Compare result --- */
+.doc-compare-result {
+  padding: 12px 20px;
+  background: #EDF7F4;
+  border-bottom: 1px solid rgba(11,74,61,0.2);
+}
+.doc-compare-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.doc-compare-result-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #0B4A3D;
+}
+.doc-compare-result-count {
+  font-size: 10px;
+  font-weight: 700;
+}
+.doc-compare-result-count.identical { color: #059669; }
+.doc-compare-result-count.changed  { color: #D97706; }
+.doc-compare-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  line-height: 1.6;
+}
+.doc-compare-change-field {
+  font-weight: 700;
+  color: #475569;
+  width: 80px;
+  flex-shrink: 0;
+}
+.doc-compare-change-old {
+  color: #94A3B8;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.doc-compare-change-arrow {
+  color: #94A3B8;
+}
+.doc-compare-change-new {
+  color: var(--purchase-text, #102A2A);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.doc-compare-clear {
+  margin-top: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748B;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.doc-compare-clear:hover {
+  color: #475569;
+}
+
+/* --- Version card --- */
+.doc-version-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.doc-version-card {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #F1F5F9;
+  background: var(--purchase-card, #fff);
+  transition: all 0.15s;
+}
+.doc-version-card:hover {
+  border-color: #E2E8F0;
+}
+.doc-version-card.current {
+  border-color: rgba(11,74,61,0.4);
+  background: rgba(237,247,244,0.4);
+}
+.doc-version-card.compare-selected {
+  border-color: #93C5FD;
+  background: rgba(239,246,255,0.4);
+}
+.doc-version-card.compare-mode {
+  cursor: pointer;
+}
+.doc-version-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.doc-version-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.doc-version-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purchase-text, #102A2A);
+}
+.doc-version-current-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 99px;
+  font-size: 8px;
+  font-weight: 700;
+  background: #0B4A3D;
+  color: #fff;
+}
+.doc-version-compare-badge {
+  font-size: 8px;
+  font-weight: 700;
+  color: #2563EB;
+  background: #DBEAFE;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+.doc-version-meta {
+  font-size: 10px;
+  color: #94A3B8;
+  line-height: 1.6;
+}
+.doc-version-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.doc-version-reason {
+  color: #64748B;
+  font-style: italic;
+}
+.doc-version-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #F1F5F9;
+}
+.doc-version-audit {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #F1F5F9;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.doc-version-audit-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: #94A3B8;
+}
+.doc-version-audit-action {
+  font-weight: 700;
+  color: #64748B;
+}
+.doc-version-audit-time {
+  margin-left: auto;
+}
+
+/* ===================================================================
+   14. DETAIL PANEL — Document Metadata Slide-in
+   =================================================================== */
+.doc-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.doc-detail-header-body {
+  flex: 1;
+  min-width: 0;
+}
+.doc-detail-field-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.doc-detail-field {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.doc-detail-field-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #F8FAFC;
+  border: 1px solid #F1F5F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.doc-detail-field-icon svg {
+  width: 13px;
+  height: 13px;
+  color: #94A3B8;
+}
+.doc-detail-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94A3B8;
+}
+.doc-detail-field-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--purchase-text, #102A2A);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.doc-detail-actions {
+  border-top: 1px solid #F1F5F9;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.doc-detail-action-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid transparent;
+}
+.doc-detail-action-btn.primary {
+  background: #0B4A3D;
+  color: #fff;
+}
+.doc-detail-action-btn.primary:hover:not(:disabled) {
+  background: #083D34;
+}
+.doc-detail-action-btn.secondary {
+  color: #475569;
+  background: #F8FAFC;
+  border-color: var(--purchase-border, #E2E8F0);
+}
+.doc-detail-action-btn.secondary:hover:not(:disabled) {
+  background: #F1F5F9;
+}
+.doc-detail-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===================================================================
+   15. INLINE RENAME
+   =================================================================== */
+.doc-rename-input {
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purchase-text, #102A2A);
+  background: #fff;
+  border: 1px solid #93C5FD;
+  border-radius: 6px;
+  outline: none;
+}
+.doc-rename-input:focus {
+  box-shadow: 0 0 0 3px rgba(147,197,253,0.2);
+}
+
+/* ===================================================================
+   16. EMPTY STATE
+   =================================================================== */
+.doc-empty {
+  text-align: center;
+  padding: 48px 16px;
+}
+.doc-empty-icon {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto 10px;
+  color: #E2E8F0;
+}
+.doc-empty-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+}
+.doc-empty-sub {
+  font-size: 12px;
+  color: #94A3B8;
+  margin-top: 3px;
+}
+.doc-empty-action {
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0B4A3D;
+  background: #EDF7F4;
+  border: 1px solid rgba(11,74,61,0.25);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.doc-empty-action:hover {
+  background: #E0F2EC;
+}
+
+/* --- Loading spinner in table --- */
+.doc-table-loading {
+  text-align: center;
+  padding: 64px 16px;
+}
+.doc-table-loading p {
+  font-size: 12px;
+  color: #94A3B8;
+  margin-top: 8px;
+}
+
+/* --- Table skeleton rows --- */
+.doc-skeleton-row {
+  display: flex;
+  gap: 16px;
+  padding: 12px 16px;
+  align-items: center;
+}
+.doc-sk {
+  height: 10px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #E8ECF0 25%, #F1F4F7 50%, #E8ECF0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+.doc-sk-thin { height: 7px; }
+.doc-sk-box  { width: 34px; height: 34px; border-radius: 8px; }
+
+/* --- Folder context bar (shown above table when inside a folder) --- */
+.doc-folder-context {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #F0FAF7;
+  border: 1px solid rgba(11,74,61,0.12);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0B4A3D;
+}
+.dark .doc-folder-context { background: rgba(7,94,84,0.12); border-color: rgba(79,209,176,0.2); color: #4FD1B0; }
+
+/* --- Grid card dropdown menu --- */
+.doc-card-menu {
+  position: relative;
+}
+.doc-card-menu-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 210;
+  min-width: 180px;
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 28px rgba(15,23,42,0.12);
+  padding: 4px;
+  animation: fadeInUp 0.12s ease;
+}
+.dark .doc-card-menu-dropdown { background: #1E293B; border-color: rgba(255,255,255,0.1); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+
+/* --- Empty state icon circle --- */
+.doc-empty-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #94A3B8;
+  margin-bottom: 10px;
+}
+.dark .doc-empty-icon-circle { background: rgba(255,255,255,0.06); color: #475569; }
+
+/* ===================================================================
+   17. FORM INPUTS — Dialog inputs
+   =================================================================== */
+.doc-dialog-input {
+  margin-top: 12px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 12px;
+  background: #F8FAFC;
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 10px;
+  outline: none;
+  color: var(--purchase-text, #102A2A);
+  transition: border-color 0.15s;
+}
+.doc-dialog-input:focus {
+  border-color: #0B4A3D;
+}
+
+/* ===================================================================
+   18. UTILITIES — Cell align, links, checkbox, dropdown, spinner
+   =================================================================== */
+.doc-align-right { text-align: right; }
+.doc-align-center { text-align: center; }
+.doc-cell-gray { color: #64748B; }
+.doc-cell-xs { font-size: 9px; }
+.doc-cell-strong { font-weight: 600; }
+.doc-cell-bold-start { font-weight: 700; }
+
+.doc-pr-link { color: #1D4ED8; font-weight: 700; }
+.doc-rfq-link { color: #6D28D9; font-weight: 700; }
+.doc-po-link { color: #047857; font-weight: 700; }
+
+.doc-filetype {
+  display: inline-flex;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  background: #F1F5F9;
+  color: #475569;
+}
+.doc-generate {
+  color: #0B4A3D;
+  font-weight: 700;
+}
+.doc-generate:hover {
+  background: #EDF7F4;
+}
+
+.doc-checkbox {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  border: 1px solid #CBD5E1;
+  accent-color: #0B4A3D;
+  cursor: pointer;
+}
+.doc-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(11,74,61,0.2);
+}
+
+/* Column selector dropdown */
+.doc-column-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 50;
+  background: var(--purchase-card, #fff);
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.12);
+  padding: 6px 0;
+  width: 208px;
+}
+.doc-column-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--purchase-text, #102A2A);
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.doc-column-dropdown-item:hover {
+  background: #F8FAFC;
+}
+.dark .doc-column-dropdown {
+  background: #1E293B;
+  border-color: rgba(255,255,255,0.08);
+}
+.dark .doc-column-dropdown-item {
+  color: #CBD5E1;
+}
+.dark .doc-column-dropdown-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  animation: doc-spin 0.8s linear infinite;
+}
+@keyframes doc-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Generate button row-dropdown icon sizing */
+.doc-row-dropdown-item .doc-row-dropdown-icon,
+.doc-row-dropdown-item svg {
+  flex-shrink: 0;
+}
+
+/* ===================================================================
+   19. DARK MODE OVERRIDES
+   =================================================================== */
+.dark .doc-kpi,
+.dark .doc-table-wrap,
+.dark .doc-filter-bar,
+.dark .doc-grid-card,
+.dark .doc-dialog,
+.dark .doc-drawer,
+.dark .doc-version-card,
+.dark .doc-bulk-report {
+  background: var(--purchase-card);
+  border-color: rgba(255,255,255,0.08);
+}
+.dark .doc-folder-chip {
+  background: var(--purchase-card);
+  border-color: rgba(255,255,255,0.08);
+  color: #CBD5E1;
+}
+.dark .doc-folder-chip:hover {
+  background: rgba(255,255,255,0.04);
+}
+.dark .doc-table thead tr {
+  background: rgba(255,255,255,0.03);
+}
+.dark .doc-table tbody td {
+  border-bottom-color: rgba(255,255,255,0.06);
+  color: #CBD5E1;
+}
+.dark .doc-table tbody tr:hover {
+  background: rgba(255,255,255,0.03);
+}
+.dark .doc-table tbody td.sticky-left,
+.dark .doc-table tbody td.sticky-right {
+  background: var(--purchase-card);
+}
+.dark .doc-table thead th.sticky-left,
+.dark .doc-table thead th.sticky-right {
+  background: rgba(255,255,255,0.03);
+}
+.dark .doc-filter-search input,
+.dark .doc-filter-select,
+.dark .doc-filter-input-sm,
+.dark .doc-dialog-input,
+.dark .doc-page-size {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+  color: #CBD5E1;
+}
+.dark .doc-kpi-label {
+  color: #64748B;
+}
+.dark .doc-kpi-value {
+  color: #E2E8F0;
+}
+.dark .doc-grid-card-header .doc-name-text {
+  color: #E2E8F0;
+}
+.dark .doc-row-dropdown {
+  background: #1E293B;
+  border-color: rgba(255,255,255,0.08);
+}
+.dark .doc-row-dropdown-item {
+  color: #CBD5E1;
+}
+.dark .doc-row-dropdown-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+.dark .doc-bulk-bar {
+  background: rgba(11,74,61,0.15);
+  border-color: rgba(11,74,61,0.25);
+}
+.dark .doc-bulk-progress {
+  background: rgba(11,74,61,0.15);
+  border-color: rgba(11,74,61,0.25);
+}
+.dark .doc-bulk-progress-track {
+  background: rgba(255,255,255,0.06);
+}
+.dark .doc-version-card {
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.06);
+}
+.dark .doc-version-card.current {
+  background: rgba(11,74,61,0.1);
+  border-color: rgba(11,74,61,0.3);
+}
+.dark .doc-dialog-preview {
+  background: rgba(255,255,255,0.04);
+}
+.dark .doc-dialog-title {
+  color: #E2E8F0;
+}
+.dark .doc-dialog-body {
+  color: #94A3B8;
+}
+.dark .doc-detail-field-icon {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.06);
+}
+.dark .doc-detail-field-label {
+  color: #64748B;
+}
+.dark .doc-detail-field-value {
+  color: #CBD5E1;
+}
+.dark .doc-drawer {
+  background: var(--purchase-card);
+  border-left-color: rgba(255,255,255,0.08);
+}
+.dark .doc-table-info,
+.dark .doc-pagination-info,
+.dark .doc-compare-bar-label {
+  color: #64748B;
+}
+.dark .doc-empty-icon {
+  color: rgba(255,255,255,0.1);
+}
+.dark .doc-empty-title {
+  color: #94A3B8;
+}
+.dark .doc-empty-sub {
+  color: #64748B;
+}
+.dark .doc-page-btn,
+.dark .doc-btn-secondary {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+  color: #CBD5E1;
+}
+.dark .doc-page-btn:hover:not(:disabled):not(.active) {
+  background: rgba(255,255,255,0.06);
+}
+.dark .doc-view-toggle button:not(.active) {
+  background: rgba(255,255,255,0.04);
+  color: #CBD5E1;
+}
+.dark .doc-view-toggle button:not(.active):hover {
+  background: rgba(255,255,255,0.06);
+}
+.dark .doc-view-toggle {
+  border-color: rgba(255,255,255,0.08);
+}
+.dark .doc-detail-action-btn.secondary {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.08);
+  color: #CBD5E1;
+}
+.dark .doc-filter-chip {
+  background: rgba(255,255,255,0.06);
+  color: #CBD5E1;
+}
+
+/* ===================================================================
+   20. VISUAL HIERARCHY & TONE — Document Repository polish
+   -------------------------------------------------------------------
+   Enterprise ERP color language: 60% neutral surfaces, 30% subtle
+   tinted bands/surfaces, 10% semantic accents (module identity, file
+   kind, status). All colors are restrained; color is used only to
+   communicate meaning. Tokens are scoped to .doc-repo so other
+   Purchase pages are untouched.
+   =================================================================== */
+.doc-repo {
+  /* Semantic accents (match the tone classes used below). */
+  --doc-green: #0F766E;
+  --doc-green-deep: #0B5B4C;
+  --doc-green-soft: #E7F4F0;
+  --doc-green-tint: #F2F9F7;
+  --doc-blue: #2563EB;
+  --doc-blue-soft: #EFF6FF;
+  --doc-amber: #D97706;
+  --doc-amber-soft: #FFF7ED;
+  --doc-red: #DC2626;
+  --doc-red-soft: #FEF2F2;
+  --doc-slate: #64748B;
+  --doc-slate-soft: #F1F5F9;
+  --doc-violet: #7C3AED;
+  --doc-violet-soft: #F5F3FF;
+  --doc-ink: #17332F;
+  --doc-muted: #6B7F7A;
+
+  /* Tinted surfaces, dividers and row treatments. */
+  --doc-border-tint: #DDE8E5;
+  --doc-surface-soft: #F7FAF8;
+  --doc-band-soft: #F1F8F5;
+  --doc-head-bg: #EFF4F3;
+  --doc-row-hover: #F2F9F7;
+  --doc-row-selected: #EAF5F0;
+  --doc-zebra: #FAFCFC;
+  --doc-hairline: #E9F0EE;
+
+  /* Replace harsh gray borders with subtle green-tinted separators
+     everywhere this page consumes the shared purchase border token. */
+  --purchase-border: #DDE8E5;
+}
+
+/* --- Section headings: muted micro-labels (shared list language) --- */
+.doc-metrics .doc-section-title,
+.doc-workspace .doc-section-title {
+  color: #52666F;
+}
+.doc-kpi:hover {
+  background: var(--doc-surface-soft);
+}
+
+/* --- Workflow navigation: module identity via icon color --- */
+.doc-nav-item {
+  border-radius: 8px 8px 0 0;
+  padding: 7px 12px;
+}
+.doc-nav-item:hover {
+  background: var(--doc-surface-soft);
+  color: var(--doc-green-deep);
+}
+.doc-nav-item .doc-nav-icon {
+  opacity: 0.75;
+}
+.doc-nav-item:hover .doc-nav-icon {
+  opacity: 1;
+}
+.doc-nav-item.active {
+  background: var(--doc-green-soft);
+  color: var(--doc-green-deep);
+  border-bottom-color: var(--doc-green-deep);
+}
+.doc-nav-item.active .doc-nav-icon {
+  opacity: 1;
+}
+.doc-nav-count {
+  background: #E7EEEB;
+  color: #52666F;
+}
+.doc-nav-item.active .doc-nav-count {
+  background: #0B4A3D;
+  color: #fff;
+}
+
+/* --- Explorer: tinted header band + white control surface --- */
+.doc-explorer-head {
+  background: var(--doc-surface-soft);
+  margin: -12px -16px 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--doc-border-tint);
+  border-radius: 11px 11px 0 0;
+  align-items: center;
+}
+.doc-explorer-head .doc-section-title {
+  color: #0F5B4C;
+  font-size: 12px;
+}
+.doc-explorer-hint {
+  color: #7A8F8B;
+}
+.doc-global-search .po-search-box input {
+  border-color: var(--doc-border-tint);
+  background: #FFFFFF;
+}
+.doc-explorer-actions .doc-btn-secondary {
+  background: #FFFFFF;
+}
+.doc-explorer-actions .doc-btn-secondary svg {
+  color: var(--doc-green);
+}
+
+/* --- Advanced filters: tinted strip when expanded --- */
+.doc-advanced.open {
+  background: var(--doc-surface-soft);
+  border: 1px solid var(--doc-border-tint);
+  border-radius: 10px;
+  margin-top: 10px;
+  padding: 6px 12px 10px;
+}
+.doc-advanced.open .doc-advanced-body {
+  padding-top: 4px;
+}
+.doc-advanced-toggle {
+  padding: 5px 6px;
+  border-radius: 6px;
+}
+.doc-advanced.open .doc-advanced-toggle {
+  background: var(--doc-band-soft);
+}
+
+/* --- Secondary filter inputs keep green focus rings --- */
+.doc-filter-input-sm:focus,
+.doc-filter-select:focus {
+  border-color: #0B7A68;
+  box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.12);
+}
+
+/* --- Table header: distinct cool green-gray band, slate-blue text --- */
+.doc-table thead tr {
+  background: var(--doc-head-bg);
+  color: #3E5F6B;
+  border-bottom: 1px solid var(--doc-border-tint);
+}
+.doc-table thead th.sticky-left,
+.doc-table thead th.sticky-right {
+  background: var(--doc-head-bg);
+}
+.doc-table thead th.sortable:hover {
+  color: #1F4B44;
+}
+
+/* --- Rows: white + very subtle zebra, hairline separators --- */
+.doc-table tbody td {
+  border-bottom-color: var(--doc-hairline);
+}
+.doc-table tbody tr:nth-child(even) {
+  background: var(--doc-zebra);
+}
+.doc-table tbody tr:nth-child(even) td.sticky-left,
+.doc-table tbody tr:nth-child(even) td.sticky-right {
+  background: var(--doc-zebra);
+}
+.doc-table tbody tr:hover {
+  background: var(--doc-row-hover);
+}
+.doc-table tbody tr:hover td.sticky-left,
+.doc-table tbody tr:hover td.sticky-right {
+  background: var(--doc-row-hover);
+}
+.doc-table tbody tr.selected {
+  background: var(--doc-row-selected);
+}
+.doc-table tbody tr.selected td.sticky-left,
+.doc-table tbody tr.selected td.sticky-right {
+  background: var(--doc-row-selected);
+}
+
+/* --- Generated / success semantics share the green family --- */
+.doc-status.generated {
+  background: #ECFDF5;
+  color: #047857;
+  border-color: #A7F3D0;
+}
+
+/* --- Doc numbers: strong primary green, underline on hover --- */
+.doc-cell-link {
+  color: var(--doc-green-deep);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px dotted transparent;
+}
+.doc-cell-link:hover {
+  color: var(--doc-green);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-bottom-color: transparent;
+}
+
+/* --- Action buttons & row controls: quiet green hover tints --- */
+.doc-row-menu-btn:hover {
+  background: #EAF3F0;
+  color: #0B4A3D;
+}
+.doc-rename-input:focus {
+  border-color: #0B7A68;
+  box-shadow: 0 0 0 3px rgba(7, 94, 84, 0.12);
+}
+.doc-checkbox {
+  accent-color: #0B4A3D;
+}
+
+/* --- Workspace/table separators and pagination dividers --- */
+.doc-workspace-head {
+  border-bottom-color: var(--doc-border-tint);
+}
+.doc-table-wrap {
+  border-color: var(--doc-border-tint);
+}
+.doc-pagination {
+  border-top-color: var(--doc-border-tint);
+}
+.doc-table-toolbar {
+  border-bottom-color: var(--doc-border-tint);
+}
+
+/* ===================================================================
+   RESPONSIVE — Mobile / Tablet / Desktop
+   =================================================================== */
+@media (max-width: 1023px) {
+  .doc-repo { padding: 0 4px 0; }
+  .doc-explorer-secondary { gap: 10px; }
+  .doc-advanced-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .doc-repo { padding: 0 0 0; }
+  .doc-kpi-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .doc-explorer { padding: 10px 12px; }
+  .doc-explorer-head { margin: -10px -12px 10px; }
+  .doc-explorer-secondary { gap: 8px; }
+  .doc-explorer-secondary .doc-field { flex: 1 1 45%; min-width: 120px; }
+  .doc-advanced-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .doc-nav-track { gap: 0; }
+  .doc-nav-item { padding: 6px 8px; font-size: 10px; gap: 4px; }
+  .doc-nav-item .doc-nav-label { display: none; }
+  .doc-nav-item .doc-nav-icon { margin: 0; }
+  .doc-workspace-head { flex-direction: column; align-items: stretch; padding: 8px 12px; }
+  .doc-workspace-head .doc-toolbar-right { justify-content: flex-end; }
+  .doc-global-search { flex: 1 1 100%; min-width: 0; }
+  .doc-explorer-top { flex-direction: column; align-items: stretch; }
+  .doc-explorer-actions { justify-content: flex-end; }
+  .doc-grid-card-body { grid-template-columns: 1fr; }
+  .doc-grid-inner { gap: 8px; }
+  .doc-table-scroll { overflow-x: auto; }
+}
+@media (max-width: 640px) {
+  .doc-repo { padding: 0; }
+  .doc-kpi-row { grid-template-columns: 1fr 1fr; }
+  .doc-kpi { padding: 8px 10px; gap: 8px; min-height: 60px; }
+  .doc-kpi-icon { width: 28px; height: 28px; border-radius: 6px; }
+  .doc-kpi-value { font-size: 18px; }
+  .doc-nav-item { padding: 5px 6px; }
+  .doc-explorer-secondary .doc-field { flex: 1 1 100%; }
+  .doc-explorer-secondary .doc-field .doc-filter-input-sm,
+  .doc-explorer-secondary .doc-field .doc-filter-select { width: 100%; }
+  .doc-advanced-grid { grid-template-columns: 1fr; }
+  .doc-grid-inner { grid-template-columns: 1fr; }
+  .doc-workspace-head { flex-direction: column; align-items: stretch; }
+  .doc-table-actions { flex-wrap: wrap; }
+  .doc-filter-count-badge { font-size: 8px; min-width: 14px; height: 14px; }
+}
+
+/* ===================================================================
+   DARK MODE — additional variants
+   =================================================================== */
+.dark .doc-filter-chip {
+  background: rgba(255,255,255,0.06);
+  color: #CBD5E1;
+  border-color: rgba(255,255,255,0.1);
+}
+.dark .doc-filter-chip .doc-filter-chip-x {
+  background: rgba(255,255,255,0.08);
+  color: #94A3B8;
+}
+.dark .doc-filter-chip .doc-filter-chip-x:hover {
+  background: rgba(255,255,255,0.15);
+}
+.dark .doc-filter-chip-clear { color: #4FD1B0; }
+.dark .doc-filter-chips-label { color: #64748B; }
+.dark .doc-explorer { background: var(--purchase-card); border-color: rgba(255,255,255,0.08); }
+.dark .doc-explorer-hint { color: #64748B; }
+.dark .doc-folder-context { background: rgba(7,94,84,0.12); border-color: rgba(79,209,176,0.2); color: #4FD1B0; }
+.dark .doc-skeleton-row .doc-sk { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; }
+.dark .doc-status.rejected { background: rgba(185,28,28,0.15); color: #FCA5A5; border-color: rgba(252,165,165,0.25); }
+.dark .doc-status.archived { background: rgba(107,114,128,0.15); color: #9CA3AF; border-color: rgba(156,163,175,0.25); }
+.dark .doc-card-menu-dropdown { background: #1E293B; border-color: rgba(255,255,255,0.1); box-shadow: 0 8px 28px rgba(0,0,0,0.4); }
+.dark .doc-empty-icon-circle { background: rgba(255,255,255,0.06); color: #475569; }
+.dark .doc-btn-secondary { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.1); color: #CBD5E1; }
+.dark .doc-btn-secondary:hover { background: rgba(255,255,255,0.08); }
+.dark .doc-advanced-toggle { color: #4FD1B0; }
+.dark .doc-advanced { border-top-color: rgba(255,255,255,0.06); }
+.dark .doc-workspace-head { border-bottom-color: rgba(255,255,255,0.06); }
+
+/* ===================================================================
+   VISUAL HIERARCHY — dark-mode counterparts
+   (keeps the polish above restrained when Purchase runs in dark mode)
+   =================================================================== */
+.dark .doc-metrics .doc-section-title,
+.dark .doc-workspace .doc-section-title { color: #94A3B8; }
+.dark .doc-kpi { border-color: rgba(255, 255, 255, 0.08); }
+.dark .doc-kpi:hover { background: rgba(255, 255, 255, 0.04); }
+.dark .doc-kpi-label { color: #94A3B8; }
+.dark .doc-kpi-sub { color: #64748B; }
+.dark .doc-nav-item:hover { background: rgba(255, 255, 255, 0.03); color: #4FD1B0; }
+.dark .doc-nav-item.active {
+  background: rgba(7, 94, 84, 0.22);
+  color: #4FD1B0;
+}
+.dark .doc-nav-count { background: rgba(255, 255, 255, 0.1); color: #94A3B8; }
+.dark .doc-explorer-head {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+.dark .doc-explorer-head .doc-section-title { color: #94A3B8; }
+.dark .doc-explorer-hint { color: #64748B; }
+.dark .doc-explorer-actions .doc-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .doc-advanced.open {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .doc-advanced.open .doc-advanced-toggle {
+  background: rgba(7, 94, 84, 0.18);
+  color: #4FD1B0;
+}
+.dark .doc-table thead tr {
+  background: rgba(255, 255, 255, 0.03);
+  color: #94A3B8;
+}
+.dark .doc-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
+.dark .doc-table tbody tr:nth-child(even) td.sticky-left,
+.dark .doc-table tbody tr:nth-child(even) td.sticky-right {
+  background: rgba(255, 255, 255, 0.02);
+}
+.dark .doc-table tbody tr:hover td.sticky-left,
+.dark .doc-table tbody tr:hover td.sticky-right {
+  background: rgba(255, 255, 255, 0.03);
+}
+.dark .doc-table tbody tr.selected td.sticky-left,
+.dark .doc-table tbody tr.selected td.sticky-right {
+  background: rgba(7, 94, 84, 0.18);
+}
+.dark .doc-status.generated {
+  background: rgba(5, 150, 105, 0.16);
+  color: #34D399;
+  border-color: rgba(52, 211, 153, 0.3);
+}
+.dark .doc-cell-link { color: #4FD1B0; }
+.dark .doc-cell-link:hover { color: #7EE7C6; }
+.dark .doc-row-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #4FD1B0;
+}
+.dark .doc-checkbox { accent-color: #4FD1B0; }
+
+/* ===================================================================
+   22. INVOICE-MANAGEMENT PARITY — shared ERP surface language
+   -------------------------------------------------------------------
+   Aligns the remaining custom Document Repository surfaces with the
+   shared CPR list design system used by /purchase/invoices and every
+   other Purchase list page (page header, KPI cards, tab strip, table
+   card). The shared classes themselves are styled by cpr-list.css +
+   requisition-list-polish.css, which this page now imports; this block
+   only re-tunes the page's own .doc-* surfaces so the whole page
+   speaks the same ERP language. Colors/typography deliberately mirror
+   requisition-list-polish.css values.
+   =================================================================== */
+
+/* --- Page header: plain shared header (no tinted band), ERP buttons --- */
+.doc-repo .pr-page-header {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 16px;
+  align-items: center;
+  gap: 12px;
+}
+.doc-repo .pr-page-header h1 {
+  color: #102A2A;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 0;
+}
+.doc-repo .pr-page-header h1 svg {
+  color: #075E54;
+}
+.doc-repo .po-page-header-subtitle {
+  color: #64748B;
+}
+.doc-repo .pr-page-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.doc-repo .pr-page-header-actions .doc-btn {
+  height: 38px;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 10px;
+  gap: 8px;
+  white-space: nowrap;
+}
+.doc-repo .pr-page-header-actions .doc-btn-primary {
+  background: linear-gradient(135deg, #0B7A68 0%, #075E54 55%, #064C44 100%);
+  border-color: transparent;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(7, 94, 84, 0.25);
+}
+.doc-repo .pr-page-header-actions .doc-btn-secondary {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+}
+
+/* --- Section rhythm: consistent 16-20px between major sections --- */
+.doc-metrics {
+  margin-bottom: 16px;
+}
+.doc-section-heading {
+  margin-bottom: 12px;
+}
+.doc-nav-row {
+  margin-bottom: 20px;
+}
+.doc-explorer {
+  margin-bottom: 16px;
+}
+
+/* --- Workflow category strip: shared rfq-tab language --- */
+.doc-nav-row {
+  border-bottom: none;
+}
+.doc-nav-track {
+  gap: 6px;
+}
+.doc-nav-item {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  gap: 6px;
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  min-width: max-content;
+}
+.doc-nav-item .doc-nav-label {
+  white-space: nowrap;
+}
+.doc-nav-item:hover {
+  background: #F8FAFC;
+  color: #075E54;
+  border-color: #CBD5E1;
+}
+.doc-nav-item .doc-nav-icon {
+  opacity: 0.85;
+}
+.doc-nav-item.active {
+  background: #075E54;
+  border-color: #075E54;
+  color: #FFFFFF;
+  font-weight: 700;
+}
+.doc-nav-item.active .doc-nav-icon {
+  color: #FFFFFF !important;
+  opacity: 1;
+}
+.doc-nav-item:hover .doc-nav-icon {
+  opacity: 1;
+}
+.doc-nav-count {
+  height: 16px;
+  min-width: 16px;
+  padding: 0 5px;
+  font-size: 9px;
+  background: #EEF2F6;
+  color: #52666F;
+  border-radius: 999px;
+}
+.doc-nav-item.active .doc-nav-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+}
+
+/* --- Explorer: flat shared surface (single 12px-radius card) --- */
+.doc-explorer {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  padding: 14px 16px 14px;
+}
+.doc-explorer-head {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  margin: 0 0 10px;
+  padding: 0;
+}
+.doc-explorer-head .doc-section-title {
+  color: #52666F;
+  font-size: 11px;
+}
+.doc-explorer-actions .doc-btn {
+  height: 32px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+/* --- Workspace head: compact toolbar bar above the table card --- */
+.doc-workspace-head {
+  padding: 0 0 12px;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+.doc-workspace-title-wrap .doc-section-title {
+  font-size: 12px;
+}
+.doc-table-actions {
+  gap: 8px;
+}
+.doc-view-toggle button {
+  height: 30px;
+  padding: 0 10px;
+  font-size: 11px;
+}
+.doc-page-size {
+  height: 30px;
+  font-size: 11px;
+  padding: 0 8px;
+}
+
+/* --- Table card: shared pr-table visual language --- */
+.doc-table-wrap {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.doc-table thead tr {
+  background: #075E54;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  border-bottom: none;
+}
+.doc-table thead th {
+  height: 44px;
+  padding: 0 14px;
+  color: #FFFFFF;
+  font-weight: 600;
+  vertical-align: middle;
+}
+.doc-table thead th.sortable:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+.doc-table thead th.sticky-left,
+.doc-table thead th.sticky-right {
+  background: #075E54;
+}
+.doc-sort-indicator {
+  color: rgba(255, 255, 255, 0.65);
+}
+/* Rows: zebra + hover + selected exactly like shared list tables */
+.doc-table tbody td {
+  border-bottom: none;
+  padding: 10px 14px;
+  background: transparent;
+}
+.doc-table tbody tr:nth-child(even) td {
+  background: #F8FBFA;
+}
+.doc-table tbody tr:nth-child(even) td.sticky-left,
+.doc-table tbody tr:nth-child(even) td.sticky-right {
+  background: #F8FBFA;
+}
+.doc-table tbody tr:hover td,
+.doc-table tbody tr:hover td.sticky-left,
+.doc-table tbody tr:hover td.sticky-right {
+  background: #F0FAF7;
+}
+.doc-table tbody tr.selected td,
+.doc-table tbody tr.selected td.sticky-left,
+.doc-table tbody tr.selected td.sticky-right {
+  background: #E2F0EA;
+}
+.doc-table tbody tr.selected td:first-child {
+  box-shadow: inset 3px 0 0 #075E54;
+}
+.doc-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* --- Dark-mode counterparts (mirror shared dark tokens) --- */
+.dark .doc-repo .pr-page-header h1 { color: #F1F5F9; }
+.dark .doc-repo .pr-page-header h1 svg { color: #5CB8A8; }
+.dark .doc-repo .po-page-header-subtitle { color: #94A3B8; }
+.dark .doc-repo .pr-page-header-actions .doc-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #E2E8F0;
+}
+.dark .doc-nav-item {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #94A3B8;
+}
+.dark .doc-nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.16);
+  color: #4FD1B0;
+}
+.dark .doc-nav-item.active {
+  background: #0B4A3D;
+  border-color: #0B4A3D;
+  color: #FFFFFF;
+}
+.dark .doc-nav-count {
+  background: rgba(255, 255, 255, 0.1);
+  color: #94A3B8;
+}
+.dark .doc-nav-item.active .doc-nav-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+}
+.dark .doc-explorer {
+  background: var(--purchase-card);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+.dark .doc-explorer-actions .doc-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .doc-table-wrap {
+  background: var(--purchase-card);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+.dark .doc-table thead tr,
+.dark .doc-table thead th.sticky-left,
+.dark .doc-table thead th.sticky-right {
+  background: var(--purchase-table-header);
+  background-color: var(--purchase-table-header);
+  color: #FFFFFF;
+}
+.dark .doc-table tbody td {
+  border-bottom-color: transparent;
+  color: #CBD5E1;
+}
+.dark .doc-table tbody tr:nth-child(even) td,
+.dark .doc-table tbody tr:nth-child(even) td.sticky-left,
+.dark .doc-table tbody tr:nth-child(even) td.sticky-right {
+  background: rgba(255, 255, 255, 0.02);
+}
+.dark .doc-table tbody tr:hover td,
+.dark .doc-table tbody tr:hover td.sticky-left,
+.dark .doc-table tbody tr:hover td.sticky-right {
+  background: rgba(7, 94, 84, 0.12);
+}
+.dark .doc-table tbody tr.selected td,
+.dark .doc-table tbody tr.selected td.sticky-left,
+.dark .doc-table tbody tr.selected td.sticky-right {
+  background: rgba(7, 94, 84, 0.2);
+}
+.dark .doc-table tbody tr.selected td:first-child {
+  box-shadow: inset 3px 0 0 var(--purchase-primary);
+}
+
+/* ===================================================================
+   23. NESTED "MORE OPERATIONS" SUBMENU
+   -------------------------------------------------------------------
+   The More Operations popover is portaled to document.body and reuses
+   the .doc-row-dropdown surface so it looks exactly like the parent
+   Actions menu (same border, radius, shadow, typography, hover states)
+   and inherits the dark-mode variants automatically. The trigger row
+   (doc-ops-trigger) gains a chevron and an open/active highlight.
+   =================================================================== */
+.doc-ops-trigger .doc-row-dropdown-item {
+  padding-right: 30px;
+}
+.doc-ops-trigger.open .doc-row-dropdown-item {
+  background: #F8FAFC;
+  color: #075E54;
+}
+.doc-ops-chevron {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94A3B8;
+  pointer-events: none;
+  transition: transform 0.15s ease;
+}
+.doc-ops-trigger.open .doc-ops-chevron {
+  transform: translateY(-50%) rotate(180deg);
+}
+.doc-ops-submenu {
+  width: 224px;
+  z-index: 10000;
+  padding: 6px 0;
+}
+.doc-ops-sub-section {
+  padding: 7px 12px 3px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94A3B8;
+  white-space: nowrap;
+}
+.doc-ops-sub-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  margin: 0 0 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #E11D48;
+  background: #FFF1F2;
+  border-bottom: 1px solid #FFE4E6;
+}
+.doc-ops-sub-owner {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 500;
+  color: #FB7185;
+}
+.dark .doc-ops-trigger .doc-row-dropdown-item {
+  color: #CBD5E1;
+}
+.dark .doc-ops-trigger.open .doc-row-dropdown-item {
+  background: rgba(255, 255, 255, 0.06);
+  color: #4FD1B0;
+}
+.dark .doc-ops-chevron {
+  color: #64748B;
+}
+.dark .doc-ops-trigger.open .doc-ops-chevron {
+  color: #4FD1B0;
+}
+.dark .doc-ops-sub-section {
+  color: #64748B;
+}
+.dark .doc-ops-sub-badge {
+  background: rgba(225, 29, 72, 0.12);
+  border-bottom-color: rgba(225, 29, 72, 0.2);
+  color: #FB7185;
+}
+.dark .doc-ops-sub-owner {
+  color: #FDA4AF;
+}
+
+/* ==========================================================================
+   DOCUMENT REPOSITORY — shared control dark overrides
+   ========================================================================== */
+.dark .doc-global-search .po-search-box input {
+  background: #1E293B;
+  color: #E2E8F0;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .doc-global-search .po-search-box input::placeholder {
+  color: #64748B;
+}
+.dark .doc-explorer-actions .doc-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #CBD5E1;
+}
+.dark .doc-explorer-actions .doc-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.dark .doc-empty-action {
+  background: rgba(15, 143, 120, 0.16);
+  border-color: rgba(15, 143, 120, 0.35);
+  color: #8FDDCB;
+}
+.dark .doc-empty-action:hover {
+  background: rgba(15, 143, 120, 0.24);
+}
+/* ==========================================================================
+   DOCUMENT FOLDERS — category cards
+   --------------------------------------------------------------------------
+   The Purchase Documents repository lists its workflow categories as folder
+   cards above the table (Inside ERP → Purchase Requisition, RFQ & Quotations,
+   Purchase Orders, …). The card uses the same white surface, border, radius
+   and soft green icon tile as the module's KPI cards, so the repository reads
+   as one page with the rest of Purchase.
+   ========================================================================== */
+.doc-folder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+}
+.doc-folder-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  text-align: left;
+  background: var(--purchase-card, #fff);
+  border: 1px solid var(--purchase-border, #E2E8F0);
+  border-radius: var(--purchase-radius, 10px);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.doc-folder-card:hover {
+  border-color: #0B4A3D;
+  background: #F6FBF9;
+  box-shadow: 0 2px 10px rgba(11, 74, 61, 0.08);
+}
+.doc-folder-card:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.16);
+}
+.doc-folder-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #EAF7F3;
+  color: #0B4A3D;
+}
+.doc-folder-card-icon svg { display: block; }
+.doc-folder-card-body { min-width: 0; flex: 1; }
+.doc-folder-card-name {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0F172A;
+}
+.doc-folder-card-meta {
+  display: block;
+  margin-top: 1px;
+  font-size: 11px;
+  color: #64748B;
+}
+
+/* Version note beside a document name in the repository table. */
+.doc-name-sub-note { margin-left: 6px; font-size: 10px; color: #94A3B8; }
+
+/* The repository table's name cell: let the name ellipsize inside its column. */
+.doc-purchase-repo .doc-name-text { display: block; }
+
+/* --------------------------------------------------------------------------
+   FOLDER EXPLORER — action row, breadcrumb, per-folder toolbar
+   --------------------------------------------------------------------------
+   Same markup and styling as the Sales Documents explorer so both repository
+   pages read identically: the page's action row is right-aligned, a
+   breadcrumb with Back sits above the folder cards, and the search/filter
+   toolbar sits directly above the open folder's table.
+   -------------------------------------------------------------------------- */
+.doc-action-row {
+  justify-content: flex-end;
+}
+
+.doc-explorer-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #F1F5F9;
+}
+.doc-crumb-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0B4A3D;
+  background: #EDF7F4;
+  border: 1px solid rgba(11, 74, 61, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.doc-crumb-back:disabled {
+  color: #94A3B8;
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+  cursor: default;
+}
+.doc-crumb-trail {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+.doc-crumb-item { display: inline-flex; align-items: center; gap: 4px; }
+.doc-crumb-sep { color: #CBD5E1; }
+.doc-crumb-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: #0B7A68;
+  font-weight: 600;
+  cursor: pointer;
+}
+.doc-crumb-link:hover { text-decoration: underline; }
+.doc-crumb-current { color: #0F172A; font-weight: 700; }
+
+.doc-query { margin-bottom: 12px; }
+.doc-query-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.doc-query-row .doc-btn { height: 38px; padding: 0 14px; }
+.doc-search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1 1 280px;
+  min-width: 220px;
+}
+.doc-search-icon {
+  position: absolute;
+  left: 11px;
+  color: #94A3B8;
+  pointer-events: none;
+}
+.doc-search-input {
+  width: 100%;
+  height: 38px;
+  padding: 0 34px 0 32px;
+  font-size: 12px;
+  color: #0F172A;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+}
+.doc-search-input::placeholder { color: #94A3B8; }
+.doc-search-input:focus {
+  outline: none;
+  border-color: #0B4A3D;
+  box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.12);
+}
+.doc-search-input::-webkit-search-cancel-button { display: none; }
+.doc-search-clear {
+  position: absolute;
+  right: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: #64748B;
+  cursor: pointer;
+}
+.doc-search-clear:hover { background: #F1F5F9; color: #0F172A; }
+.doc-query-count { font-size: 11px; color: #64748B; }
+.doc-filter-panel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+  padding: 12px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+}
+.doc-filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.doc-filter-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #64748B;
+}
+.doc-filter-control {
+  height: 34px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: #0F172A;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+}
+.doc-filter-control:focus {
+  outline: none;
+  border-color: #0B4A3D;
+  box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.12);
+}
+.doc-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+}
+
+.dark .doc-explorer-crumbs { border-bottom-color: rgba(255, 255, 255, 0.06); }
+.dark .doc-crumb-current { color: #E2E8F0; }
+.dark .doc-crumb-back {
+  background: rgba(7, 94, 84, 0.25);
+  border-color: rgba(79, 209, 176, 0.2);
+  color: #4FD1B0;
+}
+.dark .doc-crumb-back:disabled {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #64748B;
+}
+.dark .doc-search-input,
+.dark .doc-filter-control {
+  background: #1E293B;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #E2E8F0;
+}
+.dark .doc-filter-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .doc-search-clear:hover { background: rgba(255, 255, 255, 0.08); color: #E2E8F0; }
+
+@media (max-width: 720px) {
+  .doc-explorer-crumbs { align-items: flex-start; }
+}
+
+.dark .doc-folder-card {
+  background: var(--purchase-card, #1E293B);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .doc-folder-card:hover { background: rgba(11, 74, 61, 0.25); }
+.dark .doc-folder-card-name { color: #E2E8F0; }
+.dark .doc-folder-card-icon { background: rgba(15, 143, 120, 0.16); color: #4FD1B0; }
+
+@media (max-width: 720px) {
+  .doc-folder-grid { grid-template-columns: 1fr; }
+}

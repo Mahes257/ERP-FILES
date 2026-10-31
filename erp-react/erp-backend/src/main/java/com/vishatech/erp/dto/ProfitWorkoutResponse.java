@@ -1,0 +1,57 @@
+package com.vishatech.erp.dto;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+public record ProfitWorkoutResponse(
+        Long id,
+        String pwNo,
+        String pwDate,
+        String status,
+        String preparedBy,
+        String contactPerson,
+        String department,
+        String currency,
+        String project,
+        String sourceLead,
+        String customerName,
+        String cprRef,
+        Long cprId,
+        String phone,
+        String email,
+        String company,
+        String gst,
+        String pan,
+        String linkedCpr,
+        String billingAddress,
+        String shippingAddress,
+        String remarks,
+        BigDecimal profitPct,
+        BigDecimal profitAmt,
+        BigDecimal sellingPrice,
+        BigDecimal discountPct,
+        BigDecimal discountAmt,
+        BigDecimal additionalCharges,
+        BigDecimal gstPct,
+        BigDecimal gstAmt,
+        BigDecimal subtotal,
+        BigDecimal grandTotal,
+        String approvedBy,
+        String rejectionReason,
+        String date,
+        String createdAt,
+        String updatedAt,
+        String archivedAt,
+        List<ProfitWorkoutItemResponse> items,
+        List<ProfitWorkoutTimelineResponse> timeline
+,
+        Integer revision,
+        Long revisionOf,
+        Boolean latestRevision,
+        String revisionDate,
+        List<RevisionInfo> revisions,
+        String convertedToQtn,
+        String sourceCwNo,
+        Long sourceCwId
+) {
+}

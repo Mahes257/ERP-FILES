@@ -1,0 +1,1172 @@
+/* ============================================
+   CPR Technical Verification — Styles
+   Uses Purchase module design tokens
+   ============================================ */
+
+/* ---- Page ---- */
+.tv-page {
+  padding: 0 0 32px;
+}
+
+/* ---- Division Tabs ---- */
+.tv-division-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.tv-division-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tv-division-tab:hover {
+  color: #1e293b;
+  background: rgba(255,255,255,0.5);
+}
+
+.tv-division-tab-active {
+  background: #0B4A3D;
+  color: #fff;
+  box-shadow: 0 1px 3px rgba(11,74,61,0.2);
+}
+
+.tv-division-tab-active:hover {
+  background: #094539;
+  color: #fff;
+}
+
+/* ---- KPI Grid ---- */
+.tv-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.tv-kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: var(--purchase-radius, 10px);
+  transition: border-color 0.15s;
+}
+
+.tv-kpi-card:hover {
+  border-color: var(--purchase-primary, #0B4A3D);
+}
+
+.tv-kpi-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tv-kpi-content {
+  min-width: 0;
+}
+
+.tv-kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.tv-kpi-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B7280;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Technical Verification — KPI row
+   --------------------------------------------------------------------------
+   The shared `.tv-kpi-*` classes above are also used by the CPO Production
+   Tracker's five-card row, so this SEVEN-card row gets its own layout, scoped
+   to `.tv-page` (the root of this page only).
+
+   It mirrors the ERP's established KPI ladder — Purchase `.po-kpi-grid`
+   (design-system.css: base 4, five at ≥1440, 3 at ≤1199, 2 at ≤899, 1 at
+   ≤599) and Production `.prod-kpi-grid` — with one more column, because this
+   row has seven cards instead of five: one clean row down to ~1300px, then
+   4 / 3 / 2 / 1 columns.
+
+   Why 1300 and not lower: the card reserves 36px padding + 40px icon chip
+   + 14px gap, so the label column is `cardWidth - 90px`. The widest word in
+   this row is "Verification" (~60px), so below ~1300px the column gets too
+   narrow and words start breaking mid-word. The 4-column step keeps every
+   label intact at those widths.
+
+   Why the count is pinned instead of `auto-fit`: with seven cards,
+   `repeat(auto-fit, minmax(160px, 1fr))` re-derived the column count from the
+   raw pixel width (7/6/5/4/3…), so the row silently rearranged while the
+   window moved and the leftover card(s) ended up alone beside dead space.
+
+   `minmax(0, 1fr)` is deliberate: a track may shrink below its content
+   instead of forcing the row wider, so the KPI row can never push a
+   horizontal scrollbar onto the page.
+   ========================================================================== */
+.tv-page .tv-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  /* Makes every row as tall as the tallest one, so when the cards wrap the
+     heights still match exactly instead of drifting a pixel per row. */
+  grid-auto-rows: 1fr;
+  gap: 14px;
+  align-items: stretch;
+  margin: 0 0 18px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1299px) {
+  .tv-page .tv-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1023px) {
+  .tv-page .tv-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  .tv-page .tv-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 519px) {
+  .tv-page .tv-kpi-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Every card fills its track, so one uniform height across the whole row even
+   when a long label wraps to a second line. Padding / gap / min-height are the
+   ERP reference values (Purchase `.po-kpi-card`: 16px 18px, gap 14, min 88). */
+.tv-page .tv-kpi-card {
+  height: 100%;
+  min-height: 88px;
+  min-width: 0;
+  gap: 14px;
+  padding: 16px 18px;
+  align-items: center;
+}
+
+/* A long label wraps inside the card instead of running past its border:
+   "Forwarded to Cost Workout" stays fully readable and the card keeps its
+   shape at every column width. */
+.tv-page .tv-kpi-label {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+  max-width: 100%;
+}
+
+/* Value above label, both left-aligned to the same edge, vertically centred
+   against the icon chip — the same stack Purchase/PR use
+   (`.qtn-kpi-body` → count, label). */
+.tv-page .tv-kpi-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.tv-page .tv-kpi-value {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The icon chip never shrinks, so it stays pixel-identical on every card. */
+.tv-page .tv-kpi-icon {
+  flex-shrink: 0;
+}
+
+/* ---- Badges ---- */
+.tv-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tv-badge-gray { background: #f1f5f9; color: #64748b; }
+.tv-badge-blue { background: #eff6ff; color: #2563eb; }
+.tv-badge-green { background: #ecfdf5; color: #059669; }
+.tv-badge-red { background: #fef2f2; color: #dc2626; }
+.tv-badge-orange { background: #fff7ed; color: #ea580c; }
+.tv-badge-purple { background: #f5f3ff; color: #7c3aed; }
+
+/* ---- Filter Select ---- */
+.tv-filter-select {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: var(--purchase-radius-sm, 8px);
+  font-size: 13px;
+  color: #475569;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* ---- Search Input ---- */
+.tv-search-input {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: var(--purchase-radius-sm, 8px);
+  padding: 0 10px;
+  height: 34px;
+  background: #fff;
+}
+
+.tv-search-input svg {
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.tv-search-input input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  width: 260px;
+  padding: 6px 0;
+  color: #1e293b;
+}
+
+/* ---- Split View Layout ---- */
+.tv-split-view {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 0;
+  background: #fff;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: var(--purchase-radius, 10px);
+  overflow: hidden;
+  min-height: 500px;
+}
+
+.tv-split-left {
+  border-right: 1px solid var(--purchase-border, #e2e8f0);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tv-split-right {
+  overflow: visible;
+}
+
+.tv-table-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--purchase-border, #e2e8f0);
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.tv-table-count {
+  background: #e2e8f0;
+  color: #64748b;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tv-table-wrap {
+  flex: 1;
+  /* The items table is wider than the pane at every desktop width, so this is
+     the horizontal scroll container: TV No stays pinned left and Actions
+     pinned right (shared sticky data grid, styles/sticky-data-grid.css). */
+  overflow: auto;
+}
+
+/* ---- TV Table ---- */
+.tv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* z 10 = the ERP-wide level for a scrolling header (shared grid contract):
+   above the scrolling body, below the pinned cells inside it. */
+.tv-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tv-table th {
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: #0B4A3D;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 2px solid #094539;
+}
+
+.tv-table td {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  white-space: nowrap;
+}
+
+.tv-table-row {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.tv-table-row:hover {
+  background: #f0fdf4;
+}
+
+.tv-table-row-selected {
+  background: #e0f2fe !important;
+}
+
+/* ---- Pinned-column fills for the items table ---- */
+/* The frozen TV No / Actions cells must be opaque so the scrolling columns
+   cannot show through them. The shared grid supplies defaults, but the TV
+   page is light-only while the grid switches to its dark palette under
+   `.dark` — the doubled `.tv-table` class keeps these module fills winning
+   in both themes (same idiom as `.sgrid.sgrid` in the shared file). */
+.sgrid.sgrid.tv-table.tv-table > tbody td.sgrid-pin,
+.sgrid.sgrid.tv-table.tv-table > tbody td.sgrid-pin-actions {
+  background: #FFFFFF !important;
+}
+.sgrid.sgrid.tv-table.tv-table > tbody tr.tv-table-row:hover td.sgrid-pin,
+.sgrid.sgrid.tv-table.tv-table > tbody tr.tv-table-row:hover td.sgrid-pin-actions {
+  background: #F0FDF4 !important;
+}
+.sgrid.sgrid.tv-table.tv-table > tbody tr.tv-table-row-selected td.sgrid-pin,
+.sgrid.sgrid.tv-table.tv-table > tbody tr.tv-table-row-selected td.sgrid-pin-actions {
+  background: #E0F2FE !important;
+}
+
+.tv-cell-bold {
+  font-weight: 700;
+  color: #0B1F1A;
+}
+
+.tv-table-loading,
+.tv-table-empty {
+  text-align: center;
+  padding: 48px 16px !important;
+  color: #9CA3AF;
+  font-size: 13px;
+}
+
+.tv-table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ---- Table Actions ---- */
+.tv-actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
+  position: relative;
+}
+
+.tv-action-btn {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tv-action-btn:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.tv-action-btn-forward {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.tv-action-btn-forward:hover {
+  background: #d1fae5;
+}
+
+.tv-actions-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  padding: 4px;
+  min-width: 140px;
+}
+
+.tv-actions-menu button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font-size: 12px;
+  color: #475569;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s;
+}
+
+.tv-actions-menu button:hover {
+  background: #f1f5f9;
+}
+
+.tv-actions-menu-danger {
+  color: #dc2626 !important;
+}
+
+.tv-actions-menu-danger:hover {
+  background: #fef2f2 !important;
+}
+
+/* ---- Pagination ---- */
+.tv-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--purchase-border, #e2e8f0);
+  background: #f8fafc;
+}
+
+.tv-pagination-info {
+  font-size: 12px;
+  color: #6B7280;
+}
+
+.tv-pagination-btns {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tv-pagination-btns button {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: 6px;
+  background: #fff;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tv-pagination-btns button:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.tv-pagination-btns button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tv-pagination-page {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: #0B4A3D;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tv-pagination-size {
+  height: 28px;
+  padding: 0 6px;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #64748b;
+  background: #fff;
+}
+
+/* ---- Detail Panel ---- */
+.tv-detail-panel {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tv-detail-loading,
+.tv-detail-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 24px;
+  color: #9CA3AF;
+  font-size: 13px;
+}
+
+.tv-detail-header {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--purchase-border, #e2e8f0);
+}
+
+.tv-detail-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+/* ---- Stepper ---- */
+.tv-stepper {
+  display: flex;
+  gap: 0;
+  margin-top: 12px;
+}
+
+.tv-stepper-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  position: relative;
+}
+
+.tv-stepper-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 55%;
+  width: 90%;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 0;
+}
+
+.tv-stepper-done:not(:last-child)::after {
+  background: #059669;
+}
+
+.tv-stepper-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  z-index: 1;
+  transition: all 0.2s;
+}
+
+.tv-stepper-done .tv-stepper-dot {
+  background: #059669;
+  color: #fff;
+}
+
+.tv-stepper-current .tv-stepper-dot {
+  background: #2563eb;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.tv-stepper-pending .tv-stepper-dot {
+  background: #e2e8f0;
+  color: #94a3b8;
+}
+
+.tv-stepper-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  text-align: center;
+}
+
+.tv-stepper-done .tv-stepper-label {
+  color: #059669;
+}
+
+.tv-stepper-current .tv-stepper-label {
+  color: #2563eb;
+}
+
+.tv-stepper-rejected .tv-stepper-dot {
+  background: #dc2626;
+  color: #fff;
+}
+
+.tv-stepper-rejected .tv-stepper-label,
+.tv-stepper-rejected .tv-stepper-sublabel {
+  color: #dc2626;
+}
+
+.tv-stepper-sublabel {
+  font-size: 9px;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* ---- Detail Info ---- */
+.tv-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.tv-detail-row {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.tv-detail-label {
+  width: 140px;
+  flex-shrink: 0;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.tv-detail-value {
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tv-file-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.tv-file-link:hover {
+  text-decoration: underline;
+}
+
+.tv-file-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  padding: 2px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.tv-file-action:hover {
+  background: #f1f5f9;
+}
+
+/* ---- Detail Section ---- */
+.tv-detail-section {
+  padding: 12px 0;
+  border-top: 1px solid var(--purchase-border, #e2e8f0);
+}
+
+.tv-detail-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.tv-detail-remarks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tv-detail-remarks p {
+  font-size: 13px;
+  color: #1e293b;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.tv-no-remarks {
+  color: #9CA3AF;
+  font-style: italic;
+}
+
+/* ---- Detail Actions ---- */
+.tv-detail-actions {
+  display: flex;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--purchase-border, #e2e8f0);
+}
+
+.tv-detail-actions .po-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+.po-btn-danger {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.po-btn-danger:hover {
+  background: #fee2e2;
+}
+
+/* ---- File Status Check ---- */
+.tv-file-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.tv-file-status-available {
+  background: #ecfdf5;
+  border: 1px solid #d1fae5;
+  color: #059669;
+}
+
+.tv-file-status-missing {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.tv-file-status-loading,
+.tv-file-status-idle {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  color: #9CA3AF;
+}
+
+/* ---- Create Form ---- */
+.tv-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tv-form-card {
+  background: #fff;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: var(--purchase-radius, 10px);
+  padding: 20px;
+}
+
+.tv-form-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--purchase-border, #e2e8f0);
+}
+
+.tv-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.tv-form-group {
+  margin-bottom: 14px;
+}
+
+.tv-form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.tv-form-input,
+.tv-form-select,
+.tv-form-textarea {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: var(--purchase-radius, 8px);
+  font-size: 13px;
+  color: #1e293b;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.tv-form-input:focus,
+.tv-form-select:focus,
+.tv-form-textarea:focus {
+  outline: none;
+  border-color: var(--purchase-primary, #0B4A3D);
+  box-shadow: 0 0 0 2px rgba(11, 74, 61, 0.1);
+}
+
+.tv-form-textarea {
+  height: auto;
+  padding: 8px 10px;
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* ---- Status Flow (legacy for detail) ---- */
+.tv-status-flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 16px 24px;
+  background: #fff;
+  border: 1px solid var(--purchase-border, #e2e8f0);
+  border-radius: var(--purchase-radius, 10px);
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.tv-status-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  position: relative;
+  white-space: nowrap;
+}
+
+.tv-status-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 2px;
+  background: #d1d5db;
+}
+
+.tv-status-step-done:not(:last-child)::after {
+  background: #059669;
+}
+
+.tv-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tv-status-step-active .tv-status-dot {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.tv-status-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ---- Modal ---- */
+.tv-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.tv-modal {
+  background: #fff;
+  border-radius: var(--purchase-radius, 12px);
+  padding: 24px;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.tv-modal-large {
+  width: 800px;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tv-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--purchase-border, #e2e8f0);
+}
+
+.tv-modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.tv-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.tv-modal-body {
+  flex: 1;
+  overflow: auto;
+}
+
+.tv-preview-image {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.tv-preview-frame {
+  width: 100%;
+  height: 500px;
+  border: none;
+  border-radius: 8px;
+}
+
+.tv-preview-unsupported {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 48px;
+  color: #6B7280;
+}
+
+/* ---- Upload Zone ---- */
+.tv-upload-zone {
+  border: 2px dashed #cbd5e1;
+  border-radius: var(--purchase-radius, 10px);
+  padding: 24px 20px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: pointer;
+  background: #f8fafc;
+}
+
+.tv-upload-zone:hover,
+.tv-upload-zone-active {
+  border-color: var(--purchase-primary, #0B4A3D);
+  background: rgba(11, 74, 61, 0.03);
+}
+
+.tv-upload-icon {
+  color: #9CA3AF;
+  margin-bottom: 8px;
+}
+
+.tv-upload-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 4px;
+}
+
+.tv-upload-hint {
+  font-size: 12px;
+  color: #9CA3AF;
+}
+
+.tv-upload-browse {
+  color: var(--purchase-primary, #0B4A3D);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ---- Upload Progress ---- */
+.tv-upload-progress {
+  margin-top: 12px;
+}
+
+.tv-progress-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.tv-progress-name {
+  font-size: 12px;
+  color: #475569;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tv-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tv-progress-fill {
+  height: 100%;
+  background: var(--purchase-primary, #0B4A3D);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.tv-progress-pct {
+  font-size: 11px;
+  color: #6B7280;
+  width: 36px;
+  text-align: right;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .tv-split-view {
+    grid-template-columns: 1fr;
+  }
+
+  .tv-split-left {
+    border-right: none;
+    border-bottom: 1px solid var(--purchase-border, #e2e8f0);
+  }
+
+  .tv-split-right {
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .tv-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tv-division-tabs {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .tv-search-input input {
+    width: 160px;
+  }
+
+  .tv-detail-actions {
+    flex-wrap: wrap;
+  }
+
+  .tv-detail-actions .po-btn {
+    flex: 1 1 100%;
+  }
+
+  .tv-table-wrap {
+    overflow-x: auto;
+  }
+}
+.tv-rejection-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 9px 11px;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+}

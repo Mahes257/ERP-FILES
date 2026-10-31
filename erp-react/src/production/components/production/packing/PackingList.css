@@ -1,0 +1,798 @@
+/* ============================================================
+   Packing List — form + document + print stylesheet.
+   Matches the reference business document structure.
+   ============================================================ */
+
+/* ---- Form (unchanged) ---- */
+.pl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.pl-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pl-form-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.pl-form-section-title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+.pl-box-summary {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.pl-items-table .pl-cell {
+  min-width: 90px;
+  padding: 4px 6px;
+  font-size: 12.5px;
+}
+.pl-items-table tfoot td {
+  border-top: 2px solid var(--color-border-strong);
+  background: var(--color-surface);
+}
+.pl-totals-row td {
+  font-weight: 700;
+}
+.pl-form-note {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+/* ---- Signature upload (form mode) ---- */
+.pl-signature-upload {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pl-signature-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.pl-signature-preview {
+  max-width: 140px;
+  max-height: 52px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  object-fit: contain;
+  background: #fff;
+}
+.pl-signature-clear {
+  padding: 4px;
+}
+
+/* ---- Packing Box Cards (form mode) ---- */
+.pl-box-card {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+.pl-box-card + .pl-box-card {
+  margin-top: 10px;
+}
+.pl-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--color-surface-alt, #f7f9fb);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+.pl-box-header:hover {
+  background: var(--color-surface-hover, #eef1f5);
+}
+.pl-box-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pl-box-header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pl-box-number {
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--color-text);
+}
+.pl-box-dims {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  background: var(--color-bg, #eef1f5);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.pl-box-meta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.pl-box-qty {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary, #1e56a0);
+}
+.pl-box-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.pl-box-fields {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.pl-box-fields .form-field {
+  flex: 1;
+  min-width: 100px;
+}
+.pl-item-desc {
+  max-width: 260px;
+  white-space: pre-line;
+}
+.pl-add-item-btn {
+  align-self: flex-start;
+}
+.pl-add-box-btn {
+  align-self: flex-start;
+  margin-top: 6px;
+  border-style: dashed;
+}
+
+/* ---- Box weight summary (form mode only) ---- */
+.pl-box-weight-summary {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: #f0f7f0;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  font-size: 12.5px;
+}
+.pl-weight-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.pl-weight-gross {
+  color: var(--color-primary, #1e56a0);
+}
+.pl-weight-gross .form-hint {
+  margin-left: 4px;
+}
+
+/* ---- Document overlay ---- */
+.pl-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--color-bg, #eef1f5);
+  display: flex;
+  flex-direction: column;
+}
+.pl-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 12px 18px;
+  background: var(--color-surface, #fff);
+  border-bottom: 1px solid var(--color-border);
+}
+.pl-toolbar-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+.pl-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pl-scroll {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ---- The document ---- */
+.pl-document {
+  width: 794px; /* A4 at 96dpi */
+  max-width: 100%;
+  background: #fff;
+  color: #111;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12px;
+  line-height: 1.4;
+  border: 1px solid #bbb;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* ---- Page containers ---- */
+.pl-page {
+  padding: 28px 32px;
+}
+.pl-page-1 {
+  /* page 1 content */
+}
+.pl-page-2 {
+  /* page 2 content */
+}
+.pl-page-break {
+  page-break-after: always;
+  break-after: page;
+  height: 0;
+}
+
+/* ---- Document title ---- */
+.pl-doc-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+  border-bottom: 3px double #111;
+  padding-bottom: 8px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+/* ---- Header table (Exporter / Invoice / Buyer) ---- */
+.pl-header-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #111;
+  margin-bottom: 0;
+  font-size: 12px;
+}
+.pl-header-table td {
+  border: 1px solid #111;
+  padding: 8px 12px;
+  vertical-align: top;
+}
+.pl-hdr-label {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.pl-hdr-company {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+.pl-hdr-address {
+  font-size: 11.5px;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+.pl-hdr-label-inline {
+  font-weight: 700;
+  font-size: 11.5px;
+}
+.pl-hdr-value-inline {
+  font-size: 11.5px;
+}
+.pl-hdr-value-bold {
+  font-weight: 700;
+  font-size: 12px;
+}
+.pl-hdr-buyer-name {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+/* ---- Shipping details table (2-column rows) ---- */
+.pl-ship-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #111;
+  border-top: none;
+  font-size: 12px;
+  margin-bottom: 0;
+}
+.pl-ship-table td {
+  border: 1px solid #111;
+  padding: 8px 12px;
+  vertical-align: top;
+}
+.pl-ship-cell {
+  width: 50%;
+}
+.pl-ship-label {
+  font-weight: 700;
+  font-size: 11.5px;
+}
+.pl-ship-value {
+  font-weight: 700;
+  font-size: 12px;
+}
+.pl-payment-cell {
+  vertical-align: top;
+}
+
+/* ---- Packing table (page 2) ---- */
+.pl-packing-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 0;
+  table-layout: fixed;
+}
+.pl-packing-table th,
+.pl-packing-table td {
+  border: 1px solid #111;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.pl-packing-table thead th {
+  background: #f2f2f2;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  text-align: center;
+  font-weight: 700;
+}
+.pl-col-no {
+  width: 5%;
+}
+.pl-col-marks {
+  width: 14%;
+}
+.pl-col-pkg {
+  width: 15%;
+}
+.pl-col-desc {
+  width: 29%;
+}
+.pl-col-qty {
+  width: 9%;
+  text-align: center;
+}
+.pl-col-net {
+  width: 12%;
+  text-align: center;
+}
+.pl-col-gross {
+  width: 16%;
+  text-align: center;
+}
+.pl-center {
+  text-align: center !important;
+}
+.pl-strong {
+  font-weight: 700;
+}
+
+/* Box row in packing table */
+.pl-box-row td {
+  background: #fafafa;
+}
+.pl-box-pkg-cell {
+  text-align: center;
+  font-weight: 700;
+  vertical-align: middle !important;
+  padding: 8px;
+}
+
+/* Gross weight cell — vertically centered */
+.pl-packing-table td[rowspan] {
+  vertical-align: middle !important;
+}
+.pl-box-pkg-text {
+  font-weight: 700;
+  font-size: 12px;
+}
+.pl-box-dim-text {
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* Description multiline — MUST stay inside the column */
+.pl-desc-multiline {
+  white-space: pre-line;
+  line-height: 1.3;
+  font-size: 11.5px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.pl-desc {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+/* Total row */
+.pl-total-row td {
+  background: #f2f2f2;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* ---- Weight summary table (preview) ---- */
+.pl-weight-summary-section {
+  margin-top: 16px;
+}
+.pl-weight-summary-title {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  background: #f2f2f2;
+  border: 1px solid #111;
+}
+.pl-weight-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.pl-weight-summary-table th,
+.pl-weight-summary-table td {
+  border: 1px solid #111;
+  padding: 5px 8px;
+  text-align: left;
+}
+.pl-weight-summary-table th {
+  background: #f2f2f2;
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+
+/* ---- Weight lines below table ---- */
+.pl-weight-lines {
+  margin-top: 14px;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.pl-weight-line {
+  margin-bottom: 2px;
+}
+
+/* ---- Footer section (declaration + signature stay together) ---- */
+.pl-footer-section {
+  page-break-inside: avoid;
+  margin-top: 16px;
+}
+
+/* ---- Declaration (reference style) ---- */
+.pl-declaration-ref {
+  margin-top: 0;
+}
+.pl-decl-title {
+  font-weight: 700;
+  font-size: 12.5px;
+  margin-bottom: 4px;
+}
+.pl-decl-text {
+  font-size: 12px;
+  line-height: 1.5;
+  padding-left: 20px;
+}
+
+/* ---- Signatory section (right-aligned, production-ready) ---- */
+.pl-sign-area {
+  text-align: right;
+  margin-top: 40px;
+  page-break-inside: avoid;
+}
+.pl-sign-block {
+  display: inline-block;
+  text-align: center;
+  width: 220px;
+}
+.pl-sign-company {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+  color: #111;
+}
+.pl-sign-img {
+  display: block;
+  max-width: 140px;
+  max-height: 50px;
+  margin: 0 auto 6px;
+  object-fit: contain;
+}
+.pl-sign-seal {
+  width: 140px;
+  height: 140px;
+  margin: 8px auto;
+}
+.pl-seal-svg {
+  width: 100%;
+  height: 100%;
+}
+.pl-sign-line {
+  width: 180px;
+  height: 1px;
+  background: #111;
+  margin: 14px auto 6px;
+}
+.pl-sign-label {
+  font-size: 12px;
+  color: #333;
+}
+
+/* ============================================================
+   PRINT STYLESHEET — A4 Production-Ready
+   ============================================================ */
+@media (max-width: 640px) {
+  .pl-form {
+    gap: 14px;
+  }
+  .pl-section {
+    padding: 14px;
+  }
+  .pl-section-title {
+    font-size: 13px;
+  }
+  .pl-items-table {
+    font-size: 11px;
+  }
+  .pl-items-table th,
+  .pl-items-table td {
+    padding: 5px 6px;
+  }
+  .pl-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .pl-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 15mm 18mm;
+}
+
+@media print {
+  /* ── Hide ALL ERP chrome — show ONLY the packing document ── */
+  /* Hide EVERYTHING first, then show only the document */
+  body > * {
+    visibility: hidden !important;
+  }
+
+  /* Show only the document and its ancestors */
+  .pl-document,
+  .pl-document *,
+  .pl-document ~ * {
+    visibility: visible !important;
+  }
+
+  /* Reset containers for clean print */
+  .pl-overlay {
+    position: static !important;
+    background: none !important;
+    overflow: visible !important;
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    visibility: hidden !important;
+  }
+  .pl-scroll {
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+    visibility: hidden !important;
+  }
+  .page,
+  .pp-page {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Document fills A4 width */
+  .pl-document {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    visibility: visible !important;
+  }
+
+  /* Page containers */
+  .pl-page {
+    padding: 0 8mm !important;
+    margin: 0 !important;
+  }
+  .pl-page-break {
+    page-break-after: always;
+    break-after: page;
+    height: 0 !important;
+    border: none !important;
+    margin: 0 !important;
+  }
+
+  /* ── Table behaviour ────────────────────────────────────── */
+  .pl-packing-table {
+    page-break-inside: auto;
+    width: 100% !important;
+  }
+  .pl-packing-table tr {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+  .pl-packing-table thead {
+    display: table-header-group !important;
+  }
+  .pl-packing-table tfoot {
+    display: table-footer-group !important;
+  }
+  .pl-box-row {
+    page-break-inside: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Prevent orphaning of key sections */
+  .pl-header-table,
+  .pl-header-table tr,
+  .pl-ship-table,
+  .pl-ship-table tr,
+  .pl-declaration-ref,
+  .pl-sign-area,
+  .pl-weight-summary-section {
+    page-break-inside: avoid !important;
+  }
+
+  /* Signature block must stay together */
+  .pl-sign-area {
+    text-align: right !important;
+    page-break-inside: avoid !important;
+    page-break-before: avoid !important;
+    margin-top: 30px !important;
+  }
+  .pl-sign-block {
+    display: inline-block !important;
+  }
+
+  /* Declaration + signature move together */
+  .pl-declaration-ref {
+    page-break-inside: avoid !important;
+  }
+
+  /* ── Ensure borders and background colours print ─────────── */
+  .pl-packing-table th,
+  .pl-packing-table td,
+  .pl-header-table td,
+  .pl-ship-table td,
+  .pl-weight-summary-table th,
+  .pl-weight-summary-table td,
+  .pl-total-row td,
+  .pl-doc-title {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Table header background prints correctly */
+  .pl-packing-table thead th {
+    background: #f2f2f2 !important;
+  }
+  .pl-total-row td {
+    background: #f2f2f2 !important;
+  }
+
+  /* ── Remove any URL/localhost footer ─────────────────────── */
+  @page {
+    margin: 15mm 18mm;
+  }
+
+  /* ── Page header/footer suppression ─────────────────────── */
+  .pl-page::before,
+  .pl-page::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* ── Ensure text doesn't clip at page edge ──────────────── */
+  .pl-packing-table td,
+  .pl-packing-table th {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* ── Fix seal in print ────────────────────────────────── */
+  .pl-sign-seal {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* ── Hide editable fields in print ──────────────────────── */
+  .pl-edit-field {
+    border: none !important;
+    padding: 0 !important;
+    background: none !important;
+    font: inherit !important;
+    width: auto !important;
+  }
+  .pl-edit-textarea {
+    resize: none !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+}
+
+/* ---- Work Order Info (in Item Edit Modal) ---- */
+.pl-wo-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--color-surface-alt, #f8f9fa);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.pl-wo-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pl-wo-info-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.pl-wo-info-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+.pl-wo-accepted {
+  color: var(--color-success, #16a34a);
+}
+.pl-wo-available {
+  color: var(--color-primary, #2563eb);
+  font-weight: 700;
+}
+

@@ -1,0 +1,128 @@
+/* ==========================================================================
+   Advanced Settings — action system
+   --------------------------------------------------------------------------
+   The Advanced Settings reference package styles its chrome with five project
+   classes it expects to already exist:
+
+     .erp-settings-ui    the action-system root that wraps the settings page
+     .erp-btn            base button
+     .erp-btn-ghost      quiet variant (the Back affordance)
+     .erp-icon-tile      square icon container used by every admin card header
+     .erp-badge-coming   the "Coming soon" pill on non-clickable tiles
+
+   This app did not define any of them, so they are added here — deliberately
+   in a Settings-owned stylesheet rather than in the global index.css, and
+   imported only by the Settings pages, so no other module is touched and the
+   rules only load with the Settings chunk.
+
+   Colours go through the existing light/dark theme tokens (--ink, --ink-2,
+   --ink-3, --line, --surface-2, --hover, --primary) instead of the reference's
+   raw slate values, so the look matches the reference in light mode and keeps
+   working in dark mode. Layout, sizing and radii are the reference's.
+   ========================================================================== */
+
+.erp-settings-ui {
+  color: var(--ink);
+}
+
+/* --- base button ---------------------------------------------------------- */
+
+.erp-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  height: 2.25rem;
+  padding: 0 0.875rem;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.erp-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.erp-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- ghost variant -------------------------------------------------------- */
+
+.erp-btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ink-2);
+}
+
+.erp-btn-ghost:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.erp-btn-ghost:active {
+  background: var(--surface-2);
+}
+
+/* --- icon tile ------------------------------------------------------------ */
+/* Sizing and centring only: the surface, text colour and ring come from the
+   tone classes the component appends (emerald / sky / amber / rose / slate). */
+
+.erp-icon-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
+  flex-shrink: 0;
+  border-radius: 0.5rem;
+}
+
+/* --- live destination tile ------------------------------------------------ */
+/* The reference styles the clickable tile with Tailwind's `bg-surface` and
+   `border-line`. Both are dead on a <button> here: this app's global reset
+   `button { background: none; border: none }` (production/styles/global.css,
+   imported from main.jsx) is UNLAYERED and therefore outranks every rule in
+   Tailwind's `@layer utilities`. The tile would render borderless and
+   transparent, visually out of step with the div-based "Coming soon" tiles
+   next to it. These two declarations restore the reference's surface and
+   border for the live variant only, using the app's theme tokens. */
+
+.settings-card {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.settings-card:hover {
+  border-color: color-mix(in srgb, #0b4a3d 35%, transparent);
+  background-color: color-mix(in srgb, #0b4a3d 3.5%, var(--surface));
+}
+
+/* --- "Coming soon" badge -------------------------------------------------- */
+
+.erp-badge-coming {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-2);
+  padding: 0.125rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-3);
+  white-space: nowrap;
+}

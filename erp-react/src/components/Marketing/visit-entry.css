@@ -1,0 +1,555 @@
+﻿/* ================================================
+   Marketing Visit Entry — Central Source of Truth
+   ================================================ */
+
+.ve-root {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 24px;
+}
+
+/* ---- Header ---- */
+
+.ve-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.ve-header-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ve-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  border-radius: 10px;  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ve-back:hover { background: #f8fafc; border-color: #0B4A3D; color: #0B4A3D; }
+
+.ve-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.ve-subtitle {
+  font-size: 12px;
+  color: #9CA3AF;
+  margin: 2px 0 0;
+}
+
+.ve-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ---- Buttons ----
+   The visit form's action buttons use the shared ERP creation-action button
+   `.erp-create-btn` (styles/erp-creation-actions.css) — one definition of the
+   solid-green footer button instead of a module-local one. --------------- */
+
+/* ---- Sections ---- */
+
+.ve-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ve-section {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.ve-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.ve-section-header:hover { background: #F3F4F6; }
+
+.ve-section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ve-section-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: #0B4A3D;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ve-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ve-section-chevron {
+  font-size: 11px;
+  color: #9CA3AF;
+  transition: transform 0.2s;
+}
+
+.ve-section-chevron.collapsed { transform: rotate(-90deg); }
+
+.ve-section-body {
+  padding: 16px;
+}
+
+/* ---- Grid ---- */
+
+.ve-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.ve-full { grid-column: 1 / -1; }
+
+/* ---- Expenses ---- */
+
+.ve-expenses {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ve-expense-row {
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;}
+
+.ve-expense-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0B4A3D;
+  margin-bottom: 8px;
+}
+
+.ve-expense-fields {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.ve-expense-amount {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.ve-expense-rupee {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6B7280;
+}
+
+.ve-expense-input {
+  width: 80px;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  outline: none;
+}
+
+.ve-expense-bill {
+  display: flex;
+  gap: 10px;
+}
+
+.ve-radio {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+}
+
+.ve-radio input[type="radio"] { accent-color: #0B4A3D; }
+
+.ve-expense-upload {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.ve-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+}
+
+.ve-upload-btn:hover { background: #f0fdf4; border-color: #0B4A3D; color: #0B4A3D; }
+
+.hidden { display: none; }
+
+.ve-bill-preview {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #059669;
+}
+
+.ve-bill-name { font-weight: 600; }
+
+.ve-bill-remove {
+  display: flex;
+  align-items: center;
+  color: #dc2626;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.ve-expense-reason {
+  flex: 1;
+  min-width: 150px;
+  padding: 5px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 11px;
+  outline: none;
+}
+
+.ve-expense-reason:focus { border-color: #0B4A3D; }
+
+/* ---- Expense Totals ---- */
+
+.ve-expense-totals {
+  padding: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;}
+
+.ve-expense-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.ve-expense-total-row strong {
+  font-weight: 700;
+  color: #0B4A3D;
+  font-size: 16px;
+}
+
+.ve-expense-total-row.sub {
+  font-size: 11px;
+  color: #6B7280;
+  font-weight: 600;
+}
+
+/* ---- Section Badge ---- */
+
+.ve-section-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  background: #f0fdf4;
+  color: #0B4A3D;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* ---- Linked Section ---- */
+
+.ve-linked-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.ve-linked-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.ve-linked-section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---- Linked Card ---- */
+
+.ve-linked-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.ve-linked-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ve-linked-card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-right: 8px;
+}
+
+.ve-linked-card-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.ve-linked-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6B7280;
+}
+
+.ve-linked-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ---- Linked Empty ---- */
+
+.ve-linked-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 16px;
+  background: #f8fafc;
+  border: 1px dashed #e2e8f0;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.ve-linked-empty p {
+  font-size: 12px;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+/* ---- Linked Loading ---- */
+
+.ve-linked-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  font-size: 12px;
+  color: #6B7280;
+}
+
+/* ---- Follow-up Card ---- */
+
+.ve-followup-card {
+  margin-bottom: 8px;
+}
+
+/* ---- Expenses Note ---- */
+
+.ve-expenses-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  font-size: 11px;
+  color: #92400e;
+  line-height: 1.4;
+}
+
+.ve-expenses-note svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ---- Expense Actions ---- */
+
+.ve-expense-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+/* ---- Quick Links ---- */
+
+.ve-quick-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ve-quick-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.ve-quick-link:hover {
+  background: #f0fdf4;
+  border-color: #0B4A3D;
+}
+
+.ve-quick-link-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.ve-quick-link-desc {
+  display: block;
+  font-size: 10px;
+  color: #9CA3AF;
+  margin-top: 2px;
+}
+
+/* ---- Loading ---- */
+
+.ve-loading {
+  display: flex;
+  justify-content: center;
+  padding: 60px;
+}
+
+.ve-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #0B4A3D;
+  border-radius: 50%;
+  animation: ve-spin 0.8s linear infinite;
+}
+
+@keyframes ve-spin { to { transform: rotate(360deg); } }
+
+/* ---- Change History ---- */
+
+.ve-change-history { display: flex; flex-direction: column; gap: 16px; }
+.ve-change-group {
+  border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden; background: #fff;
+}
+.ve-change-group-header {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px 14px; background: #f8fafc; border-bottom: 1px solid #e2e8f0;
+}
+.ve-change-type-badge {
+  font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px;
+}
+.ve-change-type-badge.reschedule { background: #fef3c7; color: #92400e; }
+.ve-change-type-badge.edit { background: #D7E7E3; color: #083D34; }
+.ve-change-date { font-size: 11px; color: #6B7280; font-weight: 500; }
+.ve-change-by { font-size: 11px; color: #9CA3AF; }
+.ve-change-items { padding: 8px 14px; }
+.ve-change-item {
+  display: flex; align-items: center; gap: 8px; padding: 4px 0;
+  font-size: 12px; border-bottom: 1px solid #F3F4F6;
+}
+.ve-change-item:last-child { border-bottom: none; }
+.ve-change-field {
+  font-weight: 600; color: #334155; min-width: 120px; flex-shrink: 0;
+}
+.ve-change-old {
+  color: #9CA3AF; text-decoration: line-through; max-width: 180px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ve-change-arrow { color: #cbd5e1; font-weight: 600; }
+.ve-change-new {
+  color: #059669; font-weight: 500; max-width: 180px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 768px) {
+  .ve-grid { grid-template-columns: 1fr; }
+  .ve-header { flex-direction: column; }
+  .ve-header-actions { width: 100%; }
+  .ve-expense-fields { flex-direction: column; align-items: flex-start; }
+  .ve-quick-links { grid-template-columns: 1fr; }
+}

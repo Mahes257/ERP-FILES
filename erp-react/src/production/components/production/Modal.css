@@ -1,0 +1,204 @@
+/* ============================================================
+   Modal — Purchase-aligned
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  animation: modal-fade 0.15s ease;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;
+  max-height: min(90vh, 720px);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.15);
+  animation: modal-in 0.15s ease;
+}
+
+.modal-lg {
+  max-width: 680px;
+}
+
+.modal-sm {
+  max-width: 420px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.modal-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #102A2A;
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: #64748B;
+  transition: background 0.15s, color 0.15s;
+}
+.modal-close:hover {
+  background: #F1F5F9;
+  color: #102A2A;
+}
+
+.modal-body {
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid #E2E8F0;
+  border-radius: 0 0 12px 12px;
+  background: #F8FAFC;
+}
+
+.confirm-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #102A2A;
+}
+
+.confirm-subtext {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #64748B;
+}
+
+.confirm-warning {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #f5d9b8;
+  border-radius: 8px;
+  background: #fdf3e6;
+  color: #9a5b12;
+  line-height: 1.5;
+}
+
+@keyframes modal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ============================================================
+   Full-page modal — fills viewport below the app topbar
+   ============================================================ */
+.modal-fullpage {
+  position: fixed !important;
+  top: var(--header-height, 56px) !important;
+  left: var(--sidebar-width) !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: calc(100vw - var(--sidebar-width)) !important;
+  height: calc(100vh - var(--header-height, 56px)) !important;
+  z-index: 99999 !important;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+body.sidebar-collapsed .modal-fullpage {
+  left: var(--sidebar-width-collapsed) !important;
+  width: calc(100vw - var(--sidebar-width-collapsed)) !important;
+}
+
+@media (max-width: 1023px) {
+  .modal-fullpage,
+  body.sidebar-collapsed .modal-fullpage {
+    left: 0 !important;
+    width: 100vw !important;
+  }
+}
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 8px;
+    align-items: flex-end;
+  }
+  .modal {
+    max-width: 100%;
+    max-height: 85vh;
+    border-radius: 12px 12px 0 0;
+  }
+  .modal-fullpage {
+    top: 0 !important;
+    height: calc(100vh - 56px) !important;
+  }
+  .modal-fullpage-head {
+    padding: 12px 16px;
+  }
+  .modal-fullpage-body {
+    padding: 16px;
+  }
+  .modal-fullpage-foot {
+    padding: 12px 16px;
+  }
+}
+
+.modal-fullpage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid #E2E8F0;
+  background: #FFFFFF;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.modal-fullpage-body {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.modal-fullpage-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 24px;
+  border-top: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  position: sticky;
+  bottom: 0;
+}

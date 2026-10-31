@@ -1,0 +1,20 @@
+# Runtime logs — never committed
+*.log
+
+# Build output
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env (override parent only if needed)
+# .env

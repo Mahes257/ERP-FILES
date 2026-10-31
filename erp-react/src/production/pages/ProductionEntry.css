@@ -1,0 +1,126 @@
+/* Production Entry — hybrid stage entry screen.
+   Reuses the shared theme tokens (cards, tables, forms, buttons). */
+
+.entry-master {
+  margin: 14px 0 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 12px;
+  background: #fafbfc;
+}
+
+.entry-master-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.entry-master-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px 18px;
+}
+
+.entry-master-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.entry-master-label {
+  font-size: 11px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+.entry-master-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text, #1f2937);
+}
+
+.entry-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+/* Stage workflow strip (shared process history) */
+.entry-workflow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.entry-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 999px;
+  background: var(--color-bg, #fff);
+  font-size: 13px;
+  color: var(--color-text, #1f2937);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.entry-step:hover {
+  border-color: var(--color-accent, #075E54);
+  background: #f2faf6;
+}
+
+.entry-step.completed {
+  border-color: #cfe8dc;
+  background: #eefaf3;
+  color: #14532d;
+}
+
+.entry-step.current {
+  border-color: var(--color-accent, #075E54);
+  background: #f2faf6;
+  box-shadow: 0 0 0 3px rgba(23, 128, 84, 0.12);
+  font-weight: 600;
+}
+
+/* Hold — amber */
+.entry-step.held {
+  border-color: #f3ddbb;
+  background: #fdf3e3;
+  color: #92400e;
+}
+
+/* Skipped — muted, crossed out */
+.entry-step.skipped {
+  border-color: #e1e6e3;
+  background: #f4f6f5;
+  color: #6b7280;
+  text-decoration: line-through;
+}
+
+.entry-step-icon {
+  display: inline-flex;
+}
+
+.entry-step-qty {
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .entry-master-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

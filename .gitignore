@@ -1,0 +1,26 @@
+
+# Temporary runtime data
+tmp/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+
+# Generated builds
+dist/
+build/
+target/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Logs and runtime files
+*.log
+*.pid

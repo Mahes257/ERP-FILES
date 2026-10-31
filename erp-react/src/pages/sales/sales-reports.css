@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Sales Reports (/sales/reports) — page-scoped styles.
+
+   The page reuses the ERP design system for everything it can: `.po-btn*`
+   buttons, `.prm-filters` / `.prm-filter-group` / `.prm-filter-label` /
+   `.prm-filter-select` / `.prm-filter-input` controls and `.prm-card*` /
+   `.pr-kpi-*` containers (all defined in styles/purchase-design-system.css
+   and the shared list styles). Only the pieces that have no shared class yet
+   live here — filter rows, select-with-icon fields, the loading/empty/error
+   states and the ranked value bars. Everything is scoped to this page (the
+   `.srp-` prefix) and reads the shared tokens, so no other module is touched.
+   ========================================================================== */
+
+/* --- Filter bar layout -------------------------------------------------- */
+
+.srp-filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+
+.srp-filters-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.srp-advanced-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  margin-top: 2px;
+  padding-top: 12px;
+  border-top: 1px solid var(--purchase-border);
+}
+
+/* A select that keeps its lucide icon: the shared class draws its own caret,
+   so the caret is suppressed and space is reserved for the icon instead. */
+.srp-icon-field {
+  position: relative;
+  width: 100%;
+}
+
+.srp-icon-field .prm-filter-select {
+  width: 100%;
+  background-image: none;
+  padding-right: 30px;
+}
+
+.srp-icon-field > svg {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--purchase-text-light);
+  pointer-events: none;
+}
+
+.srp-filter-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: var(--purchase-primary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* --- Loading / empty / error states ------------------------------------ */
+
+.srp-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 60vh;
+  padding: 64px 20px;
+  text-align: center;
+  color: var(--purchase-text-light);
+}
+
+.srp-state--compact {
+  min-height: 0;
+  padding: 56px 20px;
+}
+
+.srp-state-icon {
+  display: inline-flex;
+  padding: 12px;
+  border-radius: var(--purchase-radius);
+  background: #F3F4F6;
+  color: var(--purchase-text-light);
+}
+
+.srp-state-icon--error {
+  background: #FEF2F2;
+  color: var(--purchase-status-danger, #DC2626);
+}
+
+.srp-state-title {
+  margin: 2px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0B1F1A;
+}
+
+.srp-state-title--error {
+  color: #B91C1C;
+}
+
+.srp-state-text {
+  margin: 0;
+  max-width: 320px;
+  font-size: 12px;
+  color: var(--purchase-text-muted);
+}
+
+.srp-state-text--error {
+  color: var(--purchase-status-danger, #DC2626);
+}
+
+.srp-spin {
+  animation: srp-spin 1s linear infinite;
+}
+
+@keyframes srp-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Ranked value bars (module breakdown) ------------------------------ */
+
+.srp-bar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.srp-bar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.srp-bar-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--purchase-text);
+}
+
+.srp-bar-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--purchase-text-light);
+}
+
+.srp-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: #F1F5F9;
+  overflow: hidden;
+}
+
+.srp-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #059669, #34D399);
+}
+
+/* --- Spacing helpers (replacing the previous utility classes) ---------- */
+
+.srp-mb-lg { margin-bottom: 18px; }
+.srp-mb-xl { margin-bottom: 24px; }
+
+/* --- Dark theme parity with the shared design system ------------------- */
+
+.dark .srp-state-icon {
+  background: rgba(255, 255, 255, 0.06);
+  color: #9CA3AF;
+}
+
+.dark .srp-state-icon--error {
+  background: rgba(220, 38, 38, 0.16);
+}
+
+.dark .srp-state-title {
+  color: #E2E8F0;
+}
+
+.dark .srp-bar-track {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark .srp-advanced-row {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}

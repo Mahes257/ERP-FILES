@@ -1,0 +1,133 @@
+/* =====================================================================
+   Marketing module — create/edit form action buttons & footer layout
+   ---------------------------------------------------------------------
+   ROOT CAUSE THIS FILE FIXES:
+   The shared footer-button class `.erp-create-btn` is defined ONLY behind
+   the `.erp-create-scope` opt-in ancestor (styles/erp-create-scope.css),
+   which Sales / Purchase / CPR / CRM create pages carry in their JSX.
+   No Marketing page opts in, so every Marketing form footer (Travel
+   Planner, Q Forms, Visit Entry, Marketing Expenses, Follow-ups)
+   rendered its buttons with no background, no border, no padding and no
+   radius — plain text exactly as reported.
+
+   FIX (mirrors the pattern every other module used — a page-level scope
+   class rather than a change to the shared CreationActionBar component):
+   Marketing containers that hold form action buttons carry
+   `.mkt-action-scope` (or `.mkt-form-footer`), and this file paints the
+   buttons beneath those Marketing-only ancestors.  No global rule and no
+   other module's DOM is touched.
+
+   Marketing design tokens (per module settings):
+     primary    #0F5A46   hover #0B4A3A
+     secondary  white background + slate border (Back / Cancel actions)
+   ===================================================================== */
+
+/* ---- Footer layout --------------------------------------------------
+   Two-sided action bar: LEFT  Back / Cancel / Save Draft
+                         RIGHT Save & New / Save & Continue / Submit   */
+.mkt-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 12px;
+  margin-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.mkt-form-footer-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---- Primary button (Marketing green) ------------------------------- */
+.mkt-action-scope .erp-create-btn,
+.mkt-form-footer .erp-create-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid #0f5a46;
+  border-radius: 8px;
+  background: #0f5a46;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.mkt-action-scope .erp-create-btn:hover:not(:disabled),
+.mkt-form-footer .erp-create-btn:hover:not(:disabled) {
+  background: #0b4a3a;
+  border-color: #0b4a3a;
+  box-shadow: 0 2px 6px rgba(11, 74, 58, 0.22);
+}
+
+.mkt-action-scope .erp-create-btn:active:not(:disabled),
+.mkt-form-footer .erp-create-btn:active:not(:disabled) {
+  background: #093d30;
+  border-color: #093d30;
+  box-shadow: none;
+}
+
+.mkt-action-scope .erp-create-btn:focus-visible,
+.mkt-form-footer .erp-create-btn:focus-visible {
+  outline: 2px solid #0f5a46;
+  outline-offset: 2px;
+}
+
+.mkt-action-scope .erp-create-btn:disabled,
+.mkt-form-footer .erp-create-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Icon + text spacing, normalised. */
+.mkt-action-scope .erp-create-btn svg,
+.mkt-form-footer .erp-create-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+/* ---- Secondary button (Back / Cancel) ------------------------------- */
+.mkt-action-scope .erp-create-btn.mkt-btn-secondary,
+.mkt-form-footer .erp-create-btn.mkt-btn-secondary {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.mkt-action-scope .erp-create-btn.mkt-btn-secondary:hover:not(:disabled),
+.mkt-form-footer .erp-create-btn.mkt-btn-secondary:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.1);
+}
+
+.mkt-action-scope .erp-create-btn.mkt-btn-secondary:active:not(:disabled),
+.mkt-form-footer .erp-create-btn.mkt-btn-secondary:active:not(:disabled) {
+  background: #e2e8f0;
+  border-color: #64748b;
+  box-shadow: none;
+}
+
+.mkt-action-scope .erp-create-btn.mkt-btn-secondary:focus-visible,
+.mkt-form-footer .erp-create-btn.mkt-btn-secondary:focus-visible {
+  outline: 2px solid #64748b;
+  outline-offset: 2px;
+}

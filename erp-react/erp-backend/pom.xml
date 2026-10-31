@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <!-- 3.4.13 = final 3.4.x patch line. Fixes Spring Framework 6.2.x CVEs
+             (CVE-2025-22228 multipart exfiltration, CVE-2025-22243) and Tomcat
+             CVE-2024-50379. Compatible patch bump from 3.4.1 — same minor. -->
+        <version>3.4.13</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.vishatech</groupId>
+    <artifactId>erp-backend</artifactId>
+    <version>1.0.0</version>
+    <name>erp-backend</name>
+    <description>VishakTech ERP - Lead Management REST API</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <jjwt.version>0.12.6</jjwt.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <!-- Actuator: production-grade health checks, metrics and info endpoints.
+             Micrometer (included) exposes JVM, HTTP, DB-pool and custom metrics.
+             Only health + info are public; every other endpoint requires JWT auth. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Lombok — used by Production module entities/DTOs -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Sales Contract bulk-upload document parsing: PDF (PDFBox) and
+             Word/Excel (Apache POI). Used only to read text out of uploaded
+             contracts for the targeted 4-field extraction — documents are
+             treated as untrusted input and never executed. -->
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.32</version>
+            <exclusions>
+                <!-- Spring Boot provides spring-jcl which bridges SLF4J to
+                     the JDK logging system.  The old commons-logging jar
+                     shipped by PDFBox conflicts with spring-jcl and produces
+                     the "please remove commons-logging.jar" warning.  -->
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <!-- 5.4.1 fixes CVE-2025-31672 (OOXML improper input validation in
+                 versions < 5.4.0). API-compatible for the passive text-reading
+                 usage in SalesContractExtractionService. -->
+            <version>5.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-scratchpad</artifactId>
+            <version>5.4.1</version>
+        </dependency>
+        <!-- HTML-to-PDF rendering for rich document templates -->
+        <dependency>
+            <groupId>org.xhtmlrenderer</groupId>
+            <artifactId>flying-saucer-pdf</artifactId>
+            <version>9.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- Live HTTP API tests. These tests are opt-in and target the
+             already-running Spring Boot application (see api/BaseApiTest). -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>5.5.6</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- H2 is TEST-SCOPE ONLY: the security test suite runs against an
+             in-memory H2 (MySQL compatibility mode) so it needs no live MySQL.
+             Runtime/production keeps using MySQL exclusively. -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- ArchUnit is TEST-SCOPE ONLY: it statically analyses the compiled
+             classes to assert the modular-monolith boundaries documented in
+             MODULAR_MONOLITH_FOUNDATION.md. Nothing runs at application
+             startup and nothing is packaged into the bootable jar (test scope
+             is excluded from the spring-boot repackage), so the deployed
+             artifact, API routes, schema and runtime behaviour are unchanged. -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>1.4.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Two @SpringBootApplication classes exist: the ERP and the
+                         ISOLATED CAD worker (com.vishatech.cadworker).
+                         The repackaged jar is the ERP; the worker runs from the
+                         same artifact via the mode switch in ErpApplication
+                         (erp.cad.worker.mode=true, see CadWorkerApplication).
+                         Pinning the main class keeps exactly one bootable entry
+                         point and the jar's build-info based on the ERP. -->
+                    <mainClass>com.vishatech.erp.ErpApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- JDK 23+ (including JDK 24) no longer runs annotation
+                         processors discovered implicitly on the compile
+                         classpath — Lombok must be declared explicitly here
+                         or every @Getter/@Setter/@Builder/@Data method
+                         disappears and compilation fails with
+                         "cannot find symbol". Version comes from the
+                         Spring Boot parent (lombok.version property), so it
+                         always matches the dependency above. Works on both
+                         JDK 21 and JDK 24. -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

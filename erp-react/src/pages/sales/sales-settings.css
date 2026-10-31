@@ -1,0 +1,27 @@
+/* ==========================================================================
+   SALES SETTINGS — MODULE THEME
+   --------------------------------------------------------------------------
+   The settings shell itself (rail, cards, fields, tables, sticky save bar,
+   banners) lives in src/styles/settings-shell.css and is shared with the
+   Production Settings module. This file only binds that shell to the Sales
+   palette, so both modules render the same design in their own brand colour.
+   ========================================================================== */
+
+.ss-page {
+  --ss-primary: var(--purchase-primary, #0B4A3D);
+  --ss-primary-hover: var(--purchase-primary-dark, #083D34);
+  --ss-primary-light: var(--purchase-primary-light, #EDF7F4);
+  --ss-primary-soft: #E8F0EE;
+  --ss-primary-border: #BFE0D6;
+  --ss-text: var(--purchase-text, #102A2A);
+  --ss-text-2: #64748B;
+  --ss-muted: #94A3B8;
+  --ss-border: var(--purchase-border, #E2E8F0);
+  --ss-border-strong: #CBD5E1;
+  --ss-card: var(--purchase-card, #FFFFFF);
+  --ss-danger: #DC2626;
+  --ss-danger-light: #FEF2F2;
+  --ss-danger-border: #FCA5A5;
+  --ss-focus-ring: 0 0 0 3px rgba(11, 74, 61, 0.16);
+  min-width: 0;
+}

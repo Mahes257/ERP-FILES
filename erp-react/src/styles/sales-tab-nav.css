@@ -1,0 +1,74 @@
+/* ==========================================================================
+   SALES TAB NAV — pending-count pill alignment
+   --------------------------------------------------------------------------
+   The four Sales module hubs (CRM, CPR, Sales Execution and the Customer
+   Purchase Orders sub-hub) render the shared <TabBadge /> inside the same
+   `.rfq-tab-nav` tab bar the Purchase modules use.
+
+   Purchase keeps its own copy of the tab-nav stylesheet
+   (purchase/styles/rfq-tab-nav.css) where the pending pill is a 1rem tall
+   red pill:   background #fee2e2 / color #dc2626.
+
+   The Sales copy (styles/rfq-tab-nav.css — shared with the Marketing hub,
+   which renders no badges) grew a slightly larger amber pill instead
+   (1.125rem, #FEF3C7 / #D97706, plus a dark-mode amber variant).
+
+   This file restores the exact Purchase pill for the Sales internal tabs
+   ONLY, so both modules show an identical badge. It is imported by the
+   Sales hub components and is deliberately NOT part of any global
+   stylesheet — Purchase and Marketing are untouched.
+
+   Every rule is scoped to the `sales-hub-tabs` marker class the four Sales
+   hubs add to their tab bar, so the override can never reach another
+   module's tab bar (Purchase and Marketing carry no such class) even when
+   this stylesheet is already loaded in the same SPA session.
+
+   The selectors are also deliberately specific (three classes) so they win
+   over the dark-mode amber rule `.dark .rfq-tab-badge` in the shared
+   stylesheet regardless of import order.
+   ========================================================================== */
+
+/* Idle pill — matches purchase/styles/rfq-tab-nav.css (.rfq-tab-badge) */
+.sales-hub-tabs .rfq-tab .rfq-tab-badge {
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.25rem;
+  margin-left: 0;
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Active tab pill — the same translucent white treatment Purchase uses
+   (re-declared here because the rule above outranks the base
+   `.rfq-tab-badge--active` on specificity). */
+.sales-hub-tabs .rfq-tab .rfq-tab-badge--active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   EMBEDDED CUSTOMER PURCHASE ORDERS SUB-TABS — content inset
+   --------------------------------------------------------------------------
+   The E-Actions · CPO List · Production Tracker row is rendered by
+   CustomerPurchaseOrdersHub directly into the PARENT hub's content area
+   (`.module-hub-content`), which carries no horizontal padding of its own —
+   every page inside it supplies the inset through its own shell.
+
+   Without this rule the row sat flush against the content edge (x=72) while
+   the breadcrumb, KPI cards and table card below start at x=100, so the tab
+   strip looked attached to the sidebar and out of line with the page.
+
+   The inset matches what the page shell actually computes — 28px at every
+   width (`.module-hub-content .purchase-page.cpr-page` outranks the hub's own
+   small-screen 12px rule), so the tab row, the KPI cards and the table share
+   ONE left edge at 1440px, 1024px and 768px alike. Deliberately no breakpoint
+   of its own: any other value here would re-introduce exactly the offset this
+   rule removes.
+
+   Scoped to the embedded case only — the standalone `/sales-orders` route
+   renders its row inside `.module-hub-header`, which already applies its own
+   inset.
+   ========================================================================== */
+.cpo-sub-tabs {
+  padding: 0 28px;
+}

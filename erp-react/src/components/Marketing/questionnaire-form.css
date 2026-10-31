@@ -1,0 +1,208 @@
+﻿/* =====================================================================
+   QUESTIONNAIRE FORM (Q Form) — ERP create-page styling.
+   Reuses the Quotation page design tokens (qtn-* variables) and classes
+   so the Q Form feels like a native ERP form/card layout. Scoped under
+   .qf-page so it never leaks into the rest of the app.
+   ===================================================================== */
+
+.qf-page {
+  --qf-primary: #0B4A3D;
+  --qf-primary-hover: #093D33;
+  --qf-bg: #F8FAFC;
+  --qf-card-bg: #fff;
+  --qf-border: #e2e8f0;
+  --qf-text: #1f2937;
+  --qf-text-muted: #6b7280;
+  --qf-radius: 16px;
+  --qf-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  background: var(--qf-bg);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.qf-page *, .qf-page *::before, .qf-page *::after { box-sizing: border-box; }
+
+/* ---- Loading ---- */
+.qf-loading { display: flex; align-items: center; justify-content: center; height: 256px; color: #9CA3AF; font-size: 13px; }
+
+/* ---- Page head ---- */
+.qf-page-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.qf-page-head-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.qf-page-head-icon {
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  background: rgba(11, 74, 61, 0.09); color: #0B4A3D;
+  display: flex; align-items: center; justify-content: center;
+}
+.qf-page-head h1 {
+  font-size: 24px; font-weight: 600; color: var(--qf-text); margin: 0; line-height: 1.2;
+}
+.qf-page-head .qf-page-subtitle { font-size: 12px; color: #9CA3AF; margin-top: 3px; font-weight: 500; }
+
+/* ---- Status pill ---- */
+.qf-status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; border: 1px solid;
+}
+.qf-status-submitted { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+.qf-status-draft { background: #fffbeb; color: #D97706; border-color: #fde68a; }
+.qf-status-new { background: #F3F4F6; color: #6B7280; border-color: #e2e8f0; }
+
+/* ---- Toolbar ---- */
+.qf-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.qf-toolbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.qf-toolbar-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* ---- Section metadata inside header card ---- */
+.qf-header-meta {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 20px; width: 100%;
+}
+.qf-header-meta-item { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.qf-header-meta-label { font-size: 11px; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.03em; }
+.qf-header-meta-value { font-size: 13px; font-weight: 600; color: #1f2937; word-break: break-word; }
+
+/* ---- Right-side sidebar cards ---- */
+.qf-meta-list { display: flex; flex-direction: column; gap: 12px; }
+.qf-meta-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.qf-meta-label { font-size: 12px; color: #9CA3AF; font-weight: 500; flex-shrink: 0; }
+.qf-meta-value { font-size: 12px; color: #1f2937; font-weight: 600; text-align: right; word-break: break-word; }
+
+.qf-snapshot-list { display: flex; flex-direction: column; gap: 10px; }
+.qf-snapshot-row { display: flex; align-items: center; gap: 10px; }
+.qf-snapshot-icon {
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+  background: #F0FDFA; color: #0B4A3D; display: flex; align-items: center; justify-content: center;
+}
+.qf-snapshot-text { min-width: 0; }
+.qf-snapshot-label { font-size: 10px; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.03em; }
+.qf-snapshot-value { font-size: 12.5px; font-weight: 600; color: #1f2937; word-break: break-word; }
+
+/* ---- Sub-section labels ---- */
+.qf-subsection {
+  font-size: 12px; font-weight: 600; color: #334155; margin: 0 0 10px;
+  display: flex; align-items: center; gap: 6px;
+}
+.qf-subsection + .qf-table-wrap { margin-top: 0; }
+
+/* ---- Tables ---- */
+.qf-table-wrap {
+  overflow-x: auto; border: 1px solid var(--qf-border); border-radius: 12px;
+  background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  -webkit-overflow-scrolling: touch;
+}
+.qf-table-wrap + .qf-table-wrap,
+.qf-table-wrap + .qf-subsection,
+.qf-table-wrap + [class*="qf-subsection"] { margin-top: 18px; }
+
+.qf-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 13px; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.qf-table thead th {
+  background: #0B4A3D; color: #fff; font-weight: 600; font-size: 12px;
+  letter-spacing: 0.02em; text-align: left; padding: 10px 12px;
+  white-space: normal; overflow-wrap: break-word;
+}
+.qf-table thead th:last-child { border-right: none; }
+.qf-table tbody td {
+  border-bottom: 1px solid #F3F4F6; padding: 4px 6px; vertical-align: middle;
+  color: #1f2937; min-width: 90px; overflow-wrap: anywhere; word-break: normal; white-space: normal;
+}
+.qf-table tbody tr:last-child td { border-bottom: none; }
+.qf-table tbody tr:hover td { background: #F8FAF9; }
+.qf-table td.qf-sno { text-align: center; font-weight: 700; color: #6B7280; width: 54px; min-width: 54px; }
+.qf-table td.qf-machine { font-weight: 600; color: #374151; min-width: 150px; overflow-wrap: anywhere; }
+
+/* ---- In-cell editing inputs ---- */
+.qf-cell-input {
+  width: 100%; min-width: 0; border: 1px solid transparent; border-radius: 6px;
+  background: transparent; font-family: inherit; font-size: 13px; color: #1f2937;
+  padding: 8px; min-height: 36px; box-sizing: border-box; outline: none;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.qf-cell-input:hover { border-color: var(--qf-border); background: #fff; }
+.qf-cell-input:focus { border-color: var(--qf-primary); background: #fff; box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.1); }
+.qf-cell-input:disabled { background: transparent; color: #6B7280; cursor: default; }
+
+/* ---- Add row link ---- */
+.qf-add-row {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;
+  font-size: 12px; color: #0B4A3D; font-weight: 600; background: none; border: none;
+  cursor: pointer; padding: 4px 8px; border-radius: 6px; font-family: inherit;
+}
+.qf-add-row:hover { background: #E8F0EE; color: #083D34; }
+
+/* ---- Signature Upload ---- */
+.qf-sig-upload { width: 100%; }
+.qf-sig-dropzone {
+  border: 2px dashed #cbd5e1; border-radius: 10px; padding: 20px 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; cursor: pointer; transition: all 0.2s;
+  background: #f8fafc; min-height: 120px;
+}
+.qf-sig-dropzone:hover, .qf-sig-dropzone.dragover {
+  border-color: #0B4A3D; background: #E8F0EE;
+}
+.qf-sig-dropzone-icon { color: #9CA3AF; }
+.qf-sig-dropzone-text { font-size: 12px; color: #6B7280; font-weight: 500; text-align: center; }
+.qf-sig-dropzone-hint { font-size: 10px; color: #9CA3AF; }
+.qf-sig-preview {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 8px; border: 1px solid #e2e8f0; border-radius: 10px;
+  background: #f8fafc;
+}
+.qf-sig-preview-img {
+  max-width: 100%; max-height: 120px; object-fit: contain; border-radius: 6px;
+}
+.qf-sig-filename { font-size: 10px; color: #6B7280; word-break: break-all; text-align: center; }
+.qf-sig-actions { display: flex; gap: 8px; margin-top: 4px; }
+.qf-sig-btn {
+  font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 6px;
+  border: 1px solid #e2e8f0; background: #fff; cursor: pointer;
+  display: flex; align-items: center; gap: 4px; font-family: inherit;
+}
+.qf-sig-btn.replace { color: #0B4A3D; }
+.qf-sig-btn.replace:hover { background: #E8F0EE; }
+.qf-sig-btn.remove { color: #e11d48; }
+.qf-sig-btn.remove:hover { background: #fef2f2; }
+.qf-sig-file-input { display: none; }
+
+/* ---- Full-width textareas (remarks / boss command) ---- */
+.qf-textarea { width: 100%; min-height: 90px; resize: vertical; }
+
+/* ---- Small helper text ---- */
+.qf-hint { font-size: 11px; color: #9CA3AF; margin-top: 6px; }
+
+/* ---- Responsive ---- */
+@media (max-width: 991px) {
+  .qf-header-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 540px) {
+  .qf-header-meta { grid-template-columns: 1fr; }
+}
+
+/* ---- Print ---- */
+@media print {
+  @page { margin: 15mm 12mm; size: A4; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .qf-print-hide, .no-print { display: none !important; }
+  .qf-page { background: #fff !important; }
+  .qf-page .qtn-card { box-shadow: none !important; border: 1px solid #e2e8f0 !important; break-inside: avoid; page-break-inside: avoid; margin-bottom: 6px !important; }
+  table { width: 100% !important; border-collapse: collapse !important; }
+  table th, table td { padding: 3px 6px !important; border: 1px solid #cbd5e1 !important; font-size: 9pt !important; word-wrap: break-word !important; }
+  /* Printed Q-Form header keeps the ERP table-header standard. It used to force
+     a light #F3F4F6 band while the header text stayed white (from
+     `.qf-table thead th`), i.e. invisible labels on paper. */
+  table th { background: #0B4A3D !important; color: #ffffff !important; font-weight: 700 !important; }
+  .qf-sig-upload { page-break-inside: avoid !important; }
+  .qf-sig-dropzone { display: none !important; }
+  .qf-sig-actions { display: none !important; }
+  .qf-sig-filename { display: none !important; }
+  .qf-sig-preview { border: none !important; padding: 4px 0 !important; background: transparent !important; }
+  .qf-sig-preview-img { max-height: 60px !important; }
+}

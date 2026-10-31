@@ -1,0 +1,12 @@
+[
+  { "id": "V-001", "name": "Tata Steel", "category": "Steel & Metals", "city": "Jamshedpur" },
+  { "id": "V-002", "name": "JSW Steel", "category": "Steel & Metals", "city": "Bellary" },
+  { "id": "V-003", "name": "Siemens", "category": "Electrical & Automation", "city": "Mumbai" },
+  { "id": "V-004", "name": "ABB", "category": "Electrical & Automation", "city": "Bangalore" },
+  { "id": "V-005", "name": "Bosch", "category": "Auto Components", "city": "Bangalore" },
+  { "id": "V-006", "name": "Godrej", "category": "FMCG Supplies", "city": "Mumbai" },
+  { "id": "V-007", "name": "L&T", "category": "Engineering & Construction", "city": "Mumbai" },
+  { "id": "V-008", "name": "Bharat Forge", "category": "Forgings & Castings", "city": "Pune" },
+  { "id": "V-009", "name": "Crompton Greaves", "category": "Electrical & Automation", "city": "Mumbai" },
+  { "id": "V-010", "name": "Havells India", "category": "Electrical & Automation", "city": "New Delhi" }
+]

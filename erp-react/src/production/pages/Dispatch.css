@@ -1,0 +1,29 @@
+/* Dispatch page — reuses the shared settings page card styles. */
+@import '../components/production/settings/settings-pages.css';
+
+.po-link {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.po-link:hover {
+  text-decoration: underline;
+}
+
+/* Auto-created dispatch record indicator */
+.auto-dispatch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #EAF7F3;
+  color: #08785F;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.auto-dispatch-badge::before {
+  content: '\2713';
+  font-weight: bold;
+}

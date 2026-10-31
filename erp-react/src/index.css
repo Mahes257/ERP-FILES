@@ -1,0 +1,770 @@
+﻿@import "tailwindcss";
+
+/* Make Tailwind's `dark:` variant follow the app's `.dark` class toggle
+   (instead of the default prefers-color-scheme media query). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   Theme tokens (Light / Dark)
+   Semantic utilities generated via @theme inline:
+     bg-app | bg-surface | bg-surface-2 | bg-surface-3 | bg-input | bg-header
+     text-ink | text-ink-2 | text-ink-3 | border-line | border-line-strong
+     bg-hover | shadow-card | bg-primary | bg-primary-hover | bg-accent
+   ========================================================================== */
+
+@theme inline {
+  --color-app: var(--bg-app);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-input: var(--input-bg);
+  --color-header: var(--table-header);
+  --color-hover: var(--hover);
+  --shadow-card: var(--card-shadow);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-accent: var(--accent);
+}
+
+:root {
+  color-scheme: light;
+
+  /* === ERP Purchase Design System Tokens === */
+  --purchase-primary: #0B4A3D;
+  --purchase-primary-dark: #083D34;
+  --purchase-primary-hover: #0A4F44;
+  --purchase-accent: #0A4F44;
+  --purchase-accent-light: #E8F0EE;
+  --purchase-primary-light: #E8F0EE;
+  --purchase-hover: #E8F0EE;
+  --purchase-border: #E5E7EB;
+  --purchase-card: #FFFFFF;
+  --purchase-bg: #F4F8F7;
+  --purchase-table-header: #0B4A3D;
+  --purchase-table-header-border: #083D34;
+  --purchase-radius: 14px;
+  --purchase-radius-sm: 9px;
+  --purchase-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --purchase-text: #374151;
+  --purchase-text-muted: #6B7280;
+  --purchase-text-light: #9CA3AF;
+  --purchase-status-success: #16A34A;
+  --purchase-status-warning: #D97706;
+  --purchase-status-danger: #DC2626;
+  --purchase-status-info: #2563EB;
+  --purchase-status-neutral: #6B7280;
+
+  --font: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+
+  /* === Global tokens aligned to Purchase palette === */
+  --primary: #0B4A3D;
+  --primary-hover: #0A4F44;
+  --accent: #0A4F44;
+
+  --bg-app: #F4F8F7;
+  --surface: #ffffff;
+  --surface-2: #F3F4F6;
+  --surface-3: #e2e8f0;
+  --ink: #0f172a;
+  --ink-2: #475569;
+  --ink-3: #6B7280;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --input-bg: #ffffff;
+  --table-header: #0B4A3D;
+  --table-header-text: #F3F4F6;
+  --hover: rgba(11, 74, 61, 0.06);
+  --card-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+
+  /* Tailwind neutral palette remap (light mode - premium enterprise) */
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #F3F4F6;
+  --color-slate-200: #e5e7eb;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #9CA3AF;
+  --color-slate-500: #6B7280;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
+
+  /* Success palette remap (light mode) - consistent #22C55E family */
+  --color-emerald-50: #f0fdf4;
+  --color-emerald-100: #dcfce7;
+  --color-emerald-200: #bbf7d0;
+  --color-emerald-300: #86efac;
+  --color-emerald-400: #4ade80;
+  --color-emerald-500: #22c55e;
+  --color-emerald-600: #16a34a;
+  --color-emerald-700: #15803d;
+  --color-emerald-800: #166534;
+  --color-emerald-900: #14532d;
+  --color-emerald-950: #052e16;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* === ERP Purchase Design System Tokens (Dark) === */
+  --purchase-primary: #136754;
+  --purchase-primary-dark: #0A4F44;
+  --purchase-primary-hover: #13A88E;
+  --purchase-accent: #5CB8A8;
+  --purchase-accent-light: rgba(11, 74, 61, 0.18);
+  --purchase-primary-light: rgba(11, 74, 61, 0.2);
+  --purchase-hover: rgba(11, 74, 61, 0.18);
+  --purchase-border: rgba(255, 255, 255, 0.08);
+  --purchase-card: #1A1A2E;
+  --purchase-bg: #0F172A;
+  --purchase-table-header: #0B4A3D;
+  --purchase-table-header-border: #083D34;
+  --purchase-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --purchase-text: #E2E8F0;
+  --purchase-text-muted: #9CA3AF;
+  --purchase-text-light: #6B7280;
+  --purchase-status-success: #4ADE80;
+  --purchase-status-warning: #FBBF24;
+  --purchase-status-danger: #F87171;
+  --purchase-status-info: #60A5FA;
+  --purchase-status-neutral: #9CA3AF;
+
+  /* === Global tokens aligned to Purchase palette (Dark) === */
+  --primary: #136754;
+  --primary-hover: #13A88E;
+  --accent: #5CB8A8;
+
+  --bg-app: #0F172A;
+  --surface: #1A1A2E;
+  --surface-2: #243244;
+  --surface-3: #334155;
+  --ink: #F3F4F6;
+  --ink-2: #cbd5e1;
+  --ink-3: #9CA3AF;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: #475569;
+  --input-bg: #243244;
+  --table-header: #0B4A3D;
+  --table-header-text: #F3F4F6;
+  --hover: rgba(11, 74, 61, 0.18);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+  /* Tailwind neutral palette remap (dark mode) */
+  --color-slate-50: #243244;
+  --color-slate-100: #1f2937;
+  --color-slate-200: #334155;
+  --color-slate-300: #475569;
+  --color-slate-400: #9CA3AF;
+  --color-slate-500: #9CA3AF;
+  --color-slate-600: #cbd5e1;
+  --color-slate-700: #e2e8f0;
+  --color-slate-800: #F3F4F6;
+  --color-slate-900: #f9fafb;
+  --color-slate-950: #ffffff;
+
+  /* Accent tint remap (dark mode) */
+  --color-emerald-50: rgba(34, 197, 94, 0.12);
+  --color-emerald-100: rgba(34, 197, 94, 0.18);
+  --color-emerald-200: rgba(34, 197, 94, 0.25);
+  --color-amber-50: rgba(245, 158, 11, 0.12);
+  --color-amber-100: rgba(245, 158, 11, 0.18);
+  --color-amber-200: rgba(245, 158, 11, 0.25);
+  --color-rose-50: rgba(244, 63, 94, 0.12);
+  --color-rose-100: rgba(244, 63, 94, 0.18);
+  --color-sky-50: rgba(14, 165, 233, 0.12);
+  --color-purple-50: rgba(168, 85, 247, 0.12);
+  --color-pink-50: rgba(236, 72, 153, 0.12);
+  --color-teal-50: rgba(20, 184, 166, 0.12);
+  --color-orange-50: rgba(249, 115, 22, 0.12);
+  --color-indigo-50: rgba(99, 102, 241, 0.12);
+}
+
+/* Theme switch animation (250ms, applied only while switching) */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    color 250ms ease,
+    background-color 250ms ease,
+    border-color 250ms ease,
+    fill 250ms ease,
+    stroke 250ms ease,
+    box-shadow 250ms ease !important;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    background-color: var(--bg-app);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(37, 99, 235, 0.18);
+    color: var(--ink);
+  }
+
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 8px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #9CA3AF;
+  }
+
+  .dark *::-webkit-scrollbar-thumb {
+    background: #334155;
+  }
+
+  .dark *::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(11, 74, 61, 0.55);
+    outline-offset: 2px;
+  }
+
+  /* Header sheen for thead.thead-sheen */
+  thead.thead-sheen {
+    position: relative;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* ==========================================================================
+   Premium helpers
+   ========================================================================== */
+
+/* Gradient brand button (used by primary actions) */
+.btn-primary {
+  background-image: linear-gradient(135deg, #136754 0%, #0B4A3D 55%, #083D34 100%);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.06);
+  box-shadow: 0 4px 12px rgba(11, 74, 61, 0.28);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.dark .btn-primary {
+  background-image: linear-gradient(135deg, #17806A 0%, #0F5C4C 55%, #04473B 100%);
+}
+
+/* Dashboard stat card with subtle gradient accent */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(600px 160px at -10% -40%, rgba(11, 74, 61, 0.12), transparent 60%),
+    radial-gradient(600px 160px at 110% 130%, rgba(10, 79, 68, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.stat-card:hover {
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+.dark .stat-card::before {
+  background:
+    radial-gradient(600px 160px at -10% -40%, rgba(19, 103, 84, 0.14), transparent 60%),
+    radial-gradient(600px 160px at 110% 130%, rgba(10, 79, 68, 0.1), transparent 60%);
+}
+
+.dark .stat-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.logo-wrapper{
+
+    position:relative;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin-bottom:10px;
+
+}
+
+.company-logo{
+
+    width:240px;
+
+    animation:
+        logoFloat 5s ease-in-out infinite;
+
+    filter:drop-shadow(0 0 10px rgba(6,182,212,.28));
+
+    transition:.4s;
+
+}
+
+.company-logo:hover{
+
+    transform:scale(1.04);
+
+    filter:
+        drop-shadow(0 0 18px rgba(37,99,235,.7))
+        drop-shadow(0 0 35px rgba(6,182,212,.35));
+
+}
+
+.logo-wrapper::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:260px;
+
+    height:120px;
+
+    background:#0B4A3D;
+
+    border-radius:50%;
+
+    filter:blur(55px);
+
+    opacity:.18;
+
+    animation:pulseGlow 4s ease-in-out infinite;
+
+}
+
+.logo-wrapper::after{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-40%;
+
+    width:25%;
+
+    height:100%;
+
+    background:linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.4),
+        transparent
+    );
+
+    transform:skewX(-20deg);
+
+    animation:logoShine 5s linear infinite;
+
+}
+
+@keyframes logoFloat{
+
+    0%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+
+    }
+
+    100%{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+@keyframes pulseGlow{
+
+    0%,100%{
+
+        opacity:.15;
+
+        transform:scale(1);
+
+    }
+
+    50%{
+
+        opacity:.35;
+
+        transform:scale(1.15);
+
+    }
+
+}
+
+@keyframes logoShine{
+
+    from{
+
+        left:-40%;
+
+    }
+
+    to{
+
+        left:140%;
+
+    }
+
+}
+/* ===========================
+   Floating Action Menu (components/Common/ActionMenu)
+   Fade + scale entrance, 150ms — matches the enterprise spec.
+=========================== */
+@keyframes actionMenuIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Floating action menus are portaled to <body> — never print them. */
+@media print {
+  .action-menu-portal {
+    display: none !important;
+  }
+}
+
+/* ===========================
+   Login Card Animation
+=========================== */
+
+.login-card{
+    animation: cardFade .8s ease;
+}
+
+@keyframes cardFade{
+
+    from{
+        opacity:0;
+        transform:translateY(30px) scale(.96);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+
+}
+
+/* ===========================
+   Sign In Button
+=========================== */
+
+.signin-btn{
+    transition:all .35s;
+}
+
+.signin-btn:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 0 25px rgba(11, 74, 61,.45);
+
+}
+
+/* ===========================
+   Input Animation
+=========================== */
+
+.input-box{
+    transition:.35s;
+}
+
+.input-box:hover{
+
+    border-color:#0A4F44;
+
+}
+
+.input-box:focus{
+
+    box-shadow:0 0 18px rgba(10,79,68,.28);
+
+}
+
+/* ===========================
+   Card Hover
+=========================== */
+
+.login-card:hover{
+
+    transform:translateY(-4px);
+
+    transition:.35s;
+
+}
+
+/* ===========================
+   Shared portal ActionMenu (Common/ActionMenu.jsx)
+   Rendered into document.body so it is never clipped by tables,
+   overflow wrappers, scroll containers or sticky columns.
+=========================== */
+.am-section-heading {
+  padding: 7px 12px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9CA3AF;
+}
+.am-divider {
+  height: 1px;
+  background: #eef2f7;
+  margin: 5px 10px;
+}
+.am-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.14s ease, color 0.14s ease;
+}
+.am-item:hover {
+  background: rgba(11, 74, 61, 0.06);
+  color: #0B4A3D;
+}
+.am-item .am-item-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #9CA3AF;
+}
+.am-item:hover .am-item-icon {
+  color: #0B4A3D;
+}
+.am-item.am-item-danger {
+  color: #dc2626;
+}
+.am-item.am-item-danger:hover {
+  background: #fef2f2;
+  color: #DC2626;
+}
+.am-item.am-item-danger .am-item-icon {
+  color: #f87171;
+}
+.am-item.am-item-danger:hover .am-item-icon {
+  color: #dc2626;
+}
+/* Unavailable action (e.g. a document action that does not apply to the
+   selected record) — visible for discoverability, not clickable. */
+.am-item.am-item-disabled,
+.am-item.am-item-disabled:hover {
+  color: #CBD5E1;
+  background: transparent;
+  cursor: not-allowed;
+}
+.am-item.am-item-disabled .am-item-icon,
+.am-item.am-item-disabled:hover .am-item-icon {
+  color: #CBD5E1;
+}
+
+.dark .am-section-heading {
+  color: #6B7280;
+}
+.dark .am-divider {
+  background: rgba(255, 255, 255, 0.08);
+}
+.dark .am-item {
+  color: #e2e8f0;
+}
+.dark .am-item:hover {
+  background: rgba(11, 74, 61, 0.18);
+  color: #5CB8A8;
+}
+.dark .am-item .am-item-icon {
+  color: #6B7280;
+}
+.dark .am-item:hover .am-item-icon {
+  color: #5CB8A8;
+}
+.dark .am-item.am-item-danger {
+  color: #f87171;
+}
+.dark .am-item.am-item-danger:hover {
+  background: rgba(220, 38, 38, 0.15);
+  color: #fca5a5;
+}
+/* ===== Revision-history dropdown (shared by all list modules) ===== */
+.qpo-rev-plain {
+  font-weight: 600;
+  color: #0B4A3D;
+  white-space: nowrap;
+}
+
+.qpo-rev-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px 2px 2px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 600;
+  color: #0B4A3D;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.qpo-rev-trigger:hover { background: rgba(11, 74, 61, 0.06); }
+.qpo-rev-trigger:focus-visible { outline: 2px solid #0B4A3D; outline-offset: 1px; }
+
+.qpo-rev-caret {
+  width: 13px;
+  height: 13px;
+  color: #0B4A3D;
+  transition: transform 0.18s ease;
+}
+.qpo-rev-trigger[aria-expanded='true'] .qpo-rev-caret { transform: rotate(180deg); }
+
+.qpo-rev-menu {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  overflow-y: auto;
+}
+.dark .qpo-rev-menu {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.qpo-rev-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #6B7280;
+}
+.qpo-rev-error { color: #dc2626; }
+.qpo-rev-spin { animation: qpo-rev-rotate 0.8s linear infinite; width: 13px; height: 13px; }
+@keyframes qpo-rev-rotate { to { transform: rotate(360deg); } }
+
+.qpo-rev-item-no {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.qpo-rev-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #6B7280;
+  background: #F3F4F6;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+.qpo-rev-badge-current {
+  color: #059669;
+  background: #ecfdf5;
+  border-color: #d1fae5;
+}
+
+/* Revision-history dropdown grouped sections (Original / Revision N / Current) */
+.qpo-rev-group { margin-top: 2px; }
+.qpo-rev-group + .qpo-rev-group {
+  border-top: 1px solid #F3F4F6;
+  margin-top: 4px;
+  padding-top: 2px;
+}
+.qpo-rev-group-title {
+  display: block;
+  padding: 3px 10px 1px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #9CA3AF;
+}
+.qpo-rev-group-title.current { color: #059669; }
+.dark .qpo-rev-group + .qpo-rev-group { border-top-color: rgba(255, 255, 255, 0.08); }
+.dark .qpo-rev-group-title { color: #6B7280; }
+.dark .qpo-rev-group-title.current { color: #34d399; }
+
+/* CRM list version-history trigger (hover-revealed next to the first column) */
+.crm-rev-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  color: #0B4A3D;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+.crm-rev-trigger:hover { background: rgba(11, 74, 61, 0.06); }
+.crm-rev-trigger:focus-visible { outline: 2px solid #0B4A3D; outline-offset: 1px; }

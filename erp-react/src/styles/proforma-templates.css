@@ -1,0 +1,1623 @@
+/* ============================================================================
+   Proforma Invoice — 10 dedicated template designs.
+   ----------------------------------------------------------------------------
+   Each template owns its own `grid-template-areas` composition, typography
+   system, card/border architecture, item table, financial summary, signature
+   and footer. All 10 compose the SAME data DOM (ProformaInvoiceDocument) so
+   Preview = Print = PDF by construction. Nothing here touches other modules
+   (#salesdoc-sheet only carries data-pi-layout for Proforma documents).
+
+   Selectors are scoped to #salesdoc-sheet[data-pi-layout='...'] and come
+   AFTER performa-invoice.css so they always win the cascade.
+   ============================================================================ */
+
+/* ============================================================================
+   1. MINIMALIST PROFESSIONAL — white space, hairline dividers, elegant minimal
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .proforma-invoice-doc {
+  --pi-ink: #16181d;
+  --pi-muted: #6b7280;
+  --pi-faint: #9ca3af;
+  --pi-rule: #e5e7eb;
+  --pi-accent: #16181d;
+  --pi-accent-2: #b08d3f;
+  --pi-soft: #f9fafb;
+  --pi-bg: #ffffff;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 7mm 11mm 9mm;
+  gap: 0 8mm;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-masthead {
+  margin: 2mm 0 7mm;
+  padding-bottom: 5mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-doc-title {
+  font-size: 30px;
+  font-weight: 200;
+  letter-spacing: .26em;
+  color: var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-sec {
+  margin-bottom: 6mm;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-sec-title {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-lbl {
+  font-size: 7px;
+  letter-spacing: .08em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-val {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-table th {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--pi-muted);
+  border-bottom: 1px solid var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-table td {
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-total-row td {
+  border-top: 2px solid var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-total-qty {
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-finance-rows {
+  align-items: flex-end;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-fin-row {
+  width: 100%;
+  max-width: 90mm;
+  padding: 1.5px 0;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-fin-row--total .pi-fin-value {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-fin-words {
+  max-width: 110mm;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-fin-words-value {
+  font-size: 9.5px;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-signature-block {
+  padding-top: 1mm;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-signature-name {
+  padding-top: 2mm;
+  border-top: 1px solid var(--pi-ink);
+  font-weight: 600;
+}
+
+#salesdoc-sheet[data-pi-layout='minimalist-professional'] .pi-footer {
+  margin-top: 6mm;
+  border-top: 1px solid var(--pi-rule);
+}
+
+/* ============================================================================
+   2. ELEGANT CORPORATE — navy & gold, serif headings, formal boxes
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .proforma-invoice-doc {
+  --pi-ink: #1c2b39;
+  --pi-muted: #5c6b7a;
+  --pi-faint: #8d9aa8;
+  --pi-rule: #d4dde6;
+  --pi-accent: #16324f;
+  --pi-accent-2: #b3924c;
+  --pi-soft: #f5f8fa;
+  --pi-bg: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-masthead {
+  background: var(--pi-accent);
+  color: #fff;
+  padding: 5mm 6mm 4.5mm;
+  margin-bottom: 5mm;
+  border-bottom: 1.5px solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-doc-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: #fff;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-sec {
+  border: 1px solid var(--pi-rule);
+  background: #fff;
+  padding: 3.5mm 4mm;
+  margin-bottom: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-sec-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-lbl {
+  font-size: 7.5px;
+  letter-spacing: .06em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-val {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-table th {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  background: var(--pi-accent);
+  color: #fff;
+  border-bottom: 1px solid var(--pi-accent-2);
+  padding: 2.5mm 2mm;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-table td {
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-total-row td {
+  background: var(--pi-soft);
+  border-top: 2px solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-total-qty {
+  color: var(--pi-accent);
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-finance {
+  background: var(--pi-soft);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-fin-row--total {
+  border-top: 1px solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-fin-row--total .pi-fin-value {
+  font-size: 14px;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-fin-words-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-size: 9.5px;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-signature-block {
+  padding-top: 1mm;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-signature-name {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 11.5px;
+  padding-top: 2mm;
+  border-top: 1px solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-footer {
+  background: var(--pi-accent);
+  color: #fff;
+  border-top: 1.5px solid var(--pi-accent-2);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='elegant-corporate'] .pi-footer span {
+  color: #fff;
+}
+
+/* ============================================================================
+   3. CREATIVE PORTFOLIO — asymmetric bold blocks, teal / coral / yellow
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .proforma-invoice-doc {
+  --pi-ink: #15181c;
+  --pi-muted: #6c7379;
+  --pi-faint: #a2a9ae;
+  --pi-rule: #dfe3e6;
+  --pi-accent: #0d7a6e;
+  --pi-accent-2: #e8604c;
+  --pi-accent-3: #f2b23e;
+  --pi-soft: #f2f7f6;
+  --pi-bg: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 6mm 7mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-masthead {
+  margin: 1mm 0 6mm;
+  padding-bottom: 4mm;
+  border-bottom: 1.2mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-doc-title {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: .05em;
+  color: var(--pi-ink);
+  text-align: left;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-doc-title::after {
+  content: "";
+  display: inline-block;
+  width: 14mm;
+  height: 2.2mm;
+  margin-left: 4mm;
+  vertical-align: middle;
+  background: var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-sec {
+  margin-bottom: 5mm;
+  padding-left: 3mm;
+  border-left: 1mm solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-sec-head {
+  margin-bottom: 2mm;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-sec-title {
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  color: var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-sec-title::before {
+  content: "";
+  display: inline-block;
+  width: 2mm;
+  height: 2mm;
+  margin-right: 1.5mm;
+  background: var(--pi-accent);
+  vertical-align: 0.5px;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-exporter {
+  border-left: 1.2mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-meta {
+  border-left: 1.2mm solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-shipment {
+  border-left: 1.2mm solid var(--pi-accent-3);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-bank {
+  border-left: 1.2mm solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-name {
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-lbl {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-table th {
+  font-size: 7.5px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  background: var(--pi-ink);
+  color: #fff;
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-table tbody tr:nth-child(even) td {
+  background: var(--pi-soft);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-table td {
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-total-row td {
+  background: var(--pi-accent);
+  color: #fff;
+  border-top: none;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-total-qty {
+  color: #fff;
+  font-weight: 900;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-finance {
+  background: var(--pi-soft);
+  border-top: 1.2mm solid var(--pi-accent-3);
+  padding-top: 3.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-fin-row--total .pi-fin-value {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-footer {
+  background: var(--pi-ink);
+  color: #fff;
+  border-top: 1.2mm solid var(--pi-accent-2);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='creative-portfolio'] .pi-footer span {
+  color: #fff;
+}
+
+/* ============================================================================
+   4. MODERN RESUME — two-column architecture with a vertical identity rail
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='modern-resume'] .proforma-invoice-doc {
+  --pi-ink: #21262d;
+  --pi-muted: #6b7683;
+  --pi-faint: #9aa4af;
+  --pi-rule: #e3e7ec;
+  --pi-accent: #3f6ad8;
+  --pi-accent-2: #20262e;
+  --pi-soft: #f2f4f6;
+  --pi-bg: #ffffff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 9.5px;
+  line-height: 1.5;
+  padding: 4mm 6mm 6mm 0;
+  gap: 0 5mm;
+  grid-template-areas:
+    "exp head head head head head"
+    "exp mast mast mast mast mast"
+    "exp meta meta meta meta meta"
+    "exp cons cons cons buyer buyer"
+    "exp ship ship ship dest dest"
+    "exp pack pack pack pack pack"
+    "exp items items items items items"
+    "exp fin fin fin fin fin"
+    "exp bank bank bank bank bank"
+    "exp terms terms terms terms terms"
+    "exp sig sig sig sig sig"
+    "exp foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-exporter {
+  align-self: stretch;
+  background: var(--pi-accent-2);
+  color: #fff;
+  padding: 6mm 4.5mm;
+  margin-bottom: 0;
+  border-left: 1mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-exporter .pi-sec-head {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 1.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-exporter .pi-sec-title {
+  color: #fff;
+  font-size: 7px;
+  letter-spacing: .16em;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-exporter .pi-name {
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-exporter .pi-addr,
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-exporter .pi-contact,
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-exporter .pi-contact-line {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-masthead {
+  margin-bottom: 4mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 1mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-doc-title {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  color: var(--pi-ink);
+  text-align: left;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-sec {
+  margin-bottom: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-sec-title {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  color: var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-consignee,
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-buyer {
+  background: var(--pi-soft);
+  padding: 3mm 3.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-consignee .pi-row,
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-buyer .pi-row {
+  border-left: 1mm solid var(--pi-accent);
+  padding-left: 2mm;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-lbl {
+  font-size: 7px;
+  letter-spacing: .06em;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-val {
+  font-size: 9.5px;
+  font-weight: 600;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-table th {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  background: var(--pi-soft);
+  color: var(--pi-ink);
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-table td {
+  font-size: 9px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-total-row td {
+  border-top: 1.5px solid var(--pi-accent);
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-total-amount {
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-fin-row--total .pi-fin-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-signature-block {
+  align-items: flex-end;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-signature-name {
+  border-top: 1px solid var(--pi-ink);
+  padding-top: 1.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-footer {
+  background: var(--pi-accent-2);
+  color: #fff;
+  border-top: 1mm solid var(--pi-accent);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='modern-resume'] .pi-footer span {
+  color: #fff;
+}
+
+/* ============================================================================
+   5. ACADEMIC REPORT — formal serif report with numbered sections
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='academic-report'] .proforma-invoice-doc {
+  --pi-ink: #1f2937;
+  --pi-muted: #5b6472;
+  --pi-faint: #8d96a3;
+  --pi-rule: #c9cfd6;
+  --pi-accent: #334155;
+  --pi-accent-2: #8d96a3;
+  --pi-soft: #eef1f4;
+  --pi-bg: #ffffff;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 10px;
+  line-height: 1.55;
+  padding: 7mm 9mm 9mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp exp exp exp"
+    "meta meta meta meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-masthead {
+  text-align: center;
+  margin-bottom: 6mm;
+  padding-bottom: 4mm;
+  border-bottom: 3px double var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-doc-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-sec {
+  margin-bottom: 5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-sec-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-exporter .pi-sec-title::before { content: "1.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-meta .pi-sec-title::before { content: "2.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-consignee .pi-sec-title::before { content: "3.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-buyer .pi-sec-title::before { content: "4.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-shipment .pi-sec-title::before { content: "5.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-destination .pi-sec-title::before { content: "6.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-packing .pi-sec-title::before { content: "7.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-items .pi-sec-title::before { content: "8.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-finance .pi-sec-title::before { content: "9.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-bank .pi-sec-title::before { content: "10.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-terms .pi-sec-title::before { content: "11.  "; }
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-signature .pi-sec-title::before { content: "12.  "; }
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-name {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-lbl {
+  font-size: 8px;
+  letter-spacing: .04em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-val {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-table th {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  background: var(--pi-soft);
+  color: var(--pi-ink);
+  border: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-table td {
+  font-size: 9.5px;
+  border: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-total-row td {
+  border-top: 3px double var(--pi-ink);
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-total-qty {
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-finance {
+  border-top: 3px double var(--pi-ink);
+  border-bottom: 1px solid var(--pi-rule);
+  padding: 2.5mm 0;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-fin-row--total .pi-fin-value {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-fin-words-value {
+  font-style: italic;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-signature-block {
+  align-items: flex-end;
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-signature-name {
+  padding-bottom: 1mm;
+  border-bottom: 1px solid var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-footer {
+  border-top: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='academic-report'] .pi-footer span {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: .06em;
+}
+
+/* ============================================================================
+   6. MARKETING BROCHURE — bold panels, diagonal energy, orange / cyan / magenta
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .proforma-invoice-doc {
+  --pi-ink: #17191d;
+  --pi-muted: #5f666e;
+  --pi-faint: #98a0a8;
+  --pi-rule: #e2e6ea;
+  --pi-accent: #f28c28;
+  --pi-accent-2: #19a7bd;
+  --pi-accent-3: #c64a7a;
+  --pi-soft: #f5f6f8;
+  --pi-bg: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 6mm 7mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-masthead {
+  background: var(--pi-ink);
+  color: #fff;
+  padding: 5mm 6mm;
+  margin-bottom: 5mm;
+  border-bottom: 1.4mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-doc-title {
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  color: #fff;
+  text-align: left;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-doc-title::after {
+  content: "";
+  display: block;
+  width: 18mm;
+  height: 1.2mm;
+  margin-top: 2mm;
+  background: var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-sec {
+  background: var(--pi-soft);
+  border-left: 1.2mm solid var(--pi-accent-2);
+  padding: 3.5mm 4mm;
+  margin-bottom: 4.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-meta { border-left-color: var(--pi-accent-3); }
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-consignee { border-left-color: var(--pi-accent); }
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-buyer { border-left-color: var(--pi-accent-2); }
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-shipment { border-left-color: var(--pi-accent-3); }
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-destination { border-left-color: var(--pi-accent); }
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-sec-title {
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: .12em;
+  color: var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-name {
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-lbl {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-table th {
+  font-size: 7.5px;
+  font-weight: 900;
+  letter-spacing: .06em;
+  background: var(--pi-ink);
+  color: #fff;
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-table tbody tr:nth-child(even) td {
+  background: var(--pi-soft);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-table td {
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-total-row td {
+  background: var(--pi-accent);
+  color: #fff;
+  border-top: none;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-total-qty {
+  color: #fff;
+  font-weight: 900;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-finance {
+  background: var(--pi-ink);
+  color: #fff;
+  padding: 4mm 5mm;
+  border-left: 1.2mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-finance .pi-lbl {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-finance .pi-val,
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-finance .pi-fin-value {
+  color: #fff;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-fin-row--total {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-fin-row--total .pi-fin-value {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-fin-words {
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-fin-words-value {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-signature-name {
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-footer {
+  background: var(--pi-ink);
+  color: #fff;
+  border-top: 1.4mm solid var(--pi-accent-2);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='marketing-brochure'] .pi-footer span {
+  color: #fff;
+}
+
+/* ============================================================================
+   7. FINANCIAL DASHBOARD — dark data report with KPI financial blocks
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .proforma-invoice-doc {
+  --pi-ink: #131a21;
+  --pi-muted: #5c6670;
+  --pi-faint: #8a949e;
+  --pi-rule: #e0e5ea;
+  --pi-accent: #19c8a0;
+  --pi-accent-2: #3aa7f0;
+  --pi-soft: #f4f6f8;
+  --pi-bg: #ffffff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 9.5px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 5mm;
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .proforma-invoice-doc .pi-val,
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .proforma-invoice-doc .pi-fin-value,
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .proforma-invoice-doc .pi-cell-num,
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .proforma-invoice-doc .pi-total-qty,
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .proforma-invoice-doc .pi-total-amount {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-masthead {
+  background: #10161d;
+  color: #fff;
+  padding: 4.5mm 5mm;
+  margin-bottom: 5mm;
+  border-bottom: 1.2mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-doc-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: #fff;
+  text-align: left;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-doc-title::after {
+  content: " • PROFORMA";
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: .3em;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-sec {
+  background: var(--pi-soft);
+  border: 1px solid #e0e5ea;
+  padding: 3mm 3.5mm;
+  margin-bottom: 3.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-sec-title {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  color: var(--pi-ink);
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-lbl {
+  font-size: 7px;
+  letter-spacing: .06em;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-table th {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  background: #10161d;
+  color: #fff;
+  border-bottom: none;
+  padding: 2mm 1.8mm;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-table td {
+  font-size: 9px;
+  border-bottom: 1px solid var(--pi-rule);
+  padding: 1.8mm 1.8mm;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-table tbody tr:nth-child(even) td {
+  background: #f9fbfc;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-total-row td {
+  background: #e9f7f2;
+  border-top: 1.5px solid var(--pi-accent);
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-total-amount {
+  color: #0b8f70;
+}
+
+/* KPI-style financial blocks */
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-finance {
+  background: #10161d;
+  color: #fff;
+  padding: 4mm;
+  border-top: 1.2mm solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-finance .pi-sec-title {
+  color: #fff;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-finance-rows {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1mm;
+  background: #1b2530;
+  border: 1px solid #2a3643;
+  padding: 2.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-row .pi-lbl {
+  color: #7d8b99;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-row .pi-fin-value {
+  color: #fff;
+  font-size: 11px;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-row:last-child {
+  grid-column: span 2;
+  background: #123f35;
+  border-color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-row--total {
+  border-top: 1px solid #2a3643;
+  margin-top: 0;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-row--total .pi-fin-value {
+  font-size: 16px;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-words {
+  border-top: 1px solid #2a3643;
+  margin-top: 3mm;
+  padding-top: 2.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-words .pi-lbl {
+  color: #7d8b99;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-fin-words-value {
+  color: #fff;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-signature-name {
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-footer {
+  background: #10161d;
+  color: #fff;
+  border-top: 1.2mm solid var(--pi-accent);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='financial-dashboard'] .pi-footer span {
+  color: #fff;
+}
+
+/* ============================================================================
+   8. TRAVEL GUIDE — earthy palette, sectioned cards, route emphasis
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='travel-guide'] .proforma-invoice-doc {
+  --pi-ink: #3f3829;
+  --pi-muted: #7a6f5a;
+  --pi-faint: #a89c83;
+  --pi-rule: #ddd2b4;
+  --pi-accent: #6d7c3f;
+  --pi-accent-2: #b5653f;
+  --pi-soft: #faf5e8;
+  --pi-bg: #ffffff;
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 5mm 7mm 7mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-masthead {
+  background: var(--pi-soft);
+  border-top: 1px solid var(--pi-accent-2);
+  border-bottom: 2px solid var(--pi-accent);
+  padding: 4mm 5mm;
+  margin-bottom: 5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-doc-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-sec {
+  background: var(--pi-soft);
+  border: 1px solid var(--pi-rule);
+  border-radius: 2mm;
+  padding: 3.5mm 4mm;
+  margin-bottom: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-sec-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-name {
+  color: var(--pi-accent);
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-route {
+  background: #fff;
+  border: 1px solid var(--pi-rule);
+  border-left: 1mm solid var(--pi-accent-2);
+  padding: 2mm 3mm;
+  margin-bottom: 2mm;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-lbl {
+  font-size: 7.5px;
+  letter-spacing: .05em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-val {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-table th {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  background: var(--pi-accent);
+  color: #fff;
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-table tbody tr:nth-child(even) td {
+  background: #fbf8ee;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-table td {
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-total-row td {
+  background: var(--pi-soft);
+  border-top: 2px solid var(--pi-accent);
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-total-qty {
+  color: var(--pi-accent);
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-finance {
+  border-top: 1.2mm solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-fin-row--total .pi-fin-value {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-fin-words-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-stamp-placeholder {
+  border-color: var(--pi-accent);
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-footer {
+  background: var(--pi-soft);
+  border-top: 2px solid var(--pi-accent);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='travel-guide'] .pi-footer span {
+  color: var(--pi-accent);
+}
+
+/* ============================================================================
+   9. EVENT PROGRAM — burgundy / gold / cream, framed program composition
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='event-program'] .proforma-invoice-doc {
+  --pi-ink: #2c2023;
+  --pi-muted: #7d6b66;
+  --pi-faint: #a5928c;
+  --pi-rule: #e2d5b8;
+  --pi-accent: #6d1f2e;
+  --pi-accent-2: #b3924c;
+  --pi-soft: #faf6ec;
+  --pi-bg: #fffdf8;
+  font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+  font-size: 10px;
+  line-height: 1.55;
+  padding: 8mm 9mm 9mm;
+  gap: 0 6mm;
+  border: 3px double var(--pi-accent);
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank bank bank bank"
+    "terms terms terms terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-masthead {
+  background: var(--pi-soft);
+  border-top: 1px solid var(--pi-accent-2);
+  border-bottom: 1px solid var(--pi-accent-2);
+  padding: 4mm 5mm;
+  margin-bottom: 5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-doc-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .24em;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-sec {
+  margin-bottom: 5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-sec-title {
+  font-size: 9.5px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-meta .pi-row,
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-shipment .pi-row {
+  padding-left: 3.5mm;
+  position: relative;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-meta .pi-row::before,
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-shipment .pi-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2.2mm;
+  width: 1.6mm;
+  height: 1.6mm;
+  background: var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-name {
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-lbl {
+  font-size: 8px;
+  letter-spacing: .05em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-val {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-table th {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  background: transparent;
+  color: var(--pi-accent);
+  border-bottom: 1.5px solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-table td {
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-total-row td {
+  border-top: 2px solid var(--pi-accent-2);
+  border-bottom: 1px solid var(--pi-accent-2);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-total-qty {
+  color: var(--pi-accent);
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-finance {
+  background: var(--pi-soft);
+  border-top: 2px solid var(--pi-accent-2);
+  border-bottom: 1px solid var(--pi-accent-2);
+  padding: 3mm 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-fin-row--total .pi-fin-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-fin-words-value {
+  font-style: italic;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-signature-name {
+  font-weight: 700;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-accent-2);
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-footer {
+  background: var(--pi-soft);
+  border-top: 1px solid var(--pi-accent-2);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='event-program'] .pi-footer span {
+  color: var(--pi-accent);
+  letter-spacing: .14em;
+}
+
+/* ============================================================================
+   10. STARTUP PITCH DECK — bold modular technology blocks
+   ============================================================================ */
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .proforma-invoice-doc {
+  --pi-ink: #131a24;
+  --pi-muted: #5f6b7d;
+  --pi-faint: #96a1b3;
+  --pi-rule: #dde3ef;
+  --pi-accent: #6d5ae6;
+  --pi-accent-2: #12b5a5;
+  --pi-accent-3: #e855a0;
+  --pi-soft: #f4f6fb;
+  --pi-bg: #ffffff;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 6mm 7mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-masthead {
+  background: var(--pi-ink);
+  color: #fff;
+  padding: 5mm 6mm 4.5mm;
+  margin-bottom: 5mm;
+  border-bottom: 1.2mm solid var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-doc-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  color: #fff;
+  text-align: left;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-doc-title::after {
+  content: "";
+  display: inline-block;
+  width: 3mm;
+  height: 3mm;
+  margin-left: 4mm;
+  border-radius: 1mm;
+  background: var(--pi-accent-2);
+  vertical-align: 2px;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-sec {
+  background: #fff;
+  border: 1px solid var(--pi-rule);
+  border-radius: 2.5mm;
+  box-shadow: 0 1px 0 rgba(19, 26, 36, 0.05);
+  padding: 3.5mm 4mm;
+  margin-bottom: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-sec-title {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-name {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-lbl {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  color: var(--pi-muted);
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-table th {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  background: var(--pi-ink);
+  color: #fff;
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-table th:first-child {
+  border-radius: 1.5mm 0 0 0;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-table th:last-child {
+  border-radius: 0 1.5mm 0 0;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-table tbody tr:nth-child(even) td {
+  background: var(--pi-soft);
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-table td {
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-total-row td {
+  background: #eef1fb;
+  border-top: 1.5px solid var(--pi-accent);
+  border-bottom: none;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-total-label,
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-total-amount,
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-total-qty {
+  color: var(--pi-accent);
+  font-weight: 800;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-finance {
+  border-left: 1.2mm solid var(--pi-accent);
+  background: var(--pi-soft);
+  padding-top: 3.5mm;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-fin-row--total .pi-fin-value {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--pi-accent);
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-fin-words-value {
+  font-weight: 600;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-signature-name {
+  font-weight: 700;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-footer {
+  background: var(--pi-ink);
+  color: #fff;
+  border-top: 1.2mm solid var(--pi-accent-2);
+  padding: 2.5mm;
+  margin-top: 4mm;
+}
+
+#salesdoc-sheet[data-pi-layout='startup-pitch-deck'] .pi-footer span {
+  color: #fff;
+}

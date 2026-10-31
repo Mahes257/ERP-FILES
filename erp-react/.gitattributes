@@ -1,0 +1,30 @@
+# ============================================================
+#  Git attribute rules
+# ============================================================
+# Keeps line endings and file modes consistent across Windows
+# and Linux (CI), so shell scripts stay runnable and binary
+# assets are never mangled.
+# ============================================================
+
+# Normalize every text file to LF in the repository and on checkout.
+# (Linux CI runs ./mvnw and the shell scripts; CRLF there is fatal.)
+* text=auto eol=lf
+
+# Windows-only scripts must keep CRLF to run under cmd.exe.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets — never converted, never diffed as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.wasm binary
+*.jar binary
+*.pdf binary
+*.xlsx binary
+*.glb binary
+*.step binary
+*.stp binary

@@ -1,0 +1,1456 @@
+/* ============================================================================
+   Invoice — 10 dedicated template designs.
+   ----------------------------------------------------------------------------
+   Each template owns its own `grid-template-areas` composition, typography
+   system, card/border architecture, item table, financial summary, signature
+   and footer. All 10 compose the SAME data DOM (ExportInvoiceDocument) so
+   Preview = Print = PDF by construction. Nothing here touches other modules —
+   selectors are scoped to .invoice-doc[data-inv-layout='...'] and come AFTER
+   invoice-document.css so they always win the cascade.
+
+   The palette is part of each design (no separate colour-theme selector for
+   the Invoice module). --acc is redefined per template so the document's
+   accent-coloured icons / stamps follow the selected design, not the shared
+   theme.
+
+   html2canvas-pro (the PDF pipeline) renders everything used here: grid,
+   flex, linear/radial gradients, border-radius, pseudo-element rules and
+   print-color-adjust backgrounds. No clip-path, no transforms, no absolute
+   positioning — pure normal document flow, A4 and multi-page safe.
+   ============================================================================ */
+
+/* Backgrounds must survive Print + PDF capture (dark mastheads, KPI blocks). */
+.invoice-doc {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* ============================================================================
+   1. DYNAMIC GRID — modular data-driven composition with accent highlights
+   ============================================================================ */
+.invoice-doc[data-inv-layout='dynamic-grid'] {
+  --inv-ink: #1c2b39;
+  --inv-muted: #5b6b7b;
+  --inv-faint: #98a6b5;
+  --inv-rule: #dfe6ec;
+  --inv-accent: #2456a6;
+  --inv-accent-2: #eef2f9;
+  --inv-soft: #f4f7fa;
+  --inv-bg: #ffffff;
+  --acc: #2456a6;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 4mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-masthead {
+  margin-bottom: 4mm;
+  padding-bottom: 3mm;
+  border-bottom: 3px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-doc-title {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  color: var(--inv-ink);
+  text-align: left;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-sec {
+  background: var(--inv-soft);
+  border: 1px solid var(--inv-rule);
+  border-top: 2px solid var(--inv-accent);
+  border-radius: 2mm;
+  padding: 3mm;
+  margin-bottom: 3mm;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-sec-head {
+  margin-bottom: 2mm;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-sec-title {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-name {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-row,
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-fin-row,
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-terms-line {
+  border-bottom-color: #e8edf3;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-table th {
+  background: var(--inv-accent);
+  color: #fff;
+  border-bottom: none;
+  letter-spacing: .06em;
+  padding: 2.2mm 2mm;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-table td {
+  border-bottom: 1px solid #e8edf3;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-fin-row--total {
+  border-top: 2px solid var(--inv-accent);
+  background: var(--inv-accent-2);
+  margin: 1mm -1mm 0;
+  padding: 2mm 1mm;
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-fin-row--total .inv-fin-value {
+  font-size: 14px;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-sign-rule {
+  border-top-color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-footer {
+  border-top: 2px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='dynamic-grid'] .inv-footer span {
+  color: var(--inv-accent);
+}
+
+/* ============================================================================
+   2. FLUID WAVE — flowing section transitions, soft gradients, large title
+   ============================================================================ */
+.invoice-doc[data-inv-layout='fluid-wave'] {
+  --inv-ink: #173b3f;
+  --inv-muted: #5f7d80;
+  --inv-faint: #9db6b8;
+  --inv-rule: #d7e6e7;
+  --inv-accent: #0e7c86;
+  --inv-accent-2: #eaf6f5;
+  --inv-soft: #f2faf9;
+  --inv-bg: #ffffff;
+  --acc: #0e7c86;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.55;
+  padding: 3mm 2mm 6mm;
+  gap: 0 4mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin bank bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-masthead {
+  margin: -3mm -2mm 5mm;
+  padding: 7mm 6mm 8mm;
+  background: linear-gradient(180deg, var(--inv-accent-2) 0%, #f7fcfb 100%);
+  border-radius: 0 0 14mm 14mm;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-doc-title {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: .14em;
+  color: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-sec {
+  background: #fbfefd;
+  border: 1px solid #e4f0ef;
+  border-radius: 3mm;
+  padding: 3.5mm 4mm;
+  margin-bottom: 3.5mm;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-sec-head {
+  margin-bottom: 2mm;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-sec-title {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-row,
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-terms-line {
+  border-bottom-color: #e7f1f0;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-table th {
+  border-bottom: 1.5px solid var(--inv-accent);
+  letter-spacing: .08em;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-table td {
+  border-bottom: 1px solid #e7f1f0;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-fin-row--total {
+  border-top: 2px solid var(--inv-accent);
+  margin-top: 1mm;
+  padding-top: 2mm;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-fin-row--total .inv-fin-value {
+  font-size: 15px;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-fin-words {
+  border-top: 1px solid #d7e6e7;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-sign-rule {
+  border-top-color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-footer {
+  border-top: none;
+  background: linear-gradient(90deg, var(--inv-accent), #1aa1ab);
+  border-radius: 999px;
+  color: #fff;
+  margin-top: 4mm;
+  padding: 2mm 4mm;
+}
+
+.invoice-doc[data-inv-layout='fluid-wave'] .inv-footer span {
+  color: #fff;
+}
+
+/* ============================================================================
+   3. BOLD CONTRAST — dark full-width masthead, high-contrast total block
+   ============================================================================ */
+.invoice-doc[data-inv-layout='bold-contrast'] {
+  --inv-ink: #10151b;
+  --inv-muted: #5a6672;
+  --inv-faint: #98a2ac;
+  --inv-rule: #c9d2da;
+  --inv-accent: #e0482e;
+  --inv-accent-2: #f8eae6;
+  --inv-soft: #f4f6f8;
+  --inv-bg: #ffffff;
+  --acc: #e0482e;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 2mm 1mm 5mm;
+  gap: 0 5mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons buyer buyer ship ship"
+    "dest dest dest dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin bank bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-masthead {
+  margin: -2mm -1mm 6mm;
+  padding: 9mm 6mm;
+  background: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-doc-title {
+  display: inline-block;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  color: #ffffff;
+  text-transform: uppercase;
+  border-bottom: 3px solid var(--inv-accent);
+  padding-bottom: 2mm;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-sec {
+  margin-bottom: 4mm;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-sec-head {
+  border-bottom: 3px solid var(--inv-ink);
+  padding-bottom: 1.5mm;
+  margin-bottom: 2mm;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-sec-title {
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  color: var(--inv-ink);
+  text-transform: uppercase;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-table th {
+  background: var(--inv-ink);
+  color: #fff;
+  border-bottom: none;
+  letter-spacing: .05em;
+  padding: 2.5mm 2mm;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-table td {
+  border-bottom: 1px solid #dfe4e9;
+  padding: 2.2mm 2mm;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-table tbody tr:nth-child(even) td {
+  background: #f7f8fa;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-cell-total {
+  font-weight: 800;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-fin-row {
+  border-bottom: 1px solid #dfe4e9;
+  padding: 2px 0;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-fin-row--total {
+  background: var(--inv-ink);
+  border: none;
+  margin-top: 2mm;
+  padding: 2.5mm 3mm;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-fin-row--total .inv-lbl,
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-fin-row--total .inv-fin-value {
+  color: #fff;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-fin-row--total .inv-fin-value {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-fin-words {
+  border-top: 1px solid #dfe4e9;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-sign-rule {
+  border-top: 2px solid var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-footer {
+  background: var(--inv-ink);
+  border-top: 3px solid var(--inv-accent);
+  color: #fff;
+  margin-top: 4mm;
+}
+
+.invoice-doc[data-inv-layout='bold-contrast'] .inv-footer span {
+  color: #fff;
+  letter-spacing: .18em;
+}
+
+/* ============================================================================
+   4. TIMELINE FLOW — document progression strip, technical markers
+   ============================================================================ */
+.invoice-doc[data-inv-layout='timeline-flow'] {
+  --inv-ink: #24303b;
+  --inv-muted: #66737f;
+  --inv-faint: #a3adb6;
+  --inv-rule: #dbe2e8;
+  --inv-accent: #3a6ea5;
+  --inv-accent-2: #eef3f8;
+  --inv-soft: #f5f8fb;
+  --inv-bg: #ffffff;
+  --acc: #3a6ea5;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 5mm 6mm 6mm;
+  gap: 0 5mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-masthead {
+  margin-bottom: 4mm;
+  padding-bottom: 3mm;
+  border-bottom: 1px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-doc-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .24em;
+  color: var(--inv-accent);
+  text-align: left;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-timeline {
+  display: flex;
+  margin-top: 4mm;
+  padding-top: 3mm;
+  border-top: 2px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-timeline-step {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 1.5mm;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-timeline-step:first-child {
+  padding-left: 0;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-timeline-step:last-child {
+  padding-right: 0;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-timeline-dot {
+  display: block;
+  width: 2.4mm;
+  height: 2.4mm;
+  background: var(--inv-accent);
+  margin-bottom: 1.5mm;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-timeline-label {
+  display: block;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-timeline-value {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--inv-ink);
+  margin-top: 1px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-sec {
+  border-left: 2px solid var(--inv-accent);
+  padding-left: 3mm;
+  margin-bottom: 3.5mm;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1mm;
+  border-bottom: 1px dashed #c6d2dd;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-sec-title {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-row,
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-terms-line {
+  border-bottom: 1px dashed #d5dee6;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-table th {
+  border-bottom: 2px solid var(--inv-accent);
+  color: var(--inv-ink);
+  letter-spacing: .06em;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-table td {
+  border-bottom: 1px dashed #d5dee6;
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-fin-row--total {
+  border-top: 2px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-fin-row--total .inv-fin-value {
+  font-size: 14px;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-footer {
+  border-top: 2px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='timeline-flow'] .inv-footer span {
+  font-family: Consolas, 'Courier New', monospace;
+  letter-spacing: .12em;
+}
+
+/* ============================================================================
+   5. MAGAZINE STYLE — editorial serif, asymmetric placement, thin rules
+   ============================================================================ */
+.invoice-doc[data-inv-layout='magazine-style'] {
+  --inv-ink: #1a1a1a;
+  --inv-muted: #5f5f5f;
+  --inv-faint: #9c9c9c;
+  --inv-rule: #e3e3e3;
+  --inv-accent: #0b4a3d;
+  --inv-accent-2: #eef4f1;
+  --inv-soft: #fafafa;
+  --inv-bg: #ffffff;
+  --acc: #0b4a3d;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 10.5px;
+  line-height: 1.65;
+  padding: 8mm 10mm 10mm;
+  gap: 0 7mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp exp meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship ship dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-masthead {
+  margin-bottom: 7mm;
+  padding-bottom: 4mm;
+  border-bottom: 3px double var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-doc-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: var(--inv-ink);
+  text-align: left;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-sec {
+  margin-bottom: 6mm;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-sec-title {
+  font-size: 10px;
+  font-weight: 700;
+  font-variant: small-caps;
+  letter-spacing: .06em;
+  color: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-sec-title::before {
+  content: '—  ';
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-sec-icon {
+  display: none;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-name {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-addr {
+  font-size: 10px;
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-lbl {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 7px;
+  letter-spacing: .1em;
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-val {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 10.5px;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-row,
+.invoice-doc[data-inv-layout='magazine-style'] .inv-terms-line {
+  border-bottom: 1px solid #ededed;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-table th {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  font-variant: small-caps;
+  letter-spacing: .08em;
+  color: var(--inv-ink);
+  border-bottom: 1px solid var(--inv-ink);
+  padding: 2.5mm 2mm;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-table td {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 10px;
+  border-bottom: 1px solid #eeeeee;
+  padding: 2.2mm 2mm;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-fin-row {
+  border-bottom: 1px solid #ededed;
+  padding: 2px 0;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-fin-row--total {
+  border-top: 1px solid var(--inv-ink);
+  border-bottom: 3px double var(--inv-ink);
+  margin-top: 1.5mm;
+  padding: 2mm 0 2.5mm;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-fin-row--total .inv-fin-value {
+  font-size: 15px;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-fin-words-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-sign-rule {
+  border-top-color: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-footer {
+  border-top: 1px solid var(--inv-ink);
+  justify-content: center;
+}
+
+.invoice-doc[data-inv-layout='magazine-style'] .inv-footer span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: .1em;
+  color: var(--inv-muted);
+}
+
+/* ============================================================================
+   6. INFOGRAPHIC FUSION — KPI-style financial blocks, data-driven layout
+   ============================================================================ */
+.invoice-doc[data-inv-layout='infographic-fusion'] {
+  --inv-ink: #17263b;
+  --inv-muted: #5b6d84;
+  --inv-faint: #93a4b8;
+  --inv-rule: #dbe3ec;
+  --inv-accent: #1f4fd8;
+  --inv-accent-2: #eef1fb;
+  --inv-soft: #f3f6fb;
+  --inv-bg: #ffffff;
+  --acc: #1f4fd8;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 4mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank terms terms terms"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-masthead {
+  margin-bottom: 4mm;
+  padding-bottom: 3mm;
+  border-bottom: 2px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-doc-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .2em;
+  color: var(--inv-accent);
+  text-align: left;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-sec {
+  margin-bottom: 3mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-sec-head {
+  margin-bottom: 1.5mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-sec-title {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  color: var(--inv-accent);
+  background: var(--inv-accent-2);
+  border-radius: 999px;
+  padding: 1mm 2.5mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-sec-icon {
+  display: none;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-row,
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-terms-line {
+  border-bottom: 1px solid #e8edf4;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-val {
+  font-weight: 600;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-table th {
+  background: var(--inv-soft);
+  color: var(--inv-ink);
+  border-bottom: 2px solid var(--inv-accent);
+  letter-spacing: .05em;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-table td {
+  border-bottom: 1px solid #e8edf4;
+  font-size: 10px;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-table tbody tr:nth-child(even) td {
+  background: #fafbfd;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-finance-rows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-row {
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--inv-soft);
+  border: none;
+  border-radius: 2mm;
+  padding: 2.5mm 3mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-row .inv-lbl {
+  padding-top: 0;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-row .inv-fin-value {
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 1mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-row--total {
+  grid-column: 1 / -1;
+  background: var(--inv-accent);
+  border-top: none;
+  margin-top: 0;
+  padding: 3mm 4mm;
+  border-radius: 2mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-row--total .inv-lbl,
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-row--total .inv-fin-value {
+  color: #fff;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-row--total .inv-fin-value {
+  font-size: 21px;
+  font-weight: 900;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-words {
+  border-top: 1px dashed var(--inv-rule);
+  margin-top: 2.5mm;
+  padding-top: 2mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-fin-words-value {
+  font-weight: 700;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-sign-rule {
+  border-top-color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-footer {
+  background: var(--inv-ink);
+  border-top: 3px solid var(--inv-accent);
+  color: #fff;
+  margin-top: 3mm;
+}
+
+.invoice-doc[data-inv-layout='infographic-fusion'] .inv-footer span {
+  color: #fff;
+  letter-spacing: .16em;
+}
+
+/* ============================================================================
+   7. ELEGANT MINIMAL — cream page, serif headings, muted gold, hairline rules
+   ============================================================================ */
+.invoice-doc[data-inv-layout='elegant-minimal'] {
+  --inv-ink: #23201b;
+  --inv-muted: #6f6a60;
+  --inv-faint: #a8a196;
+  --inv-rule: #e7e2d7;
+  --inv-accent: #b08d3f;
+  --inv-accent-2: #f6f1e5;
+  --inv-soft: #fbf9f3;
+  --inv-bg: #fdfcf9;
+  --acc: #b08d3f;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 9mm 12mm 11mm;
+  gap: 0 8mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin bank bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-masthead {
+  margin-bottom: 8mm;
+  padding-bottom: 5mm;
+  border-bottom: 1px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-doc-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: .3em;
+  color: var(--inv-ink);
+  text-transform: uppercase;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-sec {
+  margin-bottom: 7mm;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-sec-head {
+  margin-bottom: 3mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-sec-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  color: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-sec-icon {
+  display: none;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-addr {
+  font-size: 10px;
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-row,
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-terms-line {
+  border-bottom: 1px solid #ece7db;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-table th {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--inv-muted);
+  border-bottom: 1px solid var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-table td {
+  font-size: 10px;
+  border-bottom: 1px solid #ece7db;
+  padding: 2.5mm 2mm;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-finance-rows {
+  align-items: flex-end;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-fin-row {
+  width: 100%;
+  max-width: 62mm;
+  padding: 2px 0;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-fin-row--total {
+  border-top: 1.5px solid var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-fin-row--total .inv-fin-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-fin-words-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-signature-block {
+  align-items: center;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-sign-rule {
+  border-top: 1px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-footer {
+  border-top: 1px solid var(--inv-rule);
+  justify-content: center;
+}
+
+.invoice-doc[data-inv-layout='elegant-minimal'] .inv-footer span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8px;
+  letter-spacing: .24em;
+  color: var(--inv-muted);
+}
+
+/* ============================================================================
+   8. PHOTO-CENTRIC (TYPOGRAPHY) — large typographic header area, whitespace
+   ============================================================================ */
+.invoice-doc[data-inv-layout='photo-centric'] {
+  --inv-ink: #0f172a;
+  --inv-muted: #52606e;
+  --inv-faint: #94a0ad;
+  --inv-rule: #dde3ea;
+  --inv-accent: #d97706;
+  --inv-accent-2: #fdf1e3;
+  --inv-soft: #f6f8fa;
+  --inv-bg: #ffffff;
+  --acc: #d97706;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 7mm 9mm 10mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin bank bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-masthead {
+  margin-bottom: 7mm;
+  padding-bottom: 6mm;
+  border-bottom: 4px solid var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-doc-title {
+  font-size: 34px;
+  font-weight: 300;
+  letter-spacing: .3em;
+  color: var(--inv-ink);
+  text-transform: uppercase;
+  text-align: left;
+  line-height: 1.15;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-doc-title::after {
+  content: '';
+  display: block;
+  width: 28mm;
+  height: 3px;
+  background: var(--inv-accent);
+  margin-top: 3mm;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-sec {
+  margin-bottom: 5mm;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-sec-title {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .24em;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-sec-icon {
+  display: none;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-name {
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-addr {
+  font-size: 10px;
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-row,
+.invoice-doc[data-inv-layout='photo-centric'] .inv-terms-line {
+  border-bottom: 1px solid #e8ecf1;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-table th {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  color: var(--inv-ink);
+  border-bottom: 2px solid var(--inv-ink);
+  padding: 2.8mm 2.5mm;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-table td {
+  font-size: 10.5px;
+  border-bottom: 1px solid #e8ecf1;
+  padding: 2.6mm 2.5mm;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-fin-row {
+  padding: 2.5px 0;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-fin-row--total {
+  border-top: 2px solid var(--inv-ink);
+  margin-top: 1.5mm;
+  padding-top: 2.5mm;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-fin-row--total .inv-fin-value {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-sign-name {
+  font-size: 12px;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-sign-rule {
+  border-top-color: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-footer {
+  border-top: 4px solid var(--inv-ink);
+  margin-top: 5mm;
+  padding-top: 3mm;
+}
+
+.invoice-doc[data-inv-layout='photo-centric'] .inv-footer span {
+  letter-spacing: .2em;
+  color: var(--inv-muted);
+}
+
+/* ============================================================================
+   9. GEOMETRIC LAYERS — angular blocks, layered sections, gradient strips
+   ============================================================================ */
+.invoice-doc[data-inv-layout='geometric-layers'] {
+  --inv-ink: #14202e;
+  --inv-muted: #5a6b7e;
+  --inv-faint: #97a5b5;
+  --inv-rule: #c9d3de;
+  --inv-accent: #1d4f91;
+  --inv-accent-2: #e8edf3;
+  --inv-soft: #f2f6fb;
+  --inv-bg: #ffffff;
+  --acc: #1d4f91;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 5mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-masthead {
+  margin-bottom: 5mm;
+  padding: 5mm 4mm 4.5mm;
+  background: linear-gradient(135deg, #f2f6fb 0%, #f2f6fb 55%, #dde6f0 55%, #dde6f0 100%);
+  border-left: 4px solid var(--inv-accent);
+  border-bottom: 2px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-doc-title {
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  color: var(--inv-ink);
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-sec {
+  border: 1px solid var(--inv-rule);
+  border-radius: 0;
+  border-bottom: 2px solid var(--inv-accent);
+  padding: 3mm;
+  margin-bottom: 3.5mm;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-sec-head {
+  border-left: 3px solid var(--inv-accent);
+  padding-left: 2.5mm;
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-sec-title {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .2em;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-row,
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-terms-line {
+  border-bottom: 1px solid #e1e7ee;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-table th {
+  background: var(--inv-soft);
+  color: var(--inv-ink);
+  border-bottom: 3px solid var(--inv-accent);
+  border-radius: 0;
+  letter-spacing: .06em;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-table td {
+  border-bottom: 1px solid #e1e7ee;
+  border-radius: 0;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-fin-row {
+  padding: 2px 0;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-fin-row--total {
+  background: linear-gradient(90deg, var(--inv-accent), #2456a6);
+  border-top: none;
+  margin-top: 2mm;
+  padding: 2.5mm 3mm;
+  border-radius: 0;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-fin-row--total .inv-lbl,
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-fin-row--total .inv-fin-value {
+  color: #fff;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-fin-row--total .inv-fin-value {
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-fin-words {
+  border-top: 1px dashed var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-sign-rule {
+  border-top: 2px solid var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-footer {
+  background: var(--inv-ink);
+  border-top: 3px solid var(--inv-accent);
+  color: #fff;
+  border-radius: 0;
+  margin-top: 4mm;
+}
+
+.invoice-doc[data-inv-layout='geometric-layers'] .inv-footer span {
+  color: #fff;
+  letter-spacing: .18em;
+}
+
+/* ============================================================================
+   10. CLASSIC FORMAL — navy / cream, serif headings, formal framed sections
+   ============================================================================ */
+.invoice-doc[data-inv-layout='classic-formal'] {
+  --inv-ink: #1d2b3a;
+  --inv-muted: #5c6b7a;
+  --inv-faint: #97a4b2;
+  --inv-rule: #c7d0da;
+  --inv-accent: #1f3a5f;
+  --inv-accent-2: #f4f1e9;
+  --inv-soft: #faf7f0;
+  --inv-bg: #fffdf8;
+  --acc: #1f3a5f;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 7mm 9mm 9mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin bank bank bank"
+    "terms terms terms sig sig sig"
+    "remarks remarks remarks remarks remarks remarks"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-masthead {
+  margin-bottom: 6mm;
+  padding-bottom: 4mm;
+  border-bottom: 3px double var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-doc-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: var(--inv-accent);
+  text-transform: uppercase;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-sec {
+  border: 1px solid var(--inv-rule);
+  border-radius: 0;
+  margin-bottom: 4mm;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-sec-head {
+  background: var(--inv-accent-2);
+  border-bottom: 1px solid var(--inv-rule);
+  margin-bottom: 0;
+  padding: 2mm 3mm;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-sec-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-sec-body {
+  padding: 2.5mm 3mm;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--inv-ink);
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-row,
+.invoice-doc[data-inv-layout='classic-formal'] .inv-terms-line {
+  border-bottom: 1px solid #d9dfe6;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-lbl {
+  color: var(--inv-muted);
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-table th,
+.invoice-doc[data-inv-layout='classic-formal'] .inv-table td {
+  border: 1px solid var(--inv-rule);
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-table th {
+  background: var(--inv-accent-2);
+  color: var(--inv-accent);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8px;
+  letter-spacing: .06em;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-table td {
+  font-size: 10px;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-fin-row {
+  padding: 2px 0;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-fin-row--total {
+  border-top: 2px solid var(--inv-accent);
+  background: var(--inv-soft);
+  padding: 2.5mm 3mm;
+  margin-top: 1.5mm;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-fin-row--total .inv-fin-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-fin-words-value {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-style: italic;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-signature-block {
+  align-items: center;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-sign-rule {
+  border-top: 2px solid var(--inv-accent);
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-footer {
+  border-top: 3px double var(--inv-accent);
+  justify-content: center;
+}
+
+.invoice-doc[data-inv-layout='classic-formal'] .inv-footer span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8px;
+  letter-spacing: .2em;
+  color: var(--inv-muted);
+}

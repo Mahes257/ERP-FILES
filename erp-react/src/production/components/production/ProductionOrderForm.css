@@ -1,0 +1,374 @@
+/* ============================================================
+   Production Order Form — Create / Edit Work Order
+   ------------------------------------------------------------
+   The form previously stretched across the whole full-page modal
+   content area. This keeps the ERP shell intact but constrains the
+   form to a comfortable, centered enterprise card (max ~1160px)
+   with balanced spacing, so fields never span 3/4 of the screen.
+   ============================================================ */
+#production-order-form {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 28px 32px 30px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+#production-order-form .form-grid {
+  gap: 16px 20px;
+}
+
+/* ---- Selected CPO summary (below the dropdown) ---- */
+.cpo-select-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #065F46;
+  background: #ECFDF5;
+  border: 1px solid #A7F3D0;
+  border-radius: 8px;
+}
+
+/* ---- CPO load error + retry ---- */
+.cpo-select-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #B3261E;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+}
+
+.cpo-retry-btn {
+  margin-left: auto;
+  padding: 3px 10px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: #DC2626;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cpo-retry-btn:hover {
+  background: #B91C1C;
+}
+
+/* ============================================================
+   Page mode — rendered as a standalone page (not inside a modal).
+   The page itself spans the full workspace; the form stays a
+   centered, comfortable card (max ~1160px) like the ERP forms.
+   ============================================================ */
+.wo-form-page {
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  box-sizing: border-box;
+}
+
+.wo-form-page #production-order-form {
+  width: 100%;
+}
+
+.wo-form-page-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px 4px 0;
+  border-top: 1px solid #E2E8F0;
+}
+
+@media (max-width: 640px) {
+  .wo-form-page {
+    padding: 0 10px 32px;
+  }
+
+  .wo-form-page-actions {
+    justify-content: stretch;
+  }
+
+  .wo-form-page-actions .btn {
+    flex: 1;
+  }
+}
+
+/* ---- Production Items section ---- */
+.wo-items-section {
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid #E2E8F0;
+}
+
+.wo-items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.wo-items-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #102A2A;
+}
+
+.wo-items-count {
+  padding: 2px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #075E54;
+  background: #E6FFFA;
+  border: 1px solid #B2F5EA;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.wo-items-hint {
+  margin: 6px 0 14px;
+  font-size: 12px;
+  color: #64748B;
+  line-height: 1.5;
+}
+
+.wo-item-card {
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+}
+
+.wo-item-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.wo-item-number {
+  font-size: 12px;
+  font-weight: 700;
+  color: #075E54;
+}
+
+.wo-add-item-btn {
+  margin-top: 4px;
+}
+
+/* ---- Responsive: keep comfortable margins on smaller screens ---- */
+@media (max-width: 900px) {
+  #production-order-form {
+    padding: 20px 18px 22px;
+  }
+}
+
+@media (max-width: 640px) {
+  #production-order-form {
+    margin: 0;
+    border-radius: 10px;
+  }
+
+  .wo-item-card {
+    padding: 12px;
+  }
+}
+
+/* ============================================================
+   Item-wise attachments (inside each Production Item card)
+   ============================================================ */
+.wo-item-attachments {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #E2E8F0;
+}
+
+.wo-item-attach-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.wo-item-attach-head .form-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+}
+
+.wo-item-attach-browse {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.wo-item-attach-input {
+  display: none;
+}
+
+.wo-item-attach-hint {
+  margin: 6px 0 8px;
+  font-size: 11px;
+  color: #64748B;
+  line-height: 1.5;
+}
+
+.wo-item-attach-state {
+  margin: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.wo-item-attach-error {
+  margin: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  color: #B42318;
+  line-height: 1.45;
+}
+
+.wo-item-attach-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wo-item-attach-row {
+  display: grid;
+  grid-template-columns: 20px minmax(120px, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.wo-item-attach-row-pending {
+  background: #F0FDFA;
+  border-color: #B2F5EA;
+}
+
+.wo-item-attach-icon {
+  display: inline-flex;
+  color: #0F766E;
+}
+
+.wo-item-attach-name {
+  font-weight: 600;
+  color: #0F172A;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.wo-item-attach-meta {
+  color: #64748B;
+  white-space: nowrap;
+}
+
+.wo-item-attach-new {
+  color: #0F766E;
+  font-weight: 600;
+}
+
+.wo-item-attach-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wo-item-attach-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.wo-item-attach-btn:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+}
+
+.wo-item-attach-btn-danger {
+  color: #B42318;
+}
+
+.wo-item-attach-btn-danger:hover {
+  background: #FEF3F2;
+  border-color: #FDA29B;
+}
+
+.wo-item-attach-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Inline per-field validation, next to the offending item date */
+.wo-input-invalid {
+  border-color: #FDA29B !important;
+  background: #FFFBFB;
+}
+
+.wo-item-field-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #B42318;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .wo-item-attach-row {
+    grid-template-columns: 18px minmax(90px, 1fr) auto;
+  }
+
+  .wo-item-attach-meta {
+    grid-column: 2 / span 2;
+    white-space: normal;
+  }
+}

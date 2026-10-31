@@ -1,0 +1,129 @@
+/* Packing page — reuses the shared settings page card styles. */
+@import '../components/production/settings/settings-pages.css';
+
+.po-link {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.po-link:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================
+   Packing Preview Page
+   ============================================================ */
+.pp-page {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+.pp-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pp-scroll {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  background: var(--color-bg, #eef1f5);
+}
+.pp-edit-banner {
+  padding: 10px 24px;
+  background: #fff8e1;
+  border-bottom: 2px solid #f0c040;
+  font-size: 13px;
+  color: #8a6d00;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pp-toast {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  animation: pp-toast-in 0.3s ease;
+}
+.pp-toast-success {
+  background: #16a34a;
+  color: #fff;
+}
+.pp-toast-error {
+  background: #dc2626;
+  color: #fff;
+}
+@keyframes pp-toast-in {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   Editable fields in document
+   ============================================================ */
+.pl-edit-field {
+  border: 1px dashed #2563eb;
+  background: #eff6ff;
+  padding: 2px 6px;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+  border-radius: 3px;
+  outline: none;
+  width: 100%;
+  min-width: 60px;
+}
+.pl-edit-field:focus {
+  border-color: #1e40af;
+  background: #dbeafe;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+.pl-edit-textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* Hide edit fields when printing */
+@media print {
+  .pp-page {
+    height: auto;
+    overflow: visible;
+  }
+  .pp-header-actions,
+  .pp-edit-banner,
+  .pp-toast {
+    display: none !important;
+  }
+  .pp-scroll {
+    overflow: visible;
+    padding: 0;
+    display: block;
+    background: none;
+  }
+  .pl-edit-field {
+    border: none;
+    background: none;
+    padding: 0;
+    box-shadow: none;
+  }
+  .pl-document {
+    width: 100% !important;
+    max-width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+  }
+}

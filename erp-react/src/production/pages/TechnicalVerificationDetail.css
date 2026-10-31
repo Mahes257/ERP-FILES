@@ -1,0 +1,317 @@
+/* ============================================================
+   Technical Verification Detail Page
+   ============================================================ */
+
+/* The detail is a dedicated full-size page: it fills the same main content
+   area as the list page (see `.page` in production/styles/global.css) rather
+   than sitting in a 1200px column that made it read as a partial panel. */
+.tv-detail-page {
+  padding: 20px 24px 60px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Back Button ===== */
+.tv-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 16px;
+}
+.tv-back-btn:hover {
+  background: #F1F5F9;
+  border-color: #CBD5E1;
+  color: #1E293B;
+}
+
+/* ===== Title ===== */
+.tv-detail-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F172A;
+  margin: 0 0 4px;
+}
+.tv-detail-subtitle {
+  font-size: 13px;
+  color: #64748B;
+  margin: 0 0 20px;
+}
+
+/* ===== KPI Summary Cards ===== */
+.tv-detail-kpi-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.tv-detail-kpi-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+  background: #fff;
+  flex: 1;
+  min-width: 160px;
+}
+.tv-detail-kpi-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.tv-kpi-total .tv-detail-kpi-icon { background: #F1F5F9; color: #475569; }
+.tv-kpi-verified .tv-detail-kpi-icon { background: #D1FAE5; color: #065F46; }
+.tv-kpi-pending .tv-detail-kpi-icon { background: #FEF3C7; color: #92400E; }
+.tv-kpi-rejected .tv-detail-kpi-icon { background: #FEE2E2; color: #991B1B; }
+
+.tv-detail-kpi-body {
+  display: flex;
+  flex-direction: column;
+}
+.tv-detail-kpi-num {
+  font-size: 20px;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.2;
+}
+.tv-detail-kpi-label {
+  font-size: 12px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* ===== Section Title ===== */
+.tv-detail-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1E293B;
+  margin: 0 0 12px;
+}
+
+/* ===== Item Card ===== */
+.tv-detail-item-card {
+  margin-bottom: 16px;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+.tv-detail-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #F8FAFC;
+  cursor: pointer;
+  flex-wrap: wrap;
+  transition: background 0.15s;
+}
+.tv-detail-item-header:hover { background: #F1F5F9; }
+.tv-detail-item-name { font-weight: 600; font-size: 13px; color: #1E293B; }
+.tv-detail-item-qty { font-size: 12px; color: #64748B; }
+
+/* ===== Item Body (expanded) ===== */
+.tv-detail-item-body {
+  padding: 16px;
+  border-top: 1px solid #E2E8F0;
+}
+
+/* ===== Fields Grid ===== */
+.tv-detail-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.tv-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tv-detail-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.tv-detail-field-value {
+  font-size: 12px;
+  color: #1E293B;
+  font-weight: 500;
+}
+.tv-field-empty { color: #94A3B8; font-style: italic; }
+.tv-detail-field-full {
+  margin-bottom: 16px;
+}
+
+/* ===== Inputs ===== */
+.tv-detail-input,
+.tv-detail-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #1E293B;
+  background: #fff;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+.tv-detail-input:focus,
+.tv-detail-textarea:focus {
+  outline: none;
+  border-color: #075E54;
+  box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.1);
+}
+.tv-detail-textarea { resize: vertical; min-height: 60px; }
+
+/* ===== Subsection ===== */
+.tv-detail-subsection {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1E293B;
+  margin: 16px 0 8px;
+}
+
+/* ===== Checklist with GREEN ticks ===== */
+.tv-detail-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-bottom: 16px;
+}
+.tv-detail-check-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #475569;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+  position: relative;
+}
+.tv-detail-check-item:hover { background: #F1F5F9; }
+.tv-detail-check-item.checked { color: #065F46; font-weight: 500; }
+
+/* Green checkbox square */
+.tv-detail-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #CBD5E1;
+  border-radius: 4px;
+  background: #fff;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  pointer-events: none;
+}
+.tv-detail-checkbox.checked {
+  background: #10B981;
+  border-color: #10B981;
+  color: #fff;
+}
+/* Hidden real checkbox — still clickable */
+.tv-detail-check-item input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin: 0;
+  z-index: 1;
+}
+
+/* ===== Remarks ===== */
+.tv-detail-remarks {
+  font-size: 12px;
+  color: #64748B;
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  background: #F8FAFC;
+  border-radius: 6px;
+}
+.tv-detail-verified-info {
+  font-size: 11px;
+  color: #94A3B8;
+  margin: 0 0 12px;
+}
+
+/* ===== Action Buttons ===== */
+.tv-detail-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #E2E8F0;
+}
+.tv-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+.tv-detail-btn-cancel {
+  background: #F1F5F9;
+  color: #475569;
+  border-color: #E2E8F0;
+}
+.tv-detail-btn-cancel:hover { background: #E2E8F0; }
+.tv-detail-btn-reject {
+  background: #FEE2E2;
+  color: #991B1B;
+  border-color: #FECACA;
+}
+.tv-detail-btn-reject:hover { background: #FECACA; }
+.tv-detail-btn-verify {
+  background: #075E54;
+  color: #fff;
+}
+.tv-detail-btn-verify:hover { background: #064C44; }
+.tv-detail-btn-reverify {
+  background: #E0E7FF;
+  color: #3730A3;
+  border-color: #C7D2FE;
+}
+.tv-detail-btn-reverify:hover { background: #C7D2FE; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .tv-detail-page { padding: 16px; }
+  .tv-detail-kpi-row { flex-direction: column; }
+  .tv-detail-fields-grid { grid-template-columns: 1fr; }
+  .tv-detail-actions { flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .tv-detail-checklist { flex-direction: column; }
+  .tv-detail-btn { padding: 6px 12px; font-size: 12px; }
+}

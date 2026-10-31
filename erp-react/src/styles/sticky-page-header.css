@@ -1,0 +1,89 @@
+/* ==========================================================================
+   STICKY PAGE HEADER / TOP CONTROL SECTION  —  global, all modules
+   --------------------------------------------------------------------------
+   The page-level top section of every route (breadcrumb, page title,
+   subtitle, action buttons, page + sub tabs, filters, search toolbar)
+   stays pinned while KPI cards, tables and all other content scroll
+   underneath it.
+
+   Two halves make this work:
+
+   1. CSS (this file) — tokens, the shared page-level wrappers, the
+      runtime class used by the hook, and the inert-scroller fix.
+   2. `hooks/useStickyPageHeader.js` (mounted once in AppLayout) —
+      measures the leading run of header blocks of whichever page is
+      rendered and stacks them under the topbar. See that file for why
+      the generic mechanism lives in JS.
+
+   Nothing here changes sizes, colours, borders, typography or spacing:
+   sticky keeps every block in normal document flow, so the layout is
+   pixel-identical at scroll position 0. The only additions are an
+   opaque page-coloured backdrop behind the pinned blocks (so scrolling
+   content cannot show through) and a z-index that keeps them above the
+   page content but below the sidebar, topbar overlays and modals.
+   ========================================================================== */
+
+:root {
+  /* Global topbar height — `.app-topbar h-14` (AppLayout.jsx). Every page
+     header docks directly under it. */
+  --erp-topbar-h: 56px;
+  /* Pinned page chrome: above page content, below sidebar (40), the mobile
+     drawer (50) and app overlays (90+). */
+  --erp-sticky-z: 32;
+  /* Page surface behind pinned headers (light / dark). */
+  --erp-page-bg: #f4f8f7;
+}
+
+.dark {
+  --erp-page-bg: #1a1a2e;
+}
+
+/* --- Shared page-level wrappers -------------------------------------------
+   These two wrappers already isolate the header from the content, so they
+   can be pinned by CSS alone: the header is up before the hook's first
+   frame, which leaves no visible flash of an unpinned header on load. The
+   hook then adds the measured offsets for pages whose header is a run of
+   sibling blocks. */
+.cpr-page-static-header,
+.module-hub-header {
+  position: sticky;
+  top: var(--erp-topbar-h);
+  z-index: var(--erp-sticky-z);
+  background: var(--erp-page-bg);
+  /* Keep the header's own rounded/shadowed children clipping as before. */
+  background-clip: padding-box;
+}
+
+/* --- Runtime class applied by useStickyPageHeader ------------------------ */
+.erp-sticky-chrome {
+  background-clip: padding-box;
+}
+
+/* --- Inert inner scrollers -------------------------------------------------
+   `.purchase-page.cpr-page` and `.module-hub` are documented page shells that
+   carry `overflow: hidden` together with an auto height, so they never
+   actually scroll in this app (the document scrolls instead). An
+   `overflow: hidden` box is still a scroll container for sticky
+   descendants, which would pin page headers to a box that never moves.
+   `overflow: clip` clips exactly the same way but is NOT a scroll
+   container, so sticky resolves against the viewport as intended.
+   Browsers without `overflow: clip` keep `overflow: hidden` and simply
+   behave as before — a graceful fallback, never a broken layout. */
+/* The `.app-shell` prefix is deliberate: it lifts specificity above the
+   shell definitions (`.purchase-page.cpr-page`, `.module-hub`) that are
+   imported from several stylesheets and lazy-loaded module chunks, so this
+   override wins regardless of stylesheet order. */
+.app-shell .purchase-page.cpr-page,
+.app-shell .module-hub {
+  overflow: visible;
+}
+
+/* --- Print ----------------------------------------------------------------- */
+@media print {
+  .cpr-page-static-header,
+  .module-hub-header,
+  .erp-sticky-chrome {
+    position: static !important;
+    background: transparent !important;
+  }
+}

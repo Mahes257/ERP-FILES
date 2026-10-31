@@ -1,0 +1,105 @@
+package com.vishatech.erp.dto;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public record ExpenseTripResponse(
+        Long id,
+        String tripNo,
+        String marketer,
+        Long marketerUserId,
+        String travelPlanRef,
+        String startLocation,
+        BigDecimal startLatitude,
+        BigDecimal startLongitude,
+        String destination,
+        String purpose,
+        LocalDate startDate,
+        String startTime,
+        LocalDate expectedEndDate,
+        String expectedEndTime,
+        String visitRef,
+        LocalDateTime tripOnDateTime,
+        String tripOnLocation,
+        LocalDateTime tripOffDateTime,
+        String tripOffLocation,
+        String remarks,
+        String status,
+        String approvalStatus,
+        BigDecimal totalAmount,
+        BigDecimal withBillTotal,
+        BigDecimal withoutBillTotal,
+        BigDecimal travelTotal,
+        BigDecimal stayTotal,
+        BigDecimal foodTotal,
+        BigDecimal localTravelTotal,
+        BigDecimal otherTotal,
+        Integer expenseCount,
+        String approvedBy,
+        LocalDateTime approvedAt,
+        String rejectionReason,
+        String correctionComments,
+        List<ExpenseDto> expenses,
+        List<AttachmentDto> attachments,
+        List<AuditLogDto> auditLog,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
+) {
+    public record ExpenseDto(
+            Long id,
+            String expenseType,
+            String expenseSubType,
+            LocalDate expenseDate,
+            String expenseTime,
+            String location,
+            String travelMode,
+            String travelFrom,
+            String travelTo,
+            String ticketNumber,
+            String operatorProvider,
+            String passengerName,
+            String hotelName,
+            LocalDate checkInDate,
+            String checkInTime,
+            LocalDate checkOutDate,
+            String checkOutTime,
+            Integer numberOfNights,
+            String restaurantVendor,
+            Integer numberOfPersons,
+            String mealType,
+            String localTravelMode,
+            String localFrom,
+            String localTo,
+            String travelPurpose,
+            BigDecimal amount,
+            String paymentMethod,
+            String remarks,
+            String billStatus,
+            String withoutBillReason,
+            String description,
+            List<AttachmentDto> attachments,
+            String createdBy,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
+    ) {}
+
+    public record AttachmentDto(
+            Long id,
+            Long expenseId,
+            String name,
+            String storedName,
+            String contentType,
+            long size,
+            LocalDateTime uploadedAt
+    ) {}
+
+    public record AuditLogDto(
+            Long id,
+            String action,
+            String description,
+            String performedBy,
+            LocalDateTime performedAt
+    ) {}
+}

@@ -1,0 +1,161 @@
+/* ============================================================
+   Settings form — in-flow PAGE layout (layout="page")
+   ------------------------------------------------------------
+   Used by dedicated create routes (e.g. /production/casting/new)
+   so the form occupies the full content area in normal document
+   flow instead of rendering as an overlay / drawer.
+   The document is the scroll container — no internal scroller.
+   ============================================================ */
+
+.settings-form-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 14px 16px 0;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, sans-serif;
+  color: #102A2A;
+}
+
+/* ---- Page header: "Create X — Y" + Close ---- */
+.settings-form-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid #E2E8F0;
+  margin-bottom: 20px;
+}
+
+.settings-form-page-title {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0B3B33;
+}
+
+.settings-form-page-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.settings-form-page-close:hover {
+  background: #F1F5F9;
+  color: #102A2A;
+  border-color: #94A3B8;
+}
+
+/* ---- Card: form body + footer ---- */
+.settings-form-page-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.settings-form-page-body {
+  padding: 20px;
+}
+
+.settings-form-page-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid #E2E8F0;
+  background: #F8FAFC;
+}
+
+/* Bottom breathing room so the footer buttons are never clipped by
+   the end of the workspace on short viewports. */
+.settings-form-page::after {
+  content: '';
+  display: block;
+  height: 40px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .settings-form-page {
+    padding: 10px 10px 0;
+  }
+
+  .settings-form-page-header {
+    align-items: center;
+  }
+
+  .settings-form-page-title {
+    font-size: 18px;
+  }
+
+  .settings-form-page-body {
+    padding: 16px;
+  }
+
+  .settings-form-page-footer {
+    padding: 12px 16px;
+  }
+}
+
+/* ============================================================
+   Bordered form section (e.g. the Casting Stage box)
+   ------------------------------------------------------------
+   A field carrying `boxTitle` is rendered inside this box, at full
+   grid width, so a stage choice reads as its own section instead of
+   a loose grid cell.
+   ============================================================ */
+.form-section-box {
+  margin: 2px 0;
+  padding: 12px 14px;
+  border: 1px solid #D7E3E1;
+  border-radius: 10px;
+  background: #F8FAFC;
+}
+
+.form-section-box-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #DCE7E5;
+}
+
+.form-section-box-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #075E54;
+}
+
+.form-section-box-hint {
+  font-size: 10px;
+  color: #94A3B8;
+  line-height: 1.5;
+}
+
+.form-section-box-body .form-field {
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .form-section-box {
+    padding: 10px 12px;
+  }
+}

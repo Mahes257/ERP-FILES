@@ -1,0 +1,201 @@
+/* ============================================================
+   Drawings & Models pages — shared styles
+   ============================================================ */
+
+/* Green table header — only header row is green, body stays normal */
+.drawings-models-table thead tr {
+  background: var(--color-accent);
+}
+
+.drawings-models-table thead th {
+  color: #fff;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  padding: 10px 12px;
+  border-bottom: 2px solid #064C44;
+  white-space: nowrap;
+}
+
+.drawings-models-table tbody tr {
+  background: var(--color-surface);
+}
+
+.drawings-models-table tbody tr:nth-child(even) {
+  background: var(--color-bg);
+}
+
+.drawings-models-table tbody tr:hover {
+  background: #f0f7f4;
+}
+
+/* ============================================================
+   Modal overlay + modal
+   ============================================================ */
+.dm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.dm-modal {
+  width: 90%;
+  max-width: 680px;
+  max-height: 85vh;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dm-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dm-modal-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.dm-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.dm-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ============================================================
+   Form error
+   ============================================================ */
+.dm-form-error {
+  margin: 12px 20px 0;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-md);
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   File upload area
+   ============================================================ */
+.dm-file-upload {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dm-file-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  color: #166534;
+}
+
+.dm-file-type {
+  font-size: 11px;
+  font-weight: 600;
+  color: #3730a3;
+  background: #e0e7ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
+}
+
+.dm-file-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+/* ============================================================
+   Full-page form (replaces modal)
+   ============================================================ */
+.dm-fullpage-form {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.dm-fullpage-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #E2E8F0;
+  background: #F8FAFC;
+}
+
+.dm-fullpage-header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: #102A2A;
+}
+
+.dm-fullpage-form .dm-modal-body {
+  padding: 20px;
+  max-height: none;
+  overflow: visible;
+}
+
+.dm-fullpage-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 20px;
+  border-top: 1px solid #E2E8F0;
+  background: #F8FAFC;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 767px) {
+  .dm-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .dm-modal-body .ack-expand-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .dm-fullpage-form .dm-modal-body .ack-expand-fields {
+    grid-template-columns: 1fr;
+  }
+}

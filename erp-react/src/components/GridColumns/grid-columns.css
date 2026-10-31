@@ -1,0 +1,72 @@
+/* Shared grid column-management styling (Manage Columns + drag-to-resize).
+   Loaded by every grid that uses the GridColumns toolkit so the resize handle
+   looks and behaves identically across Sales & Marketing modules. */
+
+.grid-col-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 7px;
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  z-index: 2;
+}
+
+/* Widen the hit area a touch without changing layout, so the handle is easy
+   to grab on every header. */
+.grid-col-resizer::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 3px;
+  width: 2px;
+  border-radius: 2px;
+  background: rgba(15, 23, 42, 0.16);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.grid-col-resizer:hover::after,
+.grid-col-resizer-active::after {
+  opacity: 1;
+  background: #0b4a3d;
+}
+
+/* The header cell must anchor the absolutely-positioned handle. */
+.grid-resizable-th {
+  position: relative;
+}
+
+/* While a drag is in progress, keep the pointer cursor everywhere so the
+   user never loses the drag when moving fast across other cells. */
+body.grid-col-resizing,
+body.grid-col-resizing * {
+  cursor: col-resize !important;
+  user-select: none;
+}
+
+/* User-defined columns in the printable A4 item sheet (Quotation / Sales
+   document designs). They carry no document-specific styling, so they get a
+   neutral, print-safe cell that wraps instead of clipping. */
+.it-th-extra {
+  text-align: left;
+  white-space: normal;
+}
+
+.it-td-extra {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: inherit;
+}
+
+.it-td-extra input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  color: inherit;
+}

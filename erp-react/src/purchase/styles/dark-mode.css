@@ -1,0 +1,651 @@
+/* ==========================================================================
+   PURCHASE MODULE — DARK MODE
+   --------------------------------------------------------------------------
+   Comprehensive dark mode for the Purchase module. Scoped under `.dark`
+   so light mode is completely unchanged. Replaces the old
+   purchase-light-override.css which forced Purchase to always be light.
+
+   Strategy:
+   - Override Purchase-specific CSS variables for dark mode
+   - Override Tailwind utility classes used in Purchase components
+   - Add component-specific dark mode rules
+   - Ensure text contrast, border contrast, hover states
+
+   Strategy:
+   - Override Tailwind utility classes where they appear on Purchase
+     components (bg-surface, bg-white, text-slate-*, border-slate-*, etc.)
+   - Add component-specific dark mode rules for shared components
+     (PurchaseChartCard, PurchaseSectionCard, PurchaseKpiCards, etc.)
+   - Do NOT override global Tailwind utilities — only Purchase-scoped ones
+   ========================================================================== */
+
+/* ===== PURCHASE TOKEN OVERRIDES FOR DARK MODE ===== */
+.dark .purchase-page,
+.dark .purchase-active .purchase-page {
+  /* Override global --bg-app to Purchase dark palette */
+  --bg-app: #0f172a;
+  --surface: #1e293b;
+  --surface-2: #243244;
+  --surface-3: #334155;
+  --ink: #e2e8f0;
+  --ink-2: #94a3b8;
+  --ink-3: #64748b;
+  --line: #334155;
+  --line-strong: #475569;
+  --input-bg: #1e293b;
+  --hover: rgba(15,143,120,0.12);
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.15);
+
+  /* Purchase tokens */
+  --purchase-bg: #0f172a;
+  --purchase-card: #1e293b;
+  --purchase-border: #334155;
+  --purchase-text: #e2e8f0;
+  --purchase-text-muted: #94a3b8;
+  --purchase-text-light: #64748b;
+  --purchase-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  --purchase-primary: #136754;
+  --purchase-primary-dark: #0B7A68;
+  --purchase-primary-hover: #17A88E;
+  --purchase-accent: #5CB8A8;
+  --purchase-accent-light: rgba(15,143,120,0.2);
+  --purchase-primary-light: rgba(15,143,120,0.15);
+  --purchase-hover: rgba(15,143,120,0.12);
+}
+
+/* ===== PAGE & LAYOUT ===== */
+.dark .purchase-page {
+  background: #0B1120;
+  background-image: radial-gradient(ellipse 80% 60% at 85% -5%, rgba(15,143,120,0.06) 0%, transparent 70%);
+  color: #e2e8f0;
+}
+
+.dark .purchase-page.text-slate-800 {
+  color: #e2e8f0;
+}
+.dark .purchase-page.bg-app {
+  background-color: #0f172a;
+}
+
+/* ===== CARDS — .prm-card / .po-dash-card ===== */
+.dark .prm-card,
+.dark .po-dash-card {
+  background: rgba(22,28,45,0.92);
+  border-color: rgba(148,163,184,0.1);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+.dark .prm-card::before,
+.dark .po-dash-card::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+}
+.dark .prm-card-header,
+.dark .po-dash-card-header {
+  border-color: rgba(148,163,184,0.08);
+}
+.dark .prm-card-header h2,
+.dark .prm-card-header h3,
+.dark .prm-card-header h3,
+.dark .po-dash-card-header h3 {
+  color: #F1F5F9;
+}
+.dark .prm-card-header h2 svg,
+.dark .prm-card-header h3 svg,
+.dark .po-dash-card-header h3 svg {
+  color: #5CB8A8;
+}
+.dark .prm-card-header p,
+.dark .po-dash-card-header p {
+  color: #94A3B8;
+}
+.dark .prm-card-body,
+.dark .po-dash-card-body {
+  color: #CBD5E1;
+}
+
+/* ===== KPI CARDS ===== */
+.dark .po-kpi-card {
+  background: rgba(22,28,45,0.92);
+  border-color: rgba(148,163,184,0.1);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+.dark .po-kpi-card::before {
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+}
+.dark .po-kpi-card:hover {
+  border-color: #136754;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+}
+.dark .po-kpi-card.active {
+  border-color: #136754;
+  background: rgba(15,90,70,0.2);
+  box-shadow: 0 0 0 1.5px #136754, 0 4px 16px rgba(0,0,0,0.25);
+}
+.dark .po-kpi-count { color: #F1F5F9; }
+.dark .po-kpi-label { color: #94A3B8; }
+.dark .po-kpi-sub { color: #64748B; }
+.dark .po-kpi-icon { background: rgba(255,255,255,0.06); }
+.dark .po-kpi-icon svg { color: inherit; }
+
+/* ===== TABLES ===== */
+.dark .pr-table,
+.dark .po-table {
+  color: #CBD5E1;
+}
+.dark .pr-table thead th,
+.dark .po-table thead th {
+  background: rgba(7,94,84,0.9);
+  color: #F1F5F9;
+  border-color: rgba(6,76,68,0.9);
+}
+.dark .pr-table tbody td,
+.dark .po-table tbody td {
+  border-bottom-color: rgba(148,163,184,0.06);
+  color: #CBD5E1;
+  background: transparent;
+}
+.dark .pr-table tbody tr:nth-child(even) td,
+.dark .po-table tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,0.02);
+}
+.dark .pr-table tbody tr:hover td,
+.dark .po-table tbody tr:hover td {
+  background: rgba(15,143,120,0.08);
+}
+.dark .pr-table tbody td:first-child,
+.dark .po-table tbody td:first-child {
+  background: transparent;
+  box-shadow: 1px 0 0 rgba(148,163,184,0.06);
+}
+.dark .pr-table tbody td:last-child,
+.dark .po-table tbody td:last-child {
+  background: transparent;
+  box-shadow: -1px 0 0 rgba(148,163,184,0.06);
+}
+.dark .pr-table tbody tr:nth-child(even) td:first-child { background: rgba(255,255,255,0.02); }
+.dark .pr-table tbody tr:nth-child(even) td:last-child { background: rgba(255,255,255,0.02); }
+.dark .pr-table tbody tr:hover td:first-child { background: rgba(15,143,120,0.08); }
+.dark .pr-table tbody tr:hover td:last-child { background: rgba(15,143,120,0.08); }
+
+/* ===== INPUTS / SELECTS / TEXTAREAS ===== */
+.dark .purchase-form-input,
+.dark .purchase-form-select,
+.dark .purchase-form-textarea,
+.dark .prm-input,
+.dark .prm-select,
+.dark .prm-textarea {
+  background-color: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  color: #E2E8F0;
+}
+.dark .purchase-form-input::placeholder,
+.dark .purchase-form-select::placeholder,
+.dark .purchase-form-textarea::placeholder,
+.dark .prm-input::placeholder,
+.dark .prm-select::placeholder,
+.dark .prm-textarea::placeholder {
+  color: #64748B;
+}
+.dark .purchase-form-input:focus,
+.dark .purchase-form-select:focus,
+.dark .purchase-form-textarea:focus,
+.dark .prm-input:focus,
+.dark .prm-select:focus,
+.dark .prm-textarea:focus {
+  border-color: var(--purchase-primary);
+  box-shadow: 0 0 0 2px rgba(15,143,120,0.2);
+}
+.dark .purchase-form-label { color: #CBD5E1; }
+.dark .purchase-form-hint { color: #64748B; }
+
+/* Filter inputs */
+.dark .prm-filter-input,
+.dark .prm-filter-select {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  color: #E2E8F0;
+}
+.dark .prm-filter-label { color: #94A3B8; }
+
+/* ===== SEARCH BOX ===== */
+.dark .po-search-box input {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  color: #E2E8F0;
+}
+.dark .po-search-box input::placeholder { color: #64748B; }
+.dark .po-search-box svg { color: #64748B; }
+
+/* ===== FILTERS PANEL ===== */
+.dark .prm-filters {
+  background: rgba(22,28,45,0.92);
+  border-color: rgba(148,163,184,0.1);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+/* ===== TABS ===== */
+.dark .po-tab {
+  color: #94A3B8;
+  border-color: rgba(148,163,184,0.1);
+}
+.dark .po-tab:hover {
+  color: #E2E8F0;
+  background: rgba(255,255,255,0.04);
+}
+.dark .po-tab.active {
+  color: #5CB8A8;
+  border-bottom-color: #5CB8A8;
+  background: rgba(15,90,70,0.22);
+}
+.dark .po-tab .po-tab-count {
+  background: rgba(255,255,255,0.08);
+  color: #94A3B8;
+}
+.dark .po-tab.active .po-tab-count {
+  background: #136754;
+  color: #FFFFFF;
+}
+
+/* ===== BUTTONS ===== */
+.dark .po-btn-secondary {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.12);
+  color: #CBD5E1;
+}
+.dark .po-btn-secondary:hover {
+  background: rgba(255,255,255,0.1);
+  color: #F1F5F9;
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* ===== CHART CARD SKELETON ===== */
+.dark .bg-slate-100.animate-pulse {
+  background: rgba(255,255,255,0.06) !important;
+}
+
+/* ===== CHART CARD EXPORT MENU ===== */
+.dark .bg-surface {
+  background: #1A1F2E;
+}
+.dark .bg-surface:hover {
+  background: #222738;
+}
+
+/* ===== BADGES / STATUS ===== */
+.dark .pr-status-badge {
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* ===== MODAL / DIALOG ===== */
+.dark .bg-white.rounded-xl {
+  background: #1A1F2E;
+}
+
+/* ===== EMPTY STATE ===== */
+.dark .po-empty h3 { color: #E2E8F0; }
+.dark .po-empty p { color: #94A3B8; }
+.dark .po-empty-icon { color: #475569; }
+
+/* ===== TOOLTIP ===== */
+.dark [data-tooltip]::after,
+.dark .tooltip {
+  background: #1A1F2E;
+  color: #E2E8F0;
+  border-color: rgba(148,163,184,0.15);
+}
+
+/* ===== PROGRESS BARS ===== */
+.dark .h-2.bg-slate-100,
+.dark .h-2\.5.bg-slate-100 {
+  background: rgba(255,255,255,0.06);
+}
+
+/* ===== SUMMARY / FINANCIAL GRID ===== */
+.dark .bg-slate-50 {
+  background: rgba(255,255,255,0.04);
+}
+
+/* ===== DIVIDER / BORDER ===== */
+.dark .border-t.border-slate-100,
+.dark .border-b.border-slate-100 {
+  border-color: rgba(148,163,184,0.08);
+}
+.dark .border.border-slate-200 {
+  border-color: rgba(148,163,184,0.1);
+}
+
+/* ===== ACTION MENU DROPDOWN ===== */
+.dark .absolute.right-0.top-full {
+  background: #1A1F2E;
+  border-color: rgba(148,163,184,0.12);
+}
+.dark .absolute.right-0.top-full .hover\:bg-slate-50:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+/* ===== WORKFLOW STEPS ===== */
+.dark .po-workflow-node {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(148,163,184,0.15);
+  color: #64748B;
+}
+.dark .po-workflow-step.completed .po-workflow-node {
+  background: #0B7A68;
+  border-color: #0B7A68;
+  color: #fff;
+}
+.dark .po-workflow-step.current .po-workflow-node {
+  background: rgba(15,143,120,0.2);
+  border-color: #5CB8A8;
+  color: #5CB8A8;
+}
+.dark .po-workflow-label { color: #64748B; }
+.dark .po-workflow-connector { background: rgba(148,163,184,0.12); }
+.dark .po-workflow-step.completed + .po-workflow-connector,
+.dark .po-workflow-step.current + .po-workflow-connector { background: #0B7A68; }
+
+/* ===== SECTION CARD SUBTITLE ===== */
+.dark .prm-card-header p { color: #64748B; }
+
+/* ===== DOCUMENT SUMMARY ===== */
+.dark .pr-doc-summary-row { border-bottom-color: rgba(148,163,184,0.06); }
+.dark .pr-doc-summary-row .pr-doc-label { color: #94A3B8; }
+.dark .pr-doc-summary-row .pr-doc-value { color: #E2E8F0; }
+.dark .pr-doc-summary-divider { background: rgba(148,163,184,0.06); }
+
+/* ===== ATTACHMENTS ===== */
+.dark .pr-dropzone {
+  border-color: rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.03);
+}
+.dark .pr-dropzone:hover,
+.dark .pr-dropzone:focus-visible,
+.dark .pr-dropzone.is-dragging {
+  border-color: #136754;
+  background: rgba(11,74,61,0.15);
+}
+.dark .prm-attachment {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.08);
+}
+.dark .prm-attachment:hover { background: rgba(255,255,255,0.06); }
+.dark .prm-attachment-name { color: #E2E8F0; }
+.dark .prm-attachment-icon { background: rgba(255,255,255,0.06); color: #94A3B8; }
+
+/* ===== DETAIL SECTIONS ===== */
+.dark .prm-detail-section {
+  background: rgba(22,28,45,0.92);
+  border-color: rgba(148,163,184,0.1);
+}
+.dark .prm-detail-label { color: #94A3B8; }
+.dark .prm-detail-value { color: #E2E8F0; }
+
+/* ===== TIMELINE ===== */
+.dark .prm-timeline::before { background: rgba(148,163,184,0.1); }
+.dark .prm-timeline-dot { background: #1A1F2E; }
+
+/* ===== SKELETON LOADING ===== */
+.dark .prm-skeleton-line,
+.dark .prm-skeleton-card {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+}
+
+/* ===== ACCORDION ===== */
+.dark .pr-accordion { box-shadow: none; }
+.dark .pr-accordion:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.dark .pr-accordion-header:hover { background: rgba(255,255,255,0.03); }
+.dark .pr-section-chip { background: rgba(11,74,61,0.25); color: #5CB8A8; }
+
+/* ===== COMMENT ===== */
+.dark .prm-comment { border-bottom-color: rgba(255,255,255,0.05); }
+.dark .prm-comment-avatar { background: #0B7A68; }
+.dark .prm-comment-author { color: #E2E8F0; }
+.dark .prm-comment-text { color: #CBD5E1; }
+
+/* ===== PAGINATION ===== */
+.dark .po-page-btns button {
+  color: #94A3B8;
+  border-color: rgba(148,163,184,0.15);
+}
+.dark .po-page-btns button:hover {
+  background: rgba(255,255,255,0.06);
+  color: #E2E8F0;
+}
+.dark .po-page-btns button.active {
+  background: var(--purchase-primary);
+  color: #fff;
+}
+
+/* ===== TOOLBAR ===== */
+.dark .po-toolbar {
+  border-bottom-color: rgba(148,163,184,0.08);
+}
+
+/* ===== KPI SUB (subtitle on KPI cards) ===== */
+.dark .qtn-kpi-card { background: rgba(22,28,45,0.92); border-color: rgba(148,163,184,0.1); }
+.dark .qtn-kpi-card:hover { border-color: #136754; }
+.dark .qtn-kpi-count { color: #F1F5F9; }
+.dark .qtn-kpi-label { color: #94A3B8; }
+.dark .qtn-kpi-sub { color: #64748B; }
+
+/* ===== VENDOR ANALYSIS TABLE SIDEBAR CARDS ===== */
+.dark .bg-emerald-50 { background: rgba(22,163,74,0.08) !important; }
+.dark .bg-rose-50 { background: rgba(220,38,38,0.08) !important; }
+.dark .bg-amber-50 { background: rgba(245,158,11,0.08) !important; }
+.dark .bg-sky-50 { background: rgba(59,130,246,0.08) !important; }
+.dark .bg-indigo-50 { background: rgba(79,70,229,0.08) !important; }
+.dark .bg-violet-50 { background: rgba(124,58,237,0.08) !important; }
+.dark .bg-orange-50 { background: rgba(234,88,12,0.08) !important; }
+.dark .bg-teal-50 { background: rgba(20,184,166,0.08) !important; }
+.dark .bg-cyan-50 { background: rgba(6,182,212,0.08) !important; }
+
+/* ===== PURCHASE PAGE HEADER ===== */
+.dark .purchase-page header {
+  color: #E2E8F0;
+}
+
+/* ===== PURCHASE TAB NAV ===== */
+.dark .po-tabs-row {
+  border-bottom-color: rgba(148,163,184,0.1);
+}
+
+/* ===== RANGE / NUMBER INPUTS ===== */
+.dark input[type="number"],
+.dark input[type="date"] {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+  color: #E2E8F0;
+}
+.dark input[type="number"]::-webkit-inner-spin-button,
+.dark input[type="number"]::-webkit-outer-spin-button {
+  filter: invert(1);
+}
+
+/* ===== CHECKBOX / TOGGLE ===== */
+.dark input[type="checkbox"].accent-\[\#0B4A3D\] {
+  filter: brightness(0.8);
+}
+
+/* ===== EXPORT BUTTON IN CHART CARDS ===== */
+.dark .border-\[1\.5px\].border-\[\#0B4A3D\] {
+  border-color: #5CB8A8;
+  color: #5CB8A8;
+}
+.dark .border-\[1\.5px\].border-\[\#0B4A3D\]:hover {
+  background: #0B7A68;
+  color: #fff;
+  border-color: #0B7A68;
+}
+
+/* ===== PURCHASE HEADER CRUMBS ===== */
+.dark .text-slate-400 { color: #64748B; }
+.dark .text-slate-500 { color: #94A3B8; }
+.dark .text-slate-600 { color: #CBD5E1; }
+.dark .text-slate-700 { color: #E2E8F0; }
+.dark .text-slate-800 { color: #F1F5F9; }
+
+/* ===== SIDE PANEL (Settings, Summary) ===== */
+.dark nav.bg-surface {
+  background: rgba(22,28,45,0.92);
+  border-color: rgba(148,163,184,0.1);
+}
+
+/* ===== PRINT/PDF PANELS — keep light in dark mode for readability ===== */
+.dark .pr-print-page .pr-sheet,
+.dark .po-print-page .po-sheet {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+/* ===== TOGGLE SWITCH ===== */
+.dark .relative.w-10.h-\[22px\] {
+  background: rgba(100,116,139,0.4);
+}
+.dark .relative.w-10.h-\[22px\].bg-\[\#0B4A3D\] {
+  background: #0B7A68;
+}
+
+/* ===== VENDOR DETAIL MODAL ===== */
+.dark .fixed.inset-0 .bg-white.rounded-xl {
+  background: #1A1F2E;
+  border-color: rgba(148,163,184,0.12);
+}
+.dark .bg-slate-900\/50 {
+  background: rgba(0,0,0,0.65);
+}
+
+/* ===== INLINE SORT PILLS ===== */
+.dark .bg-\[\#0B4A3D\].text-white {
+  background: #0B7A68;
+}
+.dark .bg-slate-100.text-slate-600 {
+  background: rgba(255,255,255,0.06);
+  color: #CBD5E1;
+}
+.dark .bg-slate-100.text-slate-600:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* ===== SETTINGS SECTION NAV ===== */
+.dark nav.space-y-1 button {
+  color: #94A3B8;
+  border-color: transparent;
+}
+.dark nav.space-y-1 button:hover {
+  background: rgba(255,255,255,0.04);
+  color: #CBD5E1;
+}
+.dark nav.space-y-1 button.bg-\[\#EDF7F4\] {
+  background: rgba(15,90,70,0.2);
+  color: #5CB8A8;
+  border-color: rgba(15,143,120,0.3);
+}
+
+/* ===== PURCHASE STATUS BADGE ===== */
+.dark .inline-flex.items-center.gap-1.rounded-full {
+  border-color: rgba(255,255,255,0.1);
+}
+
+/* ===== GENERIC: Override common bg-surface and bg-white inside Purchase ===== */
+.dark .purchase-page .bg-white {
+  background: rgba(22,28,45,0.92);
+}
+.dark .purchase-page .bg-white:hover {
+  background: rgba(26,32,52,0.95);
+}
+
+/* ===== OVERFLOW / SCROLLBAR ===== */
+.dark ::-webkit-scrollbar {
+  background: rgba(148,163,184,0.06);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(148,163,184,0.2);
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(148,163,184,0.35);
+}
+
+/* ===== SELECT DROPDOWN ARROW ===== */
+.dark .purchase-form-select,
+.dark .prm-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   RECURRING BRAND ARBITRARY COLORS (dark-mode equivalents)
+   --------------------------------------------------------------------------
+   The Purchase module frequently uses literal brand hexes via arbitrary
+   Tailwind utilities (text-[#0B4A3D], bg-[#EDF7F4] ...). Those literals are
+   tuned for light surfaces. In dark mode we lift text greens to the dark
+   accent (#5CB8A8) and replace the pale mint/gray tints with translucent
+   dark equivalents — the same trick the palette remap in index.css uses for
+   standard utilities. Scoped to `.dark`; light mode untouched.
+   ========================================================================== */
+
+/* Brand-green TEXT -> dark accent */
+.dark .text-\[\#0B4A3D\],
+.dark .text-\[\#0A4F44\],
+.dark .text-\[\#083D34\],
+.dark .text-\[\#075E54\],
+.dark .text-\[\#0F5A46\],
+.dark .text-\[\#0F5B4C\],
+.dark .text-\[\#064D44\],
+.dark .text-\[\#102A2A\] {
+  color: #5CB8A8;
+}
+.dark .hover\:text-\[\#0B4A3D\]:hover,
+.dark .hover\:text-\[\#075E54\]:hover {
+  color: #7FD4C4 !important;
+}
+
+/* Brand-green BORDERS */
+.dark .border-\[\#0B4A3D\],
+.dark .border-\[\#075E54\],
+.dark .border-\[\#0F5A46\],
+.dark .border-\[\#0A4F44\] {
+  border-color: rgba(92, 184, 168, 0.55);
+}
+
+/* Pale mint / pale gray BACKGROUND tints -> translucent dark tints */
+.dark .bg-\[\#EDF7F4\] {
+  background-color: rgba(19, 168, 142, 0.12);
+}
+.dark .bg-\[\#E0F2EC\] {
+  background-color: rgba(19, 168, 142, 0.16);
+}
+.dark .bg-\[\#E8F0EE\] {
+  background-color: rgba(19, 168, 142, 0.07);
+}
+.dark .bg-\[\#F6FBF9\] {
+  background-color: rgba(19, 168, 142, 0.08);
+}
+.dark .bg-\[\#FBFCFC\] {
+  background-color: #1E293B;
+}
+.dark .bg-\[\#F8FAFC\] {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+.dark .bg-\[\#f8fafc\] {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+.dark .bg-\[\#f1f5f9\] {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.dark .bg-\[\#e5e7eb\] {
+  background-color: rgba(255, 255, 255, 0.10);
+}
+.dark .bg-\[\#F7F9FA\] {
+  background-color: var(--bg-app);
+}
+.dark .hover\:bg-\[\#EDF7F4\]:hover,
+.dark .hover\:bg-\[\#E0F2EC\]:hover {
+  background-color: rgba(19, 168, 142, 0.20);
+}
+
+/* ui/Tabs + ui/Table active-chip compound combos */
+.dark .bg-white.text-\[\#0F5B4C\],
+.dark .bg-\[\#E8F0EE\].text-\[\#0B4A3D\] {
+  background-color: rgba(19, 168, 142, 0.16);
+  color: #8FDDCB;
+}

@@ -1,0 +1,75 @@
+/**
+ * purchase/styles/inventory-form-footer.css
+ * ------------------------------------------------------------------
+ * Stock Movement Create (/purchase/logistics/inventory/new) — bottom
+ * action bar positioning only. Reference behavior: Purchase
+ * Requisition Create (/purchase/requisition/new).
+ *
+ * The action bar (FormActions / .erp-action-footer) is
+ * `position: sticky; bottom: 0` on every Purchase form page. A sticky
+ * element is anchored to the bottom of the VIEWPORT only while its
+ * containing block (the <form>) still extends past the viewport; once
+ * the form's bottom edge scrolls into view the bar can go no lower and
+ * starts travelling up with the content.
+ *
+ * The design system already intends this to work on short forms:
+ *   .purchase-page--form .cpr-page-scroll-content  → flex column
+ *   .purchase-page--form .cpr-page-scroll-content > form → flex: 1 0 auto
+ *   .purchase-page--form .erp-action-footer        → margin-top: auto
+ * i.e. the scroll area hands its height to the form, and the form pushes
+ * the bar to its own bottom. Two things stopped that on this page:
+ *
+ *  1. The scroll area never GREW. `.cpr-page-scroll-content` is
+ *     `flex: 0 1 auto`, so it stayed at its content height (733px)
+ *     instead of filling the page shell's content box, and the form
+ *     could not stretch past its content either.
+ *  2. The shell's trailing padding (28px here) sits BELOW the form, so
+ *     the form's bottom edge stopped 28px short of the document end.
+ *
+ * Result: the document was 56px taller than the viewport (the shell's
+ * 100vh min-height sits below the 56px app header) but the bar's
+ * containing block ended only 19px past the viewport bottom, so after
+ * ~19px of scrolling the bar lifted away and left bare shell background
+ * underneath it.
+ *
+ * Also note: `overflow-x: hidden` on the scroll area forces
+ * `overflow-y: auto` per spec, which makes it a scroll container, and a
+ * sticky element then resolves against that inert inner box instead of
+ * the viewport (that box never scrolls — the document does). On the
+ * reference PR page, AppLayout's useStickyPageHeader hook walks the
+ * page's header blocks and writes an inline `overflow: clip` on the
+ * ancestor, neutralising it. This page renders no header block, so the
+ * hook's `run` list is empty and the neutralisation never happens.
+ *
+ * FIX — the same computed result the hook produces, plus the two height
+ * links above, all scoped to this page:
+ *
+ *   overflow: clip   → drop the inert inner scrollport so sticky
+ *                      resolves against the viewport (identical
+ *                      clipping; the box never scrolled).
+ *   flex-grow: 1     → the scroll area fills the shell's content box, so
+ *                      the form (flex: 1 0 auto) stretches and its bottom
+ *                      edge reaches the end of the document.
+ *   padding-bottom:0 → the shell's trailing padding strip is reassigned
+ *                      to the form. It is invisible dead space: it lies
+ *                      entirely behind the pinned bar, and the shell's
+ *                      own background still paints that strip. Page
+ *                      height, layout and every visible spacing value are
+ *                      unchanged (the shell's height comes from its own
+ *                      100vh min-height, not from this padding).
+ *
+ * Scope: `.inventory-form-page` is on this form's root only — no other
+ * Purchase page or module matches. Only positioning/box-model of the
+ * shell's scroll area is touched; no field, card, button or style of the
+ * form itself is altered.
+ * ------------------------------------------------------------------
+ */
+
+.inventory-form-page .cpr-page-scroll-content {
+  overflow: clip;
+  flex-grow: 1;
+}
+
+.purchase-page.cpr-page.inventory-form-page {
+  padding-bottom: 0;
+}

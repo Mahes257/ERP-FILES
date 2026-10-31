@@ -1,0 +1,168 @@
+/* ==========================================================================
+   RFQ TAB NAV — horizontal tab bar for module sub-branches
+   Reused across Purchase, CRM, and other modules for consistent
+   sub-branch navigation (e.g. Vendors | Documents | Performance | Reports
+   or Leads | Clients | Follow-ups).
+   ========================================================================== */
+
+.rfq-tab-nav {
+  margin-top: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Optional wrapper that places the tab bar and a header action (e.g. a New
+   button) on the same row — the tabs take the available width and the action
+   is pinned to the right. */
+.rfq-tab-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.rfq-tab-row .rfq-tab-nav {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+.rfq-tab-row > .erp-btn-primary,
+.rfq-tab-row > .po-btn,
+.rfq-tab-row > button {
+  flex-shrink: 0;
+}
+
+.rfq-tab-nav-inner {
+  display: flex;
+  gap: 0.375rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar on WebKit but keep scrolling */
+.rfq-tab-nav-inner::-webkit-scrollbar {
+  height: 4px;
+}
+.rfq-tab-nav-inner::-webkit-scrollbar-track {
+  background: transparent;
+}
+.rfq-tab-nav-inner::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+.rfq-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  line-height: 1.2;
+}
+
+.rfq-tab:hover {
+  border-color: #cbd5e1;
+  color: #334155;
+  background: #f8fafc;
+}
+
+.rfq-tab--active {
+  background: #0F5A46;
+  border-color: #0F5A46;
+  color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(15, 90, 70, 0.12);
+}
+
+.rfq-tab--active:hover {
+  background: #0B4A3D;
+  border-color: #0B4A3D;
+  color: #ffffff;
+}
+
+.rfq-tab-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+}
+
+.rfq-tab-label {
+  display: none;
+}
+
+.rfq-tab-label-short {
+  display: inline;
+}
+
+/* Medium+ screens: full labels */
+@media (min-width: 768px) {
+  .rfq-tab-label {
+    display: inline;
+  }
+  .rfq-tab-label-short {
+    display: none;
+  }
+}
+
+/* Badge — pending-approval orange pill */
+.rfq-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.3125rem;
+  border-radius: 9999px;
+  font-size: 0.5625rem;
+  font-weight: 800;
+  line-height: 1;
+  background: #FEF3C7;
+  color: #D97706;
+  flex-shrink: 0;
+  margin-left: 0.125rem;
+}
+
+.rfq-tab-badge--active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* Dark mode adjustments */
+.dark .rfq-tab {
+  background: #1e293b;
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.dark .rfq-tab:hover {
+  background: #273548;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+.dark .rfq-tab--active {
+  background: #0F5A46;
+  border-color: #0F5A46;
+  color: #ffffff;
+}
+
+.dark .rfq-tab--active:hover {
+  background: #0B4A3D;
+  border-color: #0B4A3D;
+  color: #ffffff;
+}
+
+.dark .rfq-tab-badge {
+  background: rgba(217, 119, 6, 0.2);
+  color: #FBBF24;
+}

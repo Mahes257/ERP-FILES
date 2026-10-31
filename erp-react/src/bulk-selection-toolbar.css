@@ -1,0 +1,146 @@
+﻿/* ============================================================
+   Bulk Selection Toolbar — exact port of the original ERP
+   css/bulk-selection-toolbar.css (design reference: Cost Workout
+   module / CPR module). Do NOT restyle — keep pixel parity.
+   ============================================================ */
+
+.bulk-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 16px;
+    background: var(--primary-light, #eff6ff);
+    border: 1.5px solid var(--accent, #0B4A3D);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #166534;
+    flex-wrap: wrap;
+    transition: all 0.2s ease;
+    animation: bulkBarSlideIn 0.2s ease;
+}
+
+@keyframes bulkBarSlideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.bulk-action-bar .bulk-count {
+    font-weight: 600;
+    color: var(--accent, #0B4A3D);
+    font-size: 14px;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bulk-action-bar .bulk-count strong {
+    font-weight: 700;
+}
+
+.bulk-action-bar .bulk-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+/* ERP .btn.btn-sm.btn-ghost inside the bulk bar — all base button
+   properties (.btn height/padding, .btn-sm height) are folded in so
+   the class chain renders exactly like the ERP toolbar. */
+.bulk-action-bar .bulk-actions .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 32px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-body, #374151);
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    line-height: 1.4;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.bulk-action-bar .bulk-actions .btn-ghost:hover {
+    background: rgba(37, 99, 235, 0.06);
+    border-color: var(--accent, #0B4A3D);
+    color: var(--accent, #0B4A3D);
+    transform: none;
+    box-shadow: none;
+}
+
+.bulk-action-bar .bulk-actions .btn-ghost svg {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+}
+
+.bulk-action-bar .bulk-actions .btn-bulk-danger {
+    color: #dc2626;
+}
+
+.bulk-action-bar .bulk-actions .btn-bulk-danger:hover {
+    background: #fef2f2;
+    border-color: #dc2626;
+    color: #dc2626;
+}
+
+.bulk-action-bar .bulk-actions .btn-bulk-primary {
+    color: var(--accent, #0B4A3D);
+}
+
+.bulk-action-bar .bulk-actions .btn-bulk-primary:hover {
+    background: rgba(37, 99, 235, 0.1);
+    border-color: var(--accent, #0B4A3D);
+}
+
+/* Responsive — identical to the ERP */
+@media (max-width: 768px) {
+    .bulk-action-bar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 10px 12px;
+    }
+    .bulk-action-bar .bulk-actions {
+        margin-left: 0;
+        justify-content: center;
+    }
+}
+
+/* Dark mode overrides — the app toggles .dark on <html> (ERP: [data-theme="dark"]) */
+.dark .bulk-action-bar {
+    background: rgba(37, 99, 235, 0.12);
+    border-color: var(--accent, #0B4A3D);
+    color: #6EE7B7;
+}
+
+.dark .bulk-action-bar .bulk-count {
+    color: #6EE7B7;
+}
+
+.dark .bulk-action-bar .bulk-actions .btn-ghost {
+    color: #cbd5e1;
+}
+
+.dark .bulk-action-bar .bulk-actions .btn-ghost:hover {
+    background: rgba(37, 99, 235, 0.2);
+    color: #6EE7B7;
+    border-color: #6EE7B7;
+}
+
+.dark .bulk-action-bar .bulk-actions .btn-bulk-danger:hover {
+    background: rgba(220, 38, 38, 0.15);
+    border-color: #ef4444;
+    color: #ef4444;
+}

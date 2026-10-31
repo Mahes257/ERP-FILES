@@ -1,0 +1,54 @@
+/* ============================================================
+   Report filter bar
+   ============================================================ */
+.report-filters {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 16px;
+  margin-bottom: 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.rf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rf-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.rf-field .form-input,
+.rf-field .form-select {
+  height: 38px;
+}
+
+.rf-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .rf-field {
+    flex: 1 1 45%;
+  }
+  .rf-actions {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+  .rf-actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}

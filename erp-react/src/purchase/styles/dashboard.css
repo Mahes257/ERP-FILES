@@ -1,0 +1,302 @@
+/* ==========================================================================
+   PURCHASE DASHBOARD — Enterprise Procurement Control Center
+   --------------------------------------------------------------------------
+   Scoped under .cpr-page (the React page root). Provides the procurement
+   pipeline visualization and dashboard-specific layout. Uses the existing
+   Vishak Tech Emerald Glass Enterprise theme tokens from design-system.css.
+   ========================================================================== */
+
+/* ===== PROCUREMENT PIPELINE — full-width responsive grid =========== */
+.pipeline-wrap {
+  width: 100%;
+  padding: 8px 0;
+}
+
+/* CSS Grid: auto-fills 10 equal columns across the full card width */
+.pipeline-track {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Each stage: node centered, label below, arrow via ::after */
+.pipeline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  padding: 0 2px;
+}
+
+/* Arrow between stages — absolutely positioned on the right edge */
+.pipeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -7px;
+  top: 15px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 7px solid #CBD5E1;
+  z-index: 2;
+}
+
+.pipeline-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  border: 2px solid #E2E8F0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.pipeline-node.active {
+  background: linear-gradient(135deg, #075E54, #0F8F78);
+  border-color: #075E54;
+  box-shadow: 0 2px 8px rgba(7,94,84,0.2);
+}
+
+.pipeline-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: #64748B;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.pipeline-node.active .pipeline-count {
+  color: #FFFFFF;
+}
+
+/* Label: inline flow (not absolute), centered below node */
+.pipeline-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748B;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.pipeline-node.active + .pipeline-label,
+.pipeline-item:has(.pipeline-node.active) .pipeline-label {
+  color: #075E54;
+  font-weight: 700;
+}
+
+/* Legacy arrow class — hidden (replaced by ::after) */
+.pipeline-arrow {
+  display: none;
+}
+
+/* ===== PIPELINE STAGE BUTTON — accessible click target =========== */
+.pipeline-stage-btn:focus-visible {
+  outline: 2px solid #075E54;
+  outline-offset: 2px;
+  border-radius: 12px;
+}
+
+.pipeline-stage-btn:hover {
+  background: rgba(7, 94, 84, 0.06) !important;
+}
+
+/* Remove default button padding reset */
+.pipeline-stage-btn::-moz-focus-inner {
+  border: 0;
+}
+
+/* ===== DASHBOARD GRID HELPERS ======================================== */
+
+.dashboard-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dashboard-grid-3col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-grid-2col {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-grid-3col {
+    grid-template-columns: 1fr;
+  }
+  .dashboard-grid-3col > div[style*="grid-column: span 2"] {
+    grid-column: span 1 !important;
+  }
+}
+
+@media (min-width: 1201px) and (max-width: 1400px) {
+  .dashboard-grid-3col {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cpr-page .pipeline-wrap {
+  margin-bottom: 12px;
+}
+
+/* ===== RESPONSIVE — tablet pipeline ================================ */
+@media (max-width: 1200px) {
+  .pipeline-node {
+    width: 38px;
+    height: 38px;
+  }
+  .pipeline-count {
+    font-size: 11px;
+  }
+  .pipeline-label {
+    font-size: 9px;
+  }
+  .pipeline-item:not(:last-child)::after {
+    top: 12px;
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 6px;
+    right: -6px;
+  }
+}
+
+/* ===== RESPONSIVE — mobile pipeline ================================ */
+@media (max-width: 768px) {
+  .pipeline-track {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px 0;
+  }
+  .pipeline-node {
+    width: 34px;
+    height: 34px;
+  }
+  .pipeline-count {
+    font-size: 10px;
+  }
+  .pipeline-label {
+    font-size: 8px;
+  }
+  .pipeline-item:not(:last-child)::after {
+    top: 10px;
+    border-top-width: 4px;
+    border-bottom-width: 4px;
+    border-left-width: 5px;
+    right: -5px;
+  }
+  .cpr-page .pipeline-wrap {
+    margin-bottom: 24px;
+  }
+}
+
+/* ===== RESPONSIVE — small mobile (2 per row) ======================== */
+@media (max-width: 480px) {
+  .pipeline-track {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px 0;
+  }
+  .pipeline-item:not(:last-child)::after {
+    display: none;
+  }
+}
+
+/* ===== DARK MODE overrides ========================================== */
+.dark .pipeline-node {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.1);
+}
+.dark .pipeline-node.active {
+  background: linear-gradient(135deg, #075E54, #0F8F78);
+  border-color: #0F8F78;
+  box-shadow: 0 2px 8px rgba(15,143,120,0.3);
+}
+.dark .pipeline-count {
+  color: #94A3B8;
+}
+.dark .pipeline-node.active .pipeline-count {
+  color: #fff;
+}
+.dark .pipeline-label {
+  color: #64748B;
+}
+.dark .pipeline-node.active + .pipeline-label,
+.dark .pipeline-item:has(.pipeline-node.active) .pipeline-label {
+  color: #5CB8A8;
+}
+.dark .pipeline-arrow {
+  color: #475569;
+}
+.dark .pipeline-item:not(:last-child)::after {
+  border-left-color: #475569;
+}
+
+/* ==========================================================================
+   DASHBOARD INLINE-SURFACE TOKENS (Light / Dark)
+   --------------------------------------------------------------------------
+   The Command Center uses inline styles heavily; these tokens let those
+   styles follow the theme. Light values reproduce the original hexes so
+   light mode is unchanged; dark values use the Reports dark palette.
+   ========================================================================== */
+:root {
+  --dc-surface: #FFFFFF;
+  --dc-surface-2: #FAFBFC;
+  --dc-surface-3: #F8FAFC;
+  --dc-line: #E2E8F0;
+  --dc-ink: #102A2A;
+  --dc-ink-2: #374151;
+  --dc-muted: #64748B;
+  --dc-brand: #075E54;
+  --dc-brand-ink: #075E54;
+  --dc-brand-soft: rgba(7, 94, 84, 0.06);
+  --dc-skel-1: #E8F0EE;
+  --dc-skel-2: #F0F5F3;
+  --dc-ok-bg: #F0FDF4;
+  --dc-ok: #16A34A;
+  --dc-sev-red-bg: #FEF2F2;
+  --dc-sev-red: #B91C1C;
+  --dc-sev-amber-bg: #FFF7ED;
+  --dc-sev-amber: #B45309;
+  --dc-sev-slate-bg: #F1F5F9;
+  --dc-sev-slate: #475569;
+  --dc-sev-green-bg: #F0FDF4;
+  --dc-sev-green: #15803D;
+  --dc-row-hover: rgba(234, 247, 243, 0.4);
+  --dc-row-hover-soft: rgba(234, 247, 243, 0.3);
+}
+.dark {
+  --dc-surface: #1E293B;
+  --dc-surface-2: #243244;
+  --dc-surface-3: #243244;
+  --dc-line: #334155;
+  --dc-ink: #F1F5F9;
+  --dc-ink-2: #E2E8F0;
+  --dc-muted: #94A3B8;
+  --dc-brand: #0F8F78;
+  --dc-brand-ink: #5CB8A8;
+  --dc-brand-soft: rgba(15, 143, 120, 0.16);
+  --dc-skel-1: rgba(255, 255, 255, 0.05);
+  --dc-skel-2: rgba(255, 255, 255, 0.02);
+  --dc-ok-bg: rgba(34, 197, 94, 0.12);
+  --dc-ok: #4ADE80;
+  --dc-sev-red-bg: rgba(244, 63, 94, 0.14);
+  --dc-sev-red: #F87171;
+  --dc-sev-amber-bg: rgba(245, 158, 11, 0.15);
+  --dc-sev-amber: #FBBF24;
+  --dc-sev-slate-bg: rgba(148, 163, 184, 0.14);
+  --dc-sev-slate: #CBD5E1;
+  --dc-sev-green-bg: rgba(34, 197, 94, 0.12);
+  --dc-sev-green: #4ADE80;
+  --dc-row-hover: rgba(255, 255, 255, 0.05);
+  --dc-row-hover-soft: rgba(255, 255, 255, 0.04);
+}

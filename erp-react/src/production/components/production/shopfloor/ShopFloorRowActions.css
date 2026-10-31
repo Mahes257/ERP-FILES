@@ -1,0 +1,127 @@
+/* ============================================================
+   Row actions — Purchase-aligned
+   ============================================================ */
+.sf-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  min-width: 150px;
+}
+
+.sf-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 9px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  font-size: 11px;
+  font-weight: 600;
+  color: #102A2A;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sf-action:hover {
+  background: #EAF7F3;
+  border-color: #075E54;
+  color: #075E54;
+}
+
+.sf-action-start {
+  color: #075E54;
+  border-color: #DCE8E4;
+  background: #EAF7F3;
+}
+.sf-action-start:hover {
+  background: #075E54;
+  border-color: #075E54;
+  color: #FFFFFF;
+}
+
+.sf-action-hold {
+  color: #D97706;
+  border-color: #FDE68A;
+  background: #FFFBEB;
+}
+.sf-action-hold:hover {
+  background: #D97706;
+  border-color: #D97706;
+  color: #FFFFFF;
+}
+
+.sf-action-resume {
+  color: #3B82F6;
+  border-color: #BFDBFE;
+  background: #EFF6FF;
+}
+.sf-action-resume:hover {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  color: #FFFFFF;
+}
+
+.sf-action-complete {
+  color: #075E54;
+  border-color: #DCE8E4;
+  background: #EAF7F3;
+}
+.sf-action-complete:hover {
+  background: #075E54;
+  border-color: #075E54;
+  color: #FFFFFF;
+}
+
+.sf-action-view {
+  color: #64748B;
+}
+.sf-action-view:hover {
+  color: #075E54;
+}
+
+.sf-action-quality {
+  color: #3B82F6;
+  border-color: #BFDBFE;
+  background: #EFF6FF;
+}
+.sf-action-quality:hover {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  color: #FFFFFF;
+}
+
+.sf-action-edit {
+  color: #7C3AED;
+  border-color: #DDD6FE;
+  background: #F5F3FF;
+}
+.sf-action-edit:hover {
+  background: #7C3AED;
+  border-color: #7C3AED;
+  color: #FFFFFF;
+}
+
+.sf-action-delete {
+  color: #DC2626;
+  border-color: #FECACA;
+  background: #FEF2F2;
+}
+.sf-action-delete:hover {
+  background: #DC2626;
+  border-color: #DC2626;
+  color: #FFFFFF;
+}
+
+.sf-action-skip {
+  color: #94A3B8;
+  border-color: #E2E8F0;
+  background: #F1F5F9;
+  text-decoration: line-through;
+}
+.sf-action-skip:hover {
+  background: #64748B;
+  border-color: #64748B;
+  color: #FFFFFF;
+}

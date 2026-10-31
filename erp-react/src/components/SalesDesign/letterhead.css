@@ -1,0 +1,42 @@
+/* The supplied letterhead image is the single shared header for every document. */
+.letterhead {
+  width: 100%;
+  height: auto;
+  flex-shrink: 0;
+  background: #fff;
+  line-height: 0;
+  box-sizing: border-box;
+  /* The approved asset contains the complete black rectangular border. */
+  border: 0;
+  overflow: visible;
+}
+
+.letterhead-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
+  user-select: none;
+}
+
+@media print {
+  .letterhead {
+    break-inside: avoid;
+  }
+}
+
+/* Legacy selectors remain inert for any old cached markup. */
+.lh-col,
+.lh-col--logo,
+.lh-logo,
+.lh-sep,
+.lh-col--address,
+.lh-addr-line,
+.lh-col--contact,
+.lh-contact-row,
+.lh-icon,
+.lh-col--reg,
+.lh-reg-row {
+  display: none;
+}

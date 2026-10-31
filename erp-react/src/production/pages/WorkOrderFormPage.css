@@ -1,0 +1,219 @@
+/* ============================================================
+   Work Order Form Page (Create / Edit) — standalone full-page view
+   ------------------------------------------------------------
+   The page occupies the full application workspace (beside the
+   sidebar / below the topbar). The form itself stays a centered,
+   comfortable card (see ProductionOrderForm.css).
+   ============================================================ */
+
+.wo-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 14px 16px 0;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, sans-serif;
+  color: #102A2A;
+}
+
+/* ---- Page header ---- */
+.wo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 0 0 14px;
+  border-bottom: 1px solid #E2E8F0;
+  margin-bottom: 20px;
+}
+
+.wo-header-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.wo-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.wo-bc-link {
+  color: #0B7A68;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.wo-bc-link:hover {
+  text-decoration: underline;
+}
+
+.wo-breadcrumb .bc-sep {
+  font-size: 10px;
+  color: #CBD5E1;
+}
+
+.wo-breadcrumb .bc-current {
+  color: #64748B;
+  font-weight: 500;
+}
+
+.wo-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 2px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0B3B33;
+}
+
+.wo-title svg {
+  color: #075E54;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.wo-subtitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748B;
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+.wo-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 9px;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.wo-back-btn:hover {
+  background: #F8FAFC;
+  border-color: #94A3B8;
+}
+
+/* ---- CPO item → Work Order handoff note (shown above the create form) ----
+   Same visual language as the Purchase module's conversion banner, so a
+   document carried in from a Customer Purchase Order reads the same in both
+   destination forms. */
+.wo-convert-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  background: #F5F3FF;
+  border: 1px solid #DDD6FE;
+  border-radius: 12px;
+  color: #4C1D95;
+  font-size: 12px;
+}
+
+.wo-convert-note svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.wo-convert-note strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.wo-convert-note p {
+  margin: 2px 0 0;
+  line-height: 1.5;
+  color: #5B21B6;
+}
+
+.wo-convert-note .wo-convert-warn {
+  margin-top: 4px;
+  font-weight: 600;
+  color: #B45309;
+}
+
+/* ---- Loading / not-found states ---- */
+.wo-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 480px;
+  margin: 48px auto;
+  padding: 40px 28px;
+  text-align: center;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  color: #475569;
+  font-size: 13px;
+}
+
+.wo-state-card h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #102A2A;
+}
+
+.wo-state-card p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.wo-state-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  color: #64748B;
+}
+
+.wo-spinner {
+  width: 26px;
+  height: 26px;
+  border: 3px solid #D1FAE5;
+  border-top-color: #0B7A68;
+  border-radius: 50%;
+  animation: wo-spin 0.7s linear infinite;
+}
+
+@keyframes wo-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .wo-page {
+    padding: 10px 10px 0;
+  }
+
+  .wo-header {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,214 @@
+/* Profit Workout Preview print rules.
+ * Only the live A4 sheet is printed — all app chrome is hidden. The sheet is
+ * rendered at A4 width, so the printed output is identical to the on-screen
+ * preview and to the PDF export (which captures the same element). */
+#pw-sheet {
+  height: auto !important;
+  overflow: visible !important;
+  /* Word-aware wrapping — values are never broken mid-token. */
+  overflow-wrap: break-word;
+}
+
+#pw-sheet td,
+#pw-sheet th,
+#pw-sheet p,
+#pw-sheet span,
+#pw-sheet div {
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Read-only item table (view / preview / PDF capture). The PDF capture clones
+ * #pw-sheet at 210mm, so these rules must also apply outside @media print —
+ * otherwise the natural-width table overflows the A4 sheet and the right-hand
+ * amount/margin columns are clipped. */
+#pw-sheet .pw-items-view {
+  overflow: visible !important;
+}
+
+#pw-sheet .pw-items-view table.pw-items-table {
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+#pw-sheet .pw-items-view col.pw-col-no {
+  width: 3%;
+}
+#pw-sheet .pw-items-view col.pw-col-desc {
+  width: 18%;
+}
+#pw-sheet .pw-items-view col.pw-col-qty {
+  width: 5%;
+}
+#pw-sheet .pw-items-view col.pw-col-cat {
+  width: 9%;
+}
+#pw-sheet .pw-items-view col.pw-col-unit {
+  width: 6%;
+}
+#pw-sheet .pw-items-view col.pw-col-rate {
+  width: 8%;
+}
+#pw-sheet .pw-items-view col.pw-col-amount {
+  width: 9%;
+}
+#pw-sheet .pw-items-view col.pw-col-margin {
+  width: 8%;
+}
+
+#pw-sheet .pw-items-view th,
+#pw-sheet .pw-items-view td {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+#pw-sheet .pw-items-view td {
+  white-space: normal !important;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #pw-sheet,
+  #pw-sheet * {
+    visibility: visible !important;
+  }
+
+  #pw-sheet {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  /* Keep the item-table header on every page and avoid splitting rows. */
+  #pw-sheet thead {
+    display: table-header-group;
+  }
+
+  #pw-sheet tbody tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #pw-sheet tr,
+  #pw-sheet table {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Keep panel headers glued to their content start (no orphaned headers). */
+  #pw-sheet .pw-panel-header {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  /* Small panels (Document Information, Pricing, Remarks, Approval,
+     Attachments) never split across pages. The items table stays splittable
+     at whole-row boundaries. */
+  #pw-sheet .pw-panel.pw-keep {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #pw-sheet .pw-two-col > .pw-panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Side-by-side panels keep their columns in print (matches preview). */
+  #pw-sheet .pw-two-col {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 12px !important;
+    align-items: start;
+  }
+
+  /* Info tables (Document Information / Approval Status): never split rows. */
+  #pw-sheet .pw-info-table tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Keep totals and signature blocks together. */
+  #pw-sheet .keep-together {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* In edit mode the item table sits in a horizontal-scroll wrapper and gets a
+     min-width so its inputs are never cramped on screen. When printing (or
+     exporting the sheet), render it unclipped at its natural A4 width instead. */
+  #pw-sheet .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  /* Fixed layout for the items table only (info tables keep natural width). */
+  #pw-sheet table.pw-items-table {
+    min-width: 0 !important;
+    table-layout: fixed !important;
+    width: 100% !important;
+  }
+
+  #pw-sheet col.pw-col-no {
+    width: 3%;
+  }
+  #pw-sheet col.pw-col-desc {
+    width: 19%;
+  }
+  #pw-sheet col.pw-col-qty {
+    width: 6%;
+  }
+  #pw-sheet col.pw-col-cat {
+    width: 11%;
+  }
+  #pw-sheet col.pw-col-unit {
+    width: 8%;
+  }
+  #pw-sheet col.pw-col-rate {
+    width: 8%;
+  }
+  #pw-sheet col.pw-col-amount {
+    width: 9%;
+  }
+  #pw-sheet col.pw-col-margin {
+    width: 7%;
+  }
+  #pw-sheet col.pw-col-action {
+    width: 3%;
+  }
+
+  /* Long descriptions / addresses wrap inside their column instead of
+     squeezing (or being clipped by) the numeric columns. nowrap is dropped
+     so very large formatted amounts stay inside their fixed-width column. */
+  #pw-sheet th,
+  #pw-sheet td {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  #pw-sheet .pw-items-table td {
+    white-space: normal !important;
+  }
+}

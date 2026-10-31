@@ -1,0 +1,1965 @@
+/* ============================================================================
+   Packing List — 15 dedicated template designs.
+   ----------------------------------------------------------------------------
+   Each template owns its own `grid-template-areas` composition, typography
+   system, card/border architecture, package + item tables, logistics summary,
+   declaration, signature and footer. All 15 compose the SAME data DOM
+   (PackingListDocument) so Preview = Print = PDF by construction. Selectors
+   are scoped to .packing-list-doc[data-pl-layout='...'] and come AFTER
+   packing-list-document.css so they always win the cascade.
+
+   The palette is part of each design (no separate colour-theme selector for
+   the Packing List module). --acc is redefined per template so the document's
+   accent-coloured icons follow the selected design.
+
+   html2canvas-pro (the PDF pipeline) renders everything used here: grid,
+   flex, linear/radial gradients, border-radius, pseudo-element rules and
+   print-color-adjust backgrounds. No clip-path, no transforms, no absolute
+   positioning — pure normal document flow, A4 and multi-page safe.
+   ============================================================================ */
+
+/* Backgrounds must survive Print + PDF capture (dark mastheads, KPI tiles). */
+.packing-list-doc {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* ============================================================================
+   1. GLOBAL TRADE CLASSIC — traditional letterhead, navy / cream, formal boxes
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='global-trade-classic'] {
+  --pl-ink: #1d2b3a;
+  --pl-muted: #5c6b7a;
+  --pl-faint: #97a4b2;
+  --pl-rule: #c7d0da;
+  --pl-accent: #1f3a5f;
+  --pl-accent-2: #f4f1e9;
+  --pl-soft: #faf7f0;
+  --pl-bg: #fffdf8;
+  --acc: #1f3a5f;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 7mm 9mm 9mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest terms terms terms"
+    "remarks remarks remarks remarks remarks remarks"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-masthead {
+  margin-bottom: 5mm;
+  padding-bottom: 4mm;
+  border-bottom: 3px double var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-doc-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  color: var(--pl-accent);
+  text-transform: uppercase;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-sec {
+  border: 1px solid var(--pl-rule);
+  border-radius: 0;
+  margin-bottom: 4mm;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-sec-head {
+  background: var(--pl-accent-2);
+  border-bottom: 1px solid var(--pl-rule);
+  margin-bottom: 0;
+  padding: 2mm 3mm;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-sec-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-sec-body {
+  padding: 2.5mm 3mm;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-row,
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-log-row,
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-contact-line {
+  border-bottom: 1px solid #d9dfe6;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-name {
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-table th,
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-table td {
+  border: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-table th {
+  background: var(--pl-accent-2);
+  color: var(--pl-accent);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8px;
+  letter-spacing: .06em;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-total-row td {
+  border-top: 2px solid var(--pl-accent);
+  background: var(--pl-soft);
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-log-val {
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-sign-rule {
+  border-top: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-footer {
+  border-top: 3px double var(--pl-accent);
+  justify-content: center;
+}
+
+.packing-list-doc[data-pl-layout='global-trade-classic'] .pl-footer span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8px;
+  letter-spacing: .2em;
+  color: var(--pl-muted);
+}
+
+/* ============================================================================
+   2. MODERN LOGISTICS — compact modular, blue-grey, clean sans-serif
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='modern-logistics'] {
+  --pl-ink: #24303b;
+  --pl-muted: #66737f;
+  --pl-faint: #a3adb6;
+  --pl-rule: #dbe2e8;
+  --pl-accent: #3a6ea5;
+  --pl-accent-2: #eef3f8;
+  --pl-soft: #f5f8fb;
+  --pl-bg: #ffffff;
+  --acc: #3a6ea5;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 9.5px;
+  line-height: 1.45;
+  padding: 4mm 5mm 6mm;
+  gap: 0 4mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp buyer buyer status"
+    "totals totals totals totals totals totals"
+    "meta meta meta meta meta meta"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-masthead {
+  margin-bottom: 3mm;
+  padding-bottom: 2mm;
+  border-bottom: 3px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-doc-title {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .2em;
+  color: var(--pl-ink);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-sec {
+  background: var(--pl-soft);
+  border: 1px solid var(--pl-rule);
+  border-radius: 1.5mm;
+  padding: 2.5mm 3mm;
+  margin-bottom: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-sec-head {
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-sec-title {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-row,
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-log-row,
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-contact-line {
+  border-bottom: 1px solid #e3e9ef;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-log-val {
+  color: var(--pl-accent);
+  font-size: 11px;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-table th {
+  background: var(--pl-accent);
+  color: #fff;
+  border-bottom: none;
+  letter-spacing: .05em;
+  padding: 2.2mm 2mm;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-table td {
+  border-bottom: 1px solid #e3e9ef;
+  font-size: 9.5px;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-total-row td {
+  border-top: 2px solid var(--pl-accent);
+  background: var(--pl-accent-2);
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-footer {
+  background: var(--pl-ink);
+  border-top: 2px solid var(--pl-accent);
+  color: #fff;
+  margin-top: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='modern-logistics'] .pl-footer span {
+  color: #fff;
+  letter-spacing: .16em;
+}
+
+/* ============================================================================
+   3. ELEGANT EXPORT — navy / silver, geometric dividers, fine-line premium
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='elegant-export'] {
+  --pl-ink: #182634;
+  --pl-muted: #5f7082;
+  --pl-faint: #9aa9b8;
+  --pl-rule: #d9e1e9;
+  --pl-accent: #254e77;
+  --pl-accent-2: #eef3f8;
+  --pl-soft: #f7f9fb;
+  --pl-bg: #ffffff;
+  --acc: #254e77;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 6mm 8mm 8mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "comm comm comm totals totals status"
+    "remarks remarks remarks terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-masthead {
+  margin-bottom: 5mm;
+  padding: 5mm 4mm 4mm;
+  background: linear-gradient(90deg, var(--pl-accent) 0%, #3a6a99 100%);
+  border-bottom: 3px solid var(--pl-accent-2);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-doc-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .26em;
+  color: #ffffff;
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-sec {
+  border-top: 1px solid var(--pl-accent);
+  padding-top: 2.5mm;
+  margin-bottom: 4mm;
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-sec-head {
+  margin-bottom: 1.5mm;
+  padding-bottom: 1mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-sec-title {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-row,
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-log-row,
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-contact-line {
+  border-bottom: 1px solid #e6ecf2;
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-log-val {
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-table th {
+  border-bottom: 1.5px solid var(--pl-accent);
+  letter-spacing: .08em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-table td {
+  border-bottom: 1px solid #e6ecf2;
+  font-size: 10px;
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-total-row td {
+  border-top: 1.5px solid var(--pl-accent);
+  background: var(--pl-soft);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-decl-text {
+  font-size: 10px;
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-footer {
+  border-top: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-export'] .pl-footer span {
+  letter-spacing: .18em;
+  color: var(--pl-accent);
+}
+
+/* ============================================================================
+   4. INFOGRAPHIC STYLE — bold KPI totals strip, modular data zones
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='infographic-style'] {
+  --pl-ink: #17263b;
+  --pl-muted: #5b6d84;
+  --pl-faint: #93a4b8;
+  --pl-rule: #dbe3ec;
+  --pl-accent: #1f4fd8;
+  --pl-accent-2: #eef1fb;
+  --pl-soft: #f3f6fb;
+  --pl-bg: #ffffff;
+  --acc: #1f4fd8;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 4mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "totals totals totals totals totals totals"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "comm comm comm status status status"
+    "remarks remarks remarks terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-masthead {
+  margin-bottom: 3mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-doc-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .2em;
+  color: var(--pl-accent);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-totals {
+  margin-bottom: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-totals .pl-sec-body {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-log-row {
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--pl-soft);
+  border: none;
+  border-radius: 2mm;
+  padding: 2.5mm 3mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-log-row .pl-lbl {
+  padding-top: 0;
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-log-row .pl-log-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pl-accent);
+  margin-top: 1mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-sec {
+  margin-bottom: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-sec-head {
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-sec-title {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  color: var(--pl-accent);
+  background: var(--pl-accent-2);
+  border-radius: 999px;
+  padding: 1mm 2.5mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-sec-icon {
+  display: none;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-row,
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-contact-line {
+  border-bottom: 1px solid #e8edf4;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-val {
+  font-weight: 600;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-table th {
+  background: var(--pl-soft);
+  color: var(--pl-ink);
+  border-bottom: 2px solid var(--pl-accent);
+  letter-spacing: .05em;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-table td {
+  border-bottom: 1px solid #e8edf4;
+  font-size: 10px;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-total-row td {
+  border-top: 2px solid var(--pl-accent);
+  background: var(--pl-accent-2);
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-footer {
+  background: var(--pl-ink);
+  border-top: 3px solid var(--pl-accent);
+  color: #fff;
+  margin-top: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='infographic-style'] .pl-footer span {
+  color: #fff;
+  letter-spacing: .16em;
+}
+
+/* ============================================================================
+   5. MINIMALIST ERP — ultra-clean, open sections, thin rules, whitespace
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='minimalist-erp'] {
+  --pl-ink: #16181d;
+  --pl-muted: #6b7280;
+  --pl-faint: #9ca3af;
+  --pl-rule: #e5e7eb;
+  --pl-accent: #16181d;
+  --pl-accent-2: #b08d3f;
+  --pl-soft: #f9fafb;
+  --pl-bg: #ffffff;
+  --acc: #b08d3f;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 8mm 12mm 10mm;
+  gap: 0 8mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest dest dest dest"
+    "remarks remarks remarks terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl decl sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-masthead {
+  margin: 2mm 0 6mm;
+  padding-bottom: 4mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-doc-title {
+  font-size: 26px;
+  font-weight: 200;
+  letter-spacing: .28em;
+  color: var(--pl-ink);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-sec {
+  margin-bottom: 6mm;
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-sec-title {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-row,
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-log-row,
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-contact-line {
+  border-bottom: 1px solid #eceef0;
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-table th {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--pl-muted);
+  border-bottom: 1px solid var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-table td {
+  font-size: 10px;
+  border-bottom: 1px solid #eceef0;
+  padding: 2.5mm 2mm;
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-total-row td {
+  border-top: 2px solid var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-log-val {
+  font-weight: 800;
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-sign-rule {
+  border-top-color: var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-footer {
+  border-top: 1px solid var(--pl-rule);
+  justify-content: center;
+}
+
+.packing-list-doc[data-pl-layout='minimalist-erp'] .pl-footer span {
+  font-size: 7.5px;
+  letter-spacing: .26em;
+  color: var(--pl-muted);
+}
+
+/* ============================================================================
+   6. CORPORATE BLUE — strong corporate ERP, blue-grey masthead
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='corporate-blue'] {
+  --pl-ink: #1c2b3a;
+  --pl-muted: #5c6d7d;
+  --pl-faint: #96a6b5;
+  --pl-rule: #cfd9e2;
+  --pl-accent: #2456a6;
+  --pl-accent-2: #e8eef7;
+  --pl-soft: #f4f7fb;
+  --pl-bg: #ffffff;
+  --acc: #2456a6;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 5mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-masthead {
+  margin: -4mm -5mm 4mm;
+  padding: 7mm 6mm 5mm;
+  background: linear-gradient(90deg, #17365d 0%, #2456a6 100%);
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-doc-title {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: .22em;
+  color: #ffffff;
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-sec {
+  border: 1px solid var(--pl-rule);
+  border-radius: 1.5mm;
+  border-top: 2px solid var(--pl-accent);
+  padding: 2.5mm 3mm;
+  margin-bottom: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-sec-head {
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-sec-title {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-row,
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-log-row,
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-contact-line {
+  border-bottom: 1px solid #e2e9f1;
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-table th {
+  background: var(--pl-accent);
+  color: #fff;
+  border-bottom: none;
+  letter-spacing: .05em;
+  padding: 2.2mm 2mm;
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-table td {
+  border-bottom: 1px solid #e2e9f1;
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-total-row td {
+  border-top: 2px solid var(--pl-accent);
+  background: var(--pl-accent-2);
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-log-val {
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-footer {
+  border-top: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='corporate-blue'] .pl-footer span {
+  color: var(--pl-accent);
+}
+
+/* ============================================================================
+   7. DYNAMIC GRID — flexible CSS Grid zones that resize with content
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='dynamic-grid'] {
+  --pl-ink: #1c2b39;
+  --pl-muted: #5b6b7b;
+  --pl-faint: #98a6b5;
+  --pl-rule: #dfe6ec;
+  --pl-accent: #0b7a75;
+  --pl-accent-2: #e7f4f2;
+  --pl-soft: #f4f8f8;
+  --pl-bg: #ffffff;
+  --acc: #0b7a75;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 4mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp buyer buyer buyer"
+    "meta meta meta meta meta meta"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-masthead {
+  margin-bottom: 4mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 3px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-doc-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  color: var(--pl-ink);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-sec {
+  background: var(--pl-soft);
+  border: 1px solid var(--pl-rule);
+  border-left: 2px solid var(--pl-accent);
+  border-radius: 1.5mm;
+  padding: 2.5mm 3mm;
+  margin-bottom: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-sec-head {
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-sec-title {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-row,
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-log-row,
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-contact-line {
+  border-bottom: 1px solid #e6eeed;
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-table th {
+  border-bottom: 2px solid var(--pl-accent);
+  letter-spacing: .06em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-table td {
+  border-bottom: 1px solid #e6eeed;
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-total-row td {
+  border-top: 2px solid var(--pl-accent);
+  background: var(--pl-accent-2);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-log-val {
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-footer {
+  border-top: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dynamic-grid'] .pl-footer span {
+  color: var(--pl-accent);
+}
+
+/* ============================================================================
+   8. ELEGANT BORDERLESS — teal/grey, no cards, tonal rules and spacing
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='elegant-borderless'] {
+  --pl-ink: #1f3a3d;
+  --pl-muted: #5f7c7f;
+  --pl-faint: #9db3b5;
+  --pl-rule: #dbe7e8;
+  --pl-accent: #0e7c86;
+  --pl-accent-2: #eaf6f5;
+  --pl-soft: #f4faf9;
+  --pl-bg: #ffffff;
+  --acc: #0e7c86;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 7mm 10mm 9mm;
+  gap: 0 7mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-masthead {
+  margin-bottom: 7mm;
+  padding-bottom: 4mm;
+  border-bottom: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-doc-title {
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: .24em;
+  color: var(--pl-accent);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-sec {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 6mm;
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-sec-title {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .2em;
+  color: var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-sec-title::before {
+  content: '—  ';
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-sec-icon {
+  display: none;
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-row,
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-log-row,
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-contact-line {
+  border-bottom: 1px solid #e6efef;
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-table th {
+  border-bottom: 1px solid var(--pl-accent);
+  letter-spacing: .1em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-table td {
+  border-bottom: 1px solid #e6efef;
+  padding: 2.5mm 2mm;
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-total-row td {
+  border-top: 1.5px solid var(--pl-accent);
+  background: var(--pl-soft);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-log-val {
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-footer {
+  border-top: none;
+  justify-content: center;
+}
+
+.packing-list-doc[data-pl-layout='elegant-borderless'] .pl-footer span {
+  font-size: 7.5px;
+  letter-spacing: .24em;
+  color: var(--pl-muted);
+}
+
+/* ============================================================================
+   9. PHOTO HEADER (TYPOGRAPHY) — large typographic header, accent geometry
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='photo-header'] {
+  --pl-ink: #0f172a;
+  --pl-muted: #52606e;
+  --pl-faint: #94a0ad;
+  --pl-rule: #dde3ea;
+  --pl-accent: #d97706;
+  --pl-accent-2: #fdf1e3;
+  --pl-soft: #f6f8fa;
+  --pl-bg: #ffffff;
+  --acc: #d97706;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.6;
+  padding: 6mm 8mm 9mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-masthead {
+  margin-bottom: 6mm;
+  padding: 8mm 6mm 7mm;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #d97706 60%, #d97706 100%);
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-doc-title {
+  font-size: 34px;
+  font-weight: 300;
+  letter-spacing: .32em;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-align: left;
+  line-height: 1.1;
+  text-shadow: none;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-doc-title::after {
+  content: '';
+  display: block;
+  width: 30mm;
+  height: 3px;
+  background: #ffffff;
+  margin-top: 3.5mm;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-sec {
+  margin-bottom: 5mm;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-sec-title {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .24em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-sec-icon {
+  display: none;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-row,
+.packing-list-doc[data-pl-layout='photo-header'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='photo-header'] .pl-log-row,
+.packing-list-doc[data-pl-layout='photo-header'] .pl-contact-line {
+  border-bottom: 1px solid #e8ecf1;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-table th {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  color: var(--pl-ink);
+  border-bottom: 2px solid var(--pl-ink);
+  padding: 2.8mm 2.5mm;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-table td {
+  font-size: 10.5px;
+  border-bottom: 1px solid #e8ecf1;
+  padding: 2.6mm 2.5mm;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-total-row td {
+  border-top: 2px solid var(--pl-ink);
+  background: var(--pl-soft);
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-log-val {
+  font-weight: 800;
+  color: var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-sign-rule {
+  border-top-color: var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-footer {
+  border-top: 4px solid var(--pl-ink);
+  margin-top: 5mm;
+}
+
+.packing-list-doc[data-pl-layout='photo-header'] .pl-footer span {
+  letter-spacing: .2em;
+  color: var(--pl-muted);
+}
+
+/* ============================================================================
+   10. GEOMETRIC LAYERS — angular blocks, gradient bands, layered sections
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='geometric-layers'] {
+  --pl-ink: #14202e;
+  --pl-muted: #5a6b7e;
+  --pl-faint: #97a5b5;
+  --pl-rule: #c9d3de;
+  --pl-accent: #1d4f91;
+  --pl-accent-2: #e8edf3;
+  --pl-soft: #f2f6fb;
+  --pl-bg: #ffffff;
+  --acc: #1d4f91;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 5mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-masthead {
+  margin-bottom: 5mm;
+  padding: 6mm 4mm 5mm;
+  background: linear-gradient(135deg, #f2f6fb 0%, #f2f6fb 55%, #dde6f0 55%, #dde6f0 100%);
+  border-left: 4px solid var(--pl-accent);
+  border-bottom: 3px solid #b08d3f;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-doc-title {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  color: var(--pl-ink);
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-sec {
+  border: 1px solid var(--pl-rule);
+  border-radius: 0;
+  border-bottom: 2px solid var(--pl-accent);
+  padding: 3mm;
+  margin-bottom: 3.5mm;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-sec-head {
+  border-left: 3px solid var(--pl-accent);
+  padding-left: 2.5mm;
+  margin-bottom: 2mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-sec-title {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .2em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-row,
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-log-row,
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-contact-line {
+  border-bottom: 1px solid #e1e7ee;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-table th {
+  background: var(--pl-soft);
+  color: var(--pl-ink);
+  border-bottom: 3px solid var(--pl-accent);
+  border-radius: 0;
+  letter-spacing: .06em;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-table td {
+  border-bottom: 1px solid #e1e7ee;
+  border-radius: 0;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-table tbody tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-total-row td {
+  background: linear-gradient(90deg, var(--pl-accent), #2456a6);
+  color: #fff;
+  border-top: none;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-total-row .pl-cell-total-lbl,
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-total-row .pl-cell-total {
+  color: #fff;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-log-val {
+  color: var(--pl-accent);
+  font-weight: 900;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-sign-rule {
+  border-top: 2px solid var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-footer {
+  background: var(--pl-ink);
+  border-top: 3px solid #b08d3f;
+  color: #fff;
+  border-radius: 0;
+  margin-top: 4mm;
+}
+
+.packing-list-doc[data-pl-layout='geometric-layers'] .pl-footer span {
+  color: #fff;
+  letter-spacing: .18em;
+}
+
+/* ============================================================================
+   11. TIMELINE SHIPMENT — shipment progression strip, technical markers
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='timeline-shipment'] {
+  --pl-ink: #24303b;
+  --pl-muted: #66737f;
+  --pl-faint: #a3adb6;
+  --pl-rule: #dbe2e8;
+  --pl-accent: #3a6ea5;
+  --pl-accent-2: #eef3f8;
+  --pl-soft: #f5f8fb;
+  --pl-bg: #ffffff;
+  --acc: #3a6ea5;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 5mm 6mm 6mm;
+  gap: 0 5mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "exp exp exp buyer buyer buyer"
+    "meta meta meta meta meta meta"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-masthead {
+  margin-bottom: 3mm;
+  padding-bottom: 3mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-doc-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .24em;
+  color: var(--pl-accent);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-timeline {
+  display: flex;
+  margin-top: 3.5mm;
+  padding-top: 3mm;
+  border-top: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-timeline-step {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0 1.5mm;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-timeline-step:first-child {
+  padding-left: 0;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-timeline-step:last-child {
+  padding-right: 0;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-timeline-dot {
+  display: block;
+  width: 2.4mm;
+  height: 2.4mm;
+  background: var(--pl-accent);
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-timeline-label {
+  display: block;
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 6.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-timeline-value {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--pl-ink);
+  margin-top: 1px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-sec {
+  border-left: 2px solid var(--pl-accent);
+  padding-left: 3mm;
+  margin-bottom: 3.5mm;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-sec-head {
+  margin-bottom: 2mm;
+  padding-bottom: 1mm;
+  border-bottom: 1px dashed #c6d2dd;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-sec-title {
+  font-family: Consolas, 'Courier New', monospace;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-row,
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-log-row,
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-contact-line {
+  border-bottom: 1px dashed #d5dee6;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-table th {
+  border-bottom: 2px solid var(--pl-accent);
+  color: var(--pl-ink);
+  letter-spacing: .06em;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-table td {
+  border-bottom: 1px dashed #d5dee6;
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-total-row td {
+  border-top: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-footer {
+  border-top: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='timeline-shipment'] .pl-footer span {
+  font-family: Consolas, 'Courier New', monospace;
+  letter-spacing: .12em;
+}
+
+/* ============================================================================
+   12. ELEGANT MONOCHROME — black & white, one restrained accent, sharp type
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='elegant-monochrome'] {
+  --pl-ink: #111111;
+  --pl-muted: #555555;
+  --pl-faint: #999999;
+  --pl-rule: #d9d9d9;
+  --pl-accent: #8a6d1d;
+  --pl-accent-2: #f4f0e3;
+  --pl-soft: #f7f7f7;
+  --pl-bg: #ffffff;
+  --acc: #8a6d1d;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 7mm 10mm 9mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-masthead {
+  margin-bottom: 5mm;
+  padding-bottom: 4mm;
+  border-bottom: 3px solid var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-doc-title {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .3em;
+  color: var(--pl-ink);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-doc-title::after {
+  content: '';
+  display: block;
+  width: 18mm;
+  height: 2px;
+  background: var(--pl-accent);
+  margin-top: 2.5mm;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-sec {
+  border-top: 1px solid var(--pl-ink);
+  padding-top: 2mm;
+  margin-bottom: 4.5mm;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-sec-head {
+  margin-bottom: 1.5mm;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-sec-title {
+  font-size: 7.5px;
+  font-weight: 900;
+  letter-spacing: .22em;
+  color: var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-sec-icon {
+  display: none;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-row,
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-log-row,
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-contact-line {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-log-val {
+  color: var(--pl-ink);
+  font-weight: 900;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-table th {
+  border-bottom: 2px solid var(--pl-ink);
+  letter-spacing: .08em;
+  color: var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-table td {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-total-row td {
+  border-top: 2px solid var(--pl-ink);
+  background: var(--pl-soft);
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-sign-rule {
+  border-top: 2px solid var(--pl-ink);
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-footer {
+  border-top: 1px solid var(--pl-ink);
+  justify-content: space-between;
+}
+
+.packing-list-doc[data-pl-layout='elegant-monochrome'] .pl-footer span {
+  font-size: 7.5px;
+  letter-spacing: .24em;
+  color: var(--pl-muted);
+}
+
+/* ============================================================================
+   13. DASHBOARD STYLE — KPI logistics panels, data-heavy report
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='dashboard-style'] {
+  --pl-ink: #17263b;
+  --pl-muted: #5b6d84;
+  --pl-faint: #93a4b8;
+  --pl-rule: #dbe3ec;
+  --pl-accent: #1f4fd8;
+  --pl-accent-2: #eef1fb;
+  --pl-soft: #f3f6fb;
+  --pl-bg: #ffffff;
+  --acc: #1f4fd8;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 4mm 5mm 6mm;
+  gap: 0 4mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "totals totals totals totals totals totals"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "comm comm comm status status status"
+    "remarks remarks remarks terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-masthead {
+  margin-bottom: 3mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 2px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-doc-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .2em;
+  color: var(--pl-ink);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-totals {
+  margin-bottom: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-totals .pl-sec-head {
+  display: none;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-totals .pl-sec-body {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2mm;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-log-row {
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--pl-soft);
+  border: 1px solid var(--pl-rule);
+  border-top: 2px solid var(--pl-accent);
+  border-radius: 1.5mm;
+  padding: 2.5mm 3mm;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-log-row .pl-lbl {
+  padding-top: 0;
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-log-row .pl-log-val {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--pl-accent);
+  margin-top: 1mm;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-sec {
+  margin-bottom: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-sec-head {
+  margin-bottom: 1.5mm;
+  padding-bottom: 1mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-sec-title {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-row,
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-contact-line {
+  border-bottom: 1px solid #e8edf4;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-val {
+  font-weight: 600;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-table th {
+  background: var(--pl-ink);
+  color: #fff;
+  border-bottom: 2px solid var(--pl-accent);
+  letter-spacing: .05em;
+  padding: 2.2mm 2mm;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-table td {
+  border-bottom: 1px solid #e8edf4;
+  font-size: 10px;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-table tbody tr:nth-child(even) td {
+  background: #fafbfd;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-total-row td {
+  border-top: 2px solid var(--pl-accent);
+  background: var(--pl-accent-2);
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-footer {
+  background: var(--pl-ink);
+  border-top: 3px solid var(--pl-accent);
+  color: #fff;
+  margin-top: 3mm;
+}
+
+.packing-list-doc[data-pl-layout='dashboard-style'] .pl-footer span {
+  color: #fff;
+  letter-spacing: .16em;
+}
+
+/* ============================================================================
+   14. GLOBAL MINIMAL — neutral international minimalist, subtle CSS accent
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='global-minimal'] {
+  --pl-ink: #2b3440;
+  --pl-muted: #6a7683;
+  --pl-faint: #a0aab4;
+  --pl-rule: #e2e7eb;
+  --pl-accent: #52796f;
+  --pl-accent-2: #eef3f1;
+  --pl-soft: #f7f9f8;
+  --pl-bg: #ffffff;
+  --acc: #52796f;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.55;
+  padding: 7mm 10mm 9mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-masthead {
+  margin-bottom: 6mm;
+  padding-bottom: 3.5mm;
+  border-bottom: 1px solid var(--pl-rule);
+  position: relative;
+}
+
+/* Subtle CSS-only world-trade accent: a dotted arc under the title. */
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-masthead::after {
+  content: '';
+  display: block;
+  height: 2mm;
+  margin-top: 2mm;
+  background: radial-gradient(circle at 2px 2px, var(--pl-accent) 1.2px, transparent 1.4px) 0 0 / 6px 3px repeat-x;
+  opacity: .35;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-doc-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: .3em;
+  color: var(--pl-ink);
+  text-align: left;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-sec {
+  margin-bottom: 5.5mm;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-sec-head {
+  margin-bottom: 2.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 1px solid var(--pl-rule);
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-sec-title {
+  font-size: 7.5px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-sec-icon {
+  display: none;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-row,
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-log-row,
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-contact-line {
+  border-bottom: 1px solid #e9edf0;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-name {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-table th {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--pl-muted);
+  border-bottom: 1px solid var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-table td {
+  border-bottom: 1px solid #e9edf0;
+  padding: 2.5mm 2mm;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-total-row td {
+  border-top: 1.5px solid var(--pl-accent);
+  background: var(--pl-soft);
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-log-val {
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-sign-rule {
+  border-top-color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-footer {
+  border-top: 1px solid var(--pl-rule);
+  justify-content: center;
+}
+
+.packing-list-doc[data-pl-layout='global-minimal'] .pl-footer span {
+  font-size: 7.5px;
+  letter-spacing: .26em;
+  color: var(--pl-muted);
+}
+
+/* ============================================================================
+   15. PREMIUM TRADE — burgundy / cream / gold luxury corporate document
+   ============================================================================ */
+.packing-list-doc[data-pl-layout='premium-trade'] {
+  --pl-ink: #3a2a2a;
+  --pl-muted: #7a6666;
+  --pl-faint: #b09c9c;
+  --pl-rule: #e4d8cf;
+  --pl-accent: #6d1f34;
+  --pl-accent-2: #f5efe6;
+  --pl-soft: #faf7f1;
+  --pl-bg: #fffdf9;
+  --acc: #b08d3f;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  line-height: 1.55;
+  padding: 7mm 9mm 9mm;
+  gap: 0 6mm;
+  grid-template-areas:
+    "mast mast mast mast mast mast"
+    "meta meta meta meta meta meta"
+    "exp exp exp buyer buyer buyer"
+    "totals totals totals status status status"
+    "comm comm comm ship ship ship"
+    "dest dest dest remarks remarks remarks"
+    "terms terms terms terms terms terms"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "decl decl decl sig sig sig"
+    "att att att att att att"
+    "foot foot foot foot foot foot";
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-masthead {
+  margin-bottom: 6mm;
+  padding: 6mm 5mm 5mm;
+  background: linear-gradient(180deg, #6d1f34 0%, #83304a 100%);
+  border-bottom: 3px solid #b08d3f;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-doc-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .28em;
+  color: #fff8ec;
+  text-transform: uppercase;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-doc-title::after {
+  content: '';
+  display: block;
+  width: 26mm;
+  height: 2px;
+  background: #b08d3f;
+  margin: 2.5mm auto 0;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-sec {
+  border: 1px solid var(--pl-rule);
+  border-radius: 0;
+  margin-bottom: 4mm;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-sec-head {
+  background: var(--pl-accent-2);
+  border-bottom: 1px solid var(--pl-rule);
+  margin-bottom: 0;
+  padding: 2mm 3mm;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-sec-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  color: var(--pl-accent);
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-sec-body {
+  padding: 2.5mm 3mm;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-row,
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-ref-line,
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-log-row,
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-contact-line {
+  border-bottom: 1px solid #ece0d5;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-lbl {
+  color: var(--pl-muted);
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-log-val {
+  color: var(--pl-accent);
+  font-weight: 800;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-table th {
+  background: var(--pl-accent-2);
+  color: var(--pl-accent);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8px;
+  letter-spacing: .06em;
+  border-bottom: 1px solid #b08d3f;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-table td {
+  border-bottom: 1px solid #ece0d5;
+  font-size: 10px;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-total-row td {
+  border-top: 2px solid #b08d3f;
+  background: var(--pl-soft);
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-decl-text {
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-sign-rule {
+  border-top: 2px solid #b08d3f;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-footer {
+  border-top: 2px solid #b08d3f;
+  justify-content: center;
+}
+
+.packing-list-doc[data-pl-layout='premium-trade'] .pl-footer span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 8px;
+  letter-spacing: .22em;
+  color: var(--pl-accent);
+}

@@ -1,0 +1,681 @@
+/* ==========================================================================
+   PURCHASE REQUISITION LIST — UI/UX POLISH OVERRIDES
+   --------------------------------------------------------------------------
+   Loaded AFTER cpr-list.css so these rules win the cascade for equal
+   specificity. Styling-only: no DOM ids, no component logic. Keeps the
+   CPR-derived visual language (scoped under .purchase-page.cpr-page)
+   while tightening alignment, truncation, badges, focus states and
+   responsive behaviour. Purchase terminology only.
+   ========================================================================== */
+
+/* ===== 0. SEGMENTED CONTROL — workflow status tabs ===============
+   The PR list now shows 7 workflow status tabs inside the segmented
+   control. Add horizontal scroll on overflow so the tabs never push
+   past the viewport edge. */
+.cpr-page .segmented-control {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cpr-page .segmented-control::-webkit-scrollbar {
+  display: none;
+}
+.cpr-page .segmented-option {
+  flex-shrink: 0;
+}
+
+/* ===== 1. TABLE — FIXED LAYOUT, COLUMN SIZING, STICKY HEADER ===== */
+.cpr-page .pr-table { table-layout: fixed; }
+.cpr-page .pr-table-card {
+  max-width: 100%;
+  min-width: 0;
+}
+.cpr-page .pr-table-wrap {
+  max-width: 100%;
+  min-width: 0;
+  max-height: 62vh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.cpr-page .pr-table-wrap::-webkit-scrollbar { width: 10px; height: 10px; }
+.cpr-page .pr-table-wrap::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 8px; border: 2px solid #fff; }
+.cpr-page .pr-table-wrap::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+.cpr-page .pr-table-wrap::-webkit-scrollbar-track { background: transparent; }
+
+/* Sticky header inside the scrollable wrap — SAP-style dark green bar.
+   Must stay a solid #0B4A3D before and after scrolling: no transparency,
+   no opacity, no backdrop-filter and no background transition, even while
+   rows scroll beneath. Forces its own compositor layer so Chrome paints
+   the header fully opaque (sticky cells with collapsed borders can
+   otherwise be composited as faded/lighter during scroll). */
+.cpr-page .pr-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  height: 44px;
+  box-sizing: border-box;
+  padding: 0 14px;
+  background: var(--purchase-table-header);
+  background-color: var(--purchase-table-header);
+  background-image: none;
+  color: #FFFFFF;
+  font-weight: 600;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+  opacity: 1;
+  transition: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  will-change: transform;
+  transform: translateZ(0);
+}
+/* Solid backing on the whole header row too, so no gap can show through. */
+.cpr-page .pr-table thead,
+.cpr-page .pr-table thead tr {
+  background: var(--purchase-table-header);
+  background-color: var(--purchase-table-header);
+  background-image: none;
+}
+.dark .cpr-page .pr-table thead th,
+.dark .cpr-page .pr-table thead,
+.dark .cpr-page .pr-table thead tr { background: var(--purchase-table-header); background-color: var(--purchase-table-header); background-image: none; border-bottom-color: rgba(255,255,255,0.16); }
+
+/* ===== 1a. SEPARATE BORDERS — definitive sticky-header fix =====
+   Chrome can composite sticky cells with border-collapse: collapse as
+   faded/lighter during scroll even with an opaque background. Separate
+   borders (spacing 0) remove that collapsed-border paint path entirely.
+   The header grid is recreated explicitly so the visible borders stay
+   the same: single 1px #003930 lines around and between header cells. */
+.cpr-page .pr-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.cpr-page .pr-table thead th {
+  border-top: 1px solid var(--purchase-table-header-border);
+  border-right: 1px solid var(--purchase-table-header-border);
+  border-left: none;
+}
+.cpr-page .pr-table thead th:first-child {
+  border-left: 1px solid var(--purchase-table-header-border);
+}
+/* Sort indicators readable on the dark header */
+.cpr-page .pr-table thead th .sort-icon { color: rgba(255,255,255,0.6); opacity: 1; }
+.cpr-page .pr-table thead th.sort-asc,
+.cpr-page .pr-table thead th.sort-desc { color: #FFFFFF; }
+.cpr-page .pr-table thead th.sort-asc .sort-icon,
+.cpr-page .pr-table thead th.sort-desc .sort-icon { color: #FFFFFF; opacity: 1; }
+
+/* Checkbox + action columns: fixed, centered */
+.cpr-page .pr-table .col-checkbox,
+.cpr-page .pr-table th.checkbox-cell,
+.cpr-page .pr-table td.checkbox-cell { width: 50px; min-width: 50px; text-align: center; vertical-align: middle; }
+.cpr-page .pr-table th.checkbox-cell input,
+.cpr-page .pr-table td.checkbox-cell input { margin: 0; vertical-align: middle; }
+
+/* ---------- SELECTION-AREA STATUS DOT (shared list tables) ----------
+   A small workflow status dot sits next to the row checkbox (same
+   50px selection column, same row height) — the column width is
+   unchanged so the table never grows. Tone is driven by the shared
+   statusDotTone prop in PurchaseTable (utils/statusTone / utils/
+   pendingStatus) and only renders for rows the page marks pending /
+   action-required. */
+.cpr-page .pr-checkbox-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  vertical-align: middle;
+}
+.cpr-page .pr-row-status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+  background: #CBD5E1;
+}
+/* Dot tones mirror the shared semantic system — the dot color ALWAYS
+   matches the status badge color for the same status (orange for
+   Pending Approval, green for Approved, red for Rejected, gray for
+   Draft, blue for in-progress / informational). */
+.cpr-page .pr-row-status-dot.gray { background: #64748B; }
+.cpr-page .pr-row-status-dot.blue { background: #3B82F6; }
+.cpr-page .pr-row-status-dot.green {
+  background: #16A34A;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.14);
+}
+.cpr-page .pr-row-status-dot.orange {
+  background: #F59E0B;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.16);
+  /* Pulsing pending/action-required dot — same animation language as
+     the RFQ Follow-ups sidebar badge (sb-badge-pulse), scaled down to
+     the 7px row dot, so rows needing action continuously draw
+     attention. Red (alert) dots pulse identically. */
+  animation: pr-dot-pulse 2s ease-in-out infinite;
+}
+.cpr-page .pr-row-status-dot.red {
+  background: #DC2626;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.16);
+  animation: pr-dot-pulse 2s ease-in-out infinite;
+}
+.dark .cpr-page .pr-row-status-dot.gray { background: #475569; }
+.dark .cpr-page .pr-row-status-dot.blue { background: #3B82F6; }
+.dark .cpr-page .pr-row-status-dot.green { background: #22C55E; }
+.dark .cpr-page .pr-row-status-dot.orange { background: #FBBF24; }
+.dark .cpr-page .pr-row-status-dot.red { background: #EF4444; }
+
+/* Pending-dot pulse — mirrors the sidebar badge ring (soft red halo
+   expanding out and fading), sized for the 7px row dot. */
+@keyframes pr-dot-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+/* Reduced motion — kill the pulse for users who opt out (same rule as
+   the sidebar badge). */
+@media (prefers-reduced-motion: reduce) {
+  .cpr-page .pr-row-status-dot.red,
+  .cpr-page .pr-row-status-dot.orange {
+    animation: none !important;
+  }
+}
+/* Inline variant — non-selectable tables render the pending dot at the
+   start of the id column cell (no checkbox column to host it). */
+.cpr-page .pr-row-status-dot.pr-row-status-dot--inline {
+  display: inline-block;
+  margin-right: 7px;
+  vertical-align: middle;
+}
+.cpr-page .pr-table th.col-actions,
+.cpr-page .pr-table td.col-actions { width: 76px; min-width: 76px; text-align: center; }
+.cpr-page .pr-table td.col-actions { overflow: visible; white-space: nowrap; padding: 6px 12px; }
+/* Breathing room around the three-dot row action menu */
+.cpr-page .pr-table .action-menu-wrap { padding: 3px 2px; }
+.cpr-page .pr-table .action-menu-btn { padding: 5px; margin: 0 auto; }
+
+/* Keep header text un-wrapped; let cells clip instead of pushing widths */
+.cpr-page .pr-table th { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cpr-page .pr-table td { overflow: hidden; }
+
+/* ===== 2. CELL CONTENT — TRUNCATION + TOOLTIPS ===== */
+.cpr-page .cpr-cell-truncate {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  cursor: default;
+  font-size: 12px;
+}
+.cpr-page .pr-table td.col-prno a {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* ===== 3. AMOUNT + DATES ===== */
+.cpr-page .cpr-amount {
+  display: inline-block;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #102A2A;
+}
+.dark .cpr-page .cpr-amount { color: #E2E8F0; }
+.cpr-page .pr-table td.col-date,
+.cpr-page .pr-table td.col-expectedDate,
+.cpr-page .pr-table th.col-date,
+.cpr-page .pr-table th.col-expectedDate { text-align: center; }
+.cpr-page .cpr-cell-date {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  color: #64748B;
+}
+.dark .cpr-page .cpr-cell-date { color: #A5B4C8; }
+
+/* ===== 4. PRIORITY CHIPS (Low=green · Medium=gray · High=orange · Critical=red) ===== */
+.cpr-page .cpr-priority {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.cpr-page .cpr-priority-low { background: #EAF7F3; color: #08785F; }
+.cpr-page .cpr-priority-medium { background: #F1F5F9; color: #64748B; }
+.cpr-page .cpr-priority-high { background: #FFF7E6; color: #B45309; }
+.cpr-page .cpr-priority-critical { background: #FEF2F2; color: #B91C1C; }
+.dark .cpr-page .cpr-priority-low { background: rgba(7,94,84,0.14); color: #4ADE80; }
+.dark .cpr-page .cpr-priority-medium { background: rgba(100,116,139,0.14); color: #94A3B8; }
+.dark .cpr-page .cpr-priority-high { background: rgba(180,83,9,0.14); color: #FBBF24; }
+.dark .cpr-page .cpr-priority-critical { background: rgba(185,28,28,0.14); color: #F87171; }
+
+/* ===== 5. STATUS BADGES — consistent size + canonical tones ===== */
+.cpr-page .cpr-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 96px;
+  padding: 2.5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  letter-spacing: 0.1px;
+}
+.cpr-page .cpr-badge-draft,
+.cpr-page .cpr-badge-archived { background: #F1F5F9; color: #64748B; }
+.cpr-page .cpr-badge-pending-approval { background: #FFF7E6; color: #B45309; }
+.cpr-page .cpr-badge-approved { background: #EAF7F3; color: #08785F; }
+.cpr-page .cpr-badge-rejected { background: #FEF2F2; color: #B91C1C; }
+.cpr-page .cpr-badge-converted { background: #EEF4FF; color: #3B82F6; }
+.dark .cpr-page .cpr-badge-draft,
+.dark .cpr-page .cpr-badge-archived { background: rgba(100,116,139,0.14); color: #94A3B8; }
+.dark .cpr-page .cpr-badge-pending-approval { background: rgba(180,83,9,0.14); color: #FBBF24; }
+.dark .cpr-page .cpr-badge-approved { background: rgba(7,94,84,0.14); color: #4ADE80; }
+.dark .cpr-page .cpr-badge-rejected { background: rgba(185,28,28,0.14); color: #F87171; }
+.dark .cpr-page .cpr-badge-converted { background: rgba(59,130,246,0.14); color: #93C5FD; }
+
+/* ===== 6. ROW STATES — zebra, hover, selected ===== */
+.cpr-page .pr-table tbody tr:nth-child(even) td { background: #F8FBFA; }
+.cpr-page .pr-table tbody tr:hover td { background: #F0FAF7; }
+.cpr-page .pr-table tbody tr.is-selected td,
+.cpr-page .pr-table tbody tr.is-selected:hover td { background: #E2F0EA; }
+.cpr-page .pr-table tbody tr.is-selected td.col-checkbox { box-shadow: inset 3px 0 0 var(--purchase-primary); }
+.dark .cpr-page .pr-table tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.dark .cpr-page .pr-table tbody tr:hover td { background: rgba(7,94,84,0.12); }
+.dark .cpr-page .pr-table tbody tr.is-selected td,
+.dark .cpr-page .pr-table tbody tr.is-selected:hover td { background: rgba(7,94,84,0.2); }
+.dark .cpr-page .pr-table tbody tr.is-selected td.col-checkbox { box-shadow: inset 3px 0 0 var(--purchase-primary); }
+
+/* ===== 7. TOOLBAR — search 320px, aligned buttons, spacing ===== */
+.cpr-page .pr-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.cpr-page .pr-toolbar-left,
+.cpr-page .pr-toolbar-right { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; min-width: 0; }
+.cpr-page .pr-toolbar-right { flex: 1 1 auto; justify-content: flex-end; }
+.cpr-page .pr-search-input { width: min(100%, 300px); min-width: 170px; max-width: 100%; }
+.cpr-page .pr-toolbar .btn { height: 34px; }
+.cpr-page .pr-toolbar .export-btn { height: 34px; }
+.cpr-page .pr-toolbar .toolbar-count {
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  white-space: nowrap;
+}
+.dark .cpr-page .pr-toolbar .toolbar-count { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); color: #CBD5E1; }
+
+/* Segmented tabs + toolbar share a clean vertical rhythm */
+.cpr-page .pr-tabs { margin-bottom: 14px; }
+.cpr-page .segmented-control { margin-bottom: 14px; overflow-x: auto; }
+.cpr-page .segmented-option { white-space: nowrap; }
+
+/* ===== 8. KPI CARDS — premium single-row ERP dashboard =====
+   All six cards in ONE row on desktop (CSS Grid: five equal cards
+   plus a ~50% wider Total Value column so full monetary amounts like
+   “₹26,37,179.94” always render without truncation), 100px height,
+   20px gaps, symmetric top/bottom margins, 2px constant border
+   (selected state recolors without any 1px shift), 48px icon chip on
+   the left, 34px bold value + 15px label. The count font scales with
+   the card width (container query units, capped at 34px). */
+.cpr-page .pr-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+  margin: 16px 0;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+.cpr-page .pr-kpi-card.qtn-kpi-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  height: 88px;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid var(--purchase-border);
+  border-radius: 12px;
+  background: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  container-type: inline-size;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+.cpr-page .pr-kpi-card.qtn-kpi-card:hover {
+  border-color: #075E54;
+  box-shadow: 0 2px 8px rgba(7, 94, 84, 0.08);
+  transform: translateY(-1px);
+}
+.cpr-page .pr-kpi-card.qtn-kpi-card:focus-visible {
+  outline: 2px solid var(--purchase-primary);
+  outline-offset: 2px;
+}
+/* Selected card */
+.cpr-page .pr-kpi-card.qtn-kpi-card.active {
+  border-color: var(--purchase-primary);
+  background: var(--purchase-primary-light);
+  box-shadow: 0 0 0 1.5px var(--purchase-primary);
+  transform: translateY(-1px);
+}
+.cpr-page .qtn-kpi-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.cpr-page .qtn-kpi-icon svg { width: 20px; height: 20px; }
+.cpr-page .qtn-kpi-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.cpr-page .qtn-kpi-count {
+  font-size: clamp(1rem, 1.8vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #102A2A;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  min-width: 0;
+}
+.cpr-page .pr-kpi-card[data-filter="totalValue"] .qtn-kpi-count,
+.cpr-page .pr-kpi-card[data-filter="value"] .qtn-kpi-count {
+  font-size: clamp(0.85rem, 1.4vw, 1.3rem);
+}
+.cpr-page .pr-kpi-card[data-filter="totalValue"] .qtn-kpi-count,
+.cpr-page .pr-kpi-card[data-filter="value"] .qtn-kpi-count {
+  overflow: hidden;
+}
+/* Total Value card — long currency amounts stay inside the card. */
+.cpr-page .pr-kpi-card[data-filter="value"] .qtn-kpi-count {
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+  text-overflow: unset;
+}
+.cpr-page .qtn-kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748B;
+  margin-top: 2px;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 100%;
+}
+.dark .cpr-page .pr-kpi-card.qtn-kpi-card {
+  background: #141C2E;
+  border-color: rgba(148, 163, 184, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+.dark .cpr-page .pr-kpi-card.qtn-kpi-card:hover {
+  border-color: #0F8F78;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+.dark .cpr-page .pr-kpi-card.qtn-kpi-card.active {
+  border-color: #5CB8A8;
+  background: rgba(92, 184, 168, 0.08);
+  box-shadow: 0 0 0 1.5px #5CB8A8;
+}
+.dark .cpr-page .qtn-kpi-count { color: #F8FAFC; }
+.dark .cpr-page .qtn-kpi-label { color: #94A3B8; }
+
+/* Laptop (1200–1439px): four per row */
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }
+  .cpr-page .pr-kpi-card.qtn-kpi-card { padding: 14px; height: 84px; }
+}
+/* Tablet / small laptop (768–1199px): three per row */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+}
+/* Mobile (480–767px): two per row */
+@media (min-width: 480px) and (max-width: 767px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+  .cpr-page .pr-kpi-card.qtn-kpi-card { height: 84px; padding: 14px; gap: 10px; }
+}
+/* Small phones (<480px): stack to one per row */
+@media (max-width: 479px) {
+  .cpr-page .pr-kpi-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; margin: 10px 0; }
+  .cpr-page .pr-kpi-card.qtn-kpi-card { height: 80px; padding: 12px 14px; gap: 10px; }
+}
+
+/* ===== 9. EMPTY STATE — consistent vertical centering ===== */
+.cpr-page .cpr-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; padding: 32px 20px; text-align: center; }
+.cpr-page .cpr-empty-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+.cpr-page .cpr-empty-icon svg { width: 26px; height: 26px; }
+
+/* ===== 10. FOCUS STATES (a11y) ===== */
+.cpr-page a:focus-visible,
+.cpr-page button:focus-visible,
+.cpr-page input:focus-visible,
+.cpr-page select:focus-visible,
+.cpr-page [tabindex]:focus-visible {
+  outline: 2px solid #075E54;
+  outline-offset: 2px;
+}
+.cpr-page .pr-table thead th:focus-visible { outline-offset: -2px; }
+.cpr-page .action-menu-btn:focus-visible { outline: 2px solid #075E54; outline-offset: 1px; }
+
+/* ===== 11. RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .cpr-page .pr-toolbar { flex-direction: column; align-items: stretch; }
+  .cpr-page .pr-toolbar-left,
+  .cpr-page .pr-toolbar-right { justify-content: flex-start; width: 100%; }
+  .cpr-page .pr-search-input { width: 100%; }
+}
+
+/* ===== 12. RFQ LIST — DOCUMENT ID LINK =====
+   The RFQ status dot lives in the selection column next to the
+   checkbox (shared .pr-checkbox-wrap / .pr-row-status-dot rules in
+   section 1a above): [checkbox + dot] → RFQ Number → remaining RFQ
+   columns. The dot renders ONLY on pending / action-required rows
+   (red + pulse, driven by the shared statusDotTone prop and utils/
+   pendingStatus) — Approved, Awarded, Closed, Cancelled and other
+   non-pending rows show no dot. The RFQ Number link matches the PR
+   list's .col-prno link styling so both document-ID columns behave
+   and look identical. */
+.cpr-page .pr-table tbody td.col-rfqNo a {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  color: #075E54;
+  text-decoration: none;
+  font-weight: 600;
+}
+.cpr-page .pr-table tbody td.col-rfqNo a:hover {
+  text-decoration: underline;
+}
+.dark .cpr-page .pr-table tbody td.col-rfqNo a { color: #6EE7B7; }
+
+/* ===== 13a. RFQ FOLLOW-UPS — KPI GRID (4 cards) =====
+   The RFQ Follow-ups page shows four compact follow-up KPIs (Today's
+   Follow-ups, Overdue, Due Today, Upcoming) — one clean row on
+   desktop, two per row on tablet, one per row on small phones.
+   Three-class selectors beat the shared two-class .pr-kpi-grid
+   breakpoints regardless of stylesheet order (this polish file loads
+   after cpr-list.css). */
+.cpr-page .pr-kpi-grid.fu-kpi-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+.cpr-page .pr-kpi-grid.fu-kpi-grid .pr-kpi-card.qtn-kpi-card {
+  height: 88px;
+  padding: 14px 16px;
+  cursor: pointer;
+}
+@media (min-width: 768px) and (max-width: 1279px) {
+  .cpr-page .pr-kpi-grid.fu-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 14px 0;
+  }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+  .cpr-page .pr-kpi-grid.fu-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 12px 0;
+  }
+  .cpr-page .pr-kpi-grid.fu-kpi-grid .pr-kpi-card.qtn-kpi-card { height: 84px; padding: 14px; gap: 10px; }
+}
+@media (max-width: 479px) {
+  .cpr-page .pr-kpi-grid.fu-kpi-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+}
+
+/* ===== 13b. RFQ FOLLOW-UPS — STATUS BADGES + TYPE CHIP =====
+   The follow-up Status column renders the derived bucket
+   (Overdue / Due Today / Upcoming / Completed / Cancelled) with the
+   same pill language as the shared .cpr-badge tones. The follow-up
+   type chip is a subtle neutral tag so the pipeline wording stays
+   readable without competing with the status. */
+.cpr-page .fu-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 86px;
+  padding: 2.5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  letter-spacing: 0.1px;
+}
+.cpr-page .fu-badge-overdue { background: #FEF2F2; color: #B91C1C; }
+.cpr-page .fu-badge-due-today { background: #FFF7E6; color: #B45309; }
+.cpr-page .fu-badge-upcoming { background: #EEF4FF; color: #3B82F6; }
+.cpr-page .fu-badge-completed { background: #EAF7F3; color: #08785F; }
+.cpr-page .fu-badge-cancelled { background: #F1F5F9; color: #64748B; }
+.dark .cpr-page .fu-badge-overdue { background: rgba(185,28,28,0.14); color: #F87171; }
+.dark .cpr-page .fu-badge-due-today { background: rgba(180,83,9,0.14); color: #FBBF24; }
+.dark .cpr-page .fu-badge-upcoming { background: rgba(59,130,246,0.14); color: #93C5FD; }
+.dark .cpr-page .fu-badge-completed { background: rgba(7,94,84,0.14); color: #4ADE80; }
+.dark .cpr-page .fu-badge-cancelled { background: rgba(100,116,139,0.14); color: #94A3B8; }
+
+.cpr-page .fu-type-chip {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #F1F5F9;
+  color: #64748B;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.dark .cpr-page .fu-type-chip { background: rgba(148,163,184,0.12); color: #CBD5E1; }
+
+/* ===== 13. RFQ LIST — KPI GRID (12 cards) =====
+   The RFQ list shows twelve KPI cards (incl. Cancelled + Overdue).
+   Responsive layout: 6 per row on wide desktop (>=1440px), 4 per row
+   on laptop (1200–1439px), 2 per row on tablet/mobile, 1 per row on
+   small phones. Labels wrap to 2 lines so no text is truncated. */
+.cpr-page .pr-kpi-grid.rfq-kpi-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0;
+}
+/* Override the shared span-2 rule for Total RFQ Value card */
+.cpr-page .pr-kpi-grid.rfq-kpi-grid .pr-kpi-card[data-filter="totalValue"] {
+  grid-column: auto;
+}
+/* Laptop screens (1200–1439px): 4 cards per row */
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .cpr-page .pr-kpi-grid.rfq-kpi-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .cpr-page .pr-kpi-grid.rfq-kpi-grid .pr-kpi-card.qtn-kpi-card { padding: 14px; }
+}
+/* Tablet / small laptop (768–1199px): 2 cards per row */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .cpr-page .pr-kpi-grid.rfq-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 14px 0;
+  }
+}
+/* Mobile (480–767px): 2 cards per row */
+@media (min-width: 480px) and (max-width: 767px) {
+  .cpr-page .pr-kpi-grid.rfq-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+  }
+}
+/* Small phones (<480px): 1 card per row */
+@media (max-width: 479px) {
+  .cpr-page .pr-kpi-grid.rfq-kpi-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    margin: 10px 0;
+  }
+}
+

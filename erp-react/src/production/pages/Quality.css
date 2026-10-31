@@ -1,0 +1,8 @@
+/* ============================================================
+   Quality page — layout styles. Component-level styles live in
+   src/components/production/quality/*.css.
+   ============================================================ */
+/* Quality reuses the shared settings page card styles, exactly like the
+   Packing page, so .settings-page-head / -title / -subtitle come from the same
+   source instead of Quality's own copies. */
+@import '../components/production/settings/settings-pages.css';

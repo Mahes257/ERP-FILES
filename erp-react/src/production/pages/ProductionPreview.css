@@ -1,0 +1,827 @@
+/* =====================================================================
+   Production record preview — read-only detail page.
+
+   Visual reference: Sales → CPR → Cost Workout View
+   (src/pages/cpr/CostWorkoutView.jsx): breadcrumb, sticky surface
+   header card with record badge + status + actions, underlined tabs,
+   two-column information cards, right-hand summary panel, and the same
+   green (#0B4A3D) accent used across the ERP detail pages.
+
+   Everything here is presentation only — no inputs, no inline editing.
+   ===================================================================== */
+
+.ppv-page {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  padding: 16px 20px 32px;
+  color: #1e293b;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.ppv-page * {
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------ */
+/* Breadcrumb                                                          */
+/* ------------------------------------------------------------------ */
+.ppv-breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+  font-size: 11.5px;
+  color: #64748b;
+}
+
+.ppv-breadcrumb button {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #0b4a3d;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ppv-breadcrumb button:hover {
+  text-decoration: underline;
+}
+
+.ppv-breadcrumb-current {
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ */
+/* Sticky header + tabs                                                */
+/* ------------------------------------------------------------------ */
+.ppv-header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--app-bg, #f8fafc);
+}
+
+.ppv-header-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  padding: 20px;
+}
+
+.ppv-header-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 280px;
+  flex: 1;
+}
+
+.ppv-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0b4a3d, #083d34);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ppv-title-wrap {
+  min-width: 0;
+}
+
+.ppv-title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.ppv-title-number {
+  margin-left: 7px;
+  color: #94a3b8;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ppv-subtitle {
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.ppv-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 9px;
+}
+
+.ppv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #475569;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.ppv-chip-label {
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ppv-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ppv-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-top: 12px;
+  border-bottom: 2px solid #e2e8f0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ppv-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.ppv-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  background: transparent;
+  color: #64748b;
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.ppv-tab:hover {
+  color: #0b4a3d;
+}
+
+.ppv-tab.is-active {
+  color: #0b4a3d;
+  border-bottom-color: #0b4a3d;
+}
+
+.ppv-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.ppv-tab.is-active .ppv-tab-count {
+  background: #e8f0ee;
+  color: #0b4a3d;
+}
+
+/* ------------------------------------------------------------------ */
+/* Content / cards                                                     */
+/* ------------------------------------------------------------------ */
+.ppv-content {
+  margin-top: 16px;
+}
+
+.ppv-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+.ppv-overview-main {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ppv-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 190px;
+}
+
+.ppv-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  padding: 18px 20px;
+}
+
+.ppv-card + .ppv-card {
+  margin-top: 14px;
+}
+
+.ppv-overview-main .ppv-card + .ppv-card,
+.ppv-summary .ppv-card + .ppv-card {
+  margin-top: 0;
+}
+
+.ppv-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: #0b4a3d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ppv-card-count {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.ppv-field-row {
+  display: flex;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 12.5px;
+}
+
+.ppv-field-row:last-child {
+  border-bottom: 0;
+}
+
+.ppv-field-label {
+  width: 150px;
+  flex-shrink: 0;
+  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.ppv-field-value {
+  flex: 1;
+  min-width: 0;
+  color: #334155;
+  font-weight: 500;
+  word-break: break-word;
+}
+
+.ppv-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 12.5px;
+}
+
+.ppv-summary-row:last-child {
+  border-bottom: 0;
+}
+
+.ppv-summary-row span {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.ppv-summary-row strong {
+  color: #0b4a3d;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* ------------------------------------------------------------------ */
+/* Tables                                                              */
+/* ------------------------------------------------------------------ */
+.ppv-table-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+}
+
+.ppv-table-head {
+  padding: 16px 20px 2px;
+}
+
+.ppv-table-wrap {
+  overflow-x: auto;
+}
+
+.ppv-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+.ppv-table th {
+  padding: 9px 12px;
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ppv-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.ppv-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ppv-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* ------------------------------------------------------------------ */
+/* Timeline / attachments / file                                       */
+/* ------------------------------------------------------------------ */
+.ppv-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ppv-timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.ppv-timeline-dot {
+  width: 9px;
+  height: 9px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: #0b4a3d;
+  box-shadow: 0 0 0 3px rgba(11, 74, 61, 0.12);
+  flex-shrink: 0;
+}
+
+.ppv-timeline-title {
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.ppv-timeline-detail {
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 11.5px;
+}
+
+.ppv-timeline-date {
+  margin-top: 3px;
+  color: #94a3b8;
+  font-size: 10.5px;
+}
+
+.ppv-attachment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.ppv-attachment {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.ppv-attachment-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: #e8f0ee;
+  color: #0b4a3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ppv-attachment-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ppv-attachment-title {
+  color: #334155;
+  font-size: 12px;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.ppv-attachment-meta {
+  color: #64748b;
+  font-size: 10.5px;
+}
+
+.ppv-attachment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ppv-file-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.ppv-file-note {
+  margin: 0;
+  max-width: 580px;
+  color: #64748b;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+.ppv-inline-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: #64748b;
+  font-size: 11.5px;
+}
+
+.ppv-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.ppv-action:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.ppv-action-primary {
+  background: #0b4a3d;
+  border-color: #0b4a3d;
+  color: #fff;
+}
+
+.ppv-action-primary:hover {
+  background: #083d34;
+  border-color: #083d34;
+}
+
+.ppv-action-ghost {
+  background: #fff;
+}
+
+/* ------------------------------------------------------------------ */
+/* Loading / empty / error                                             */
+/* ------------------------------------------------------------------ */
+.ppv-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 320px;
+  color: #64748b;
+  font-size: 12.5px;
+}
+
+.ppv-spin {
+  animation: ppv-spin 0.9s linear infinite;
+}
+
+@keyframes ppv-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ppv-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 24px;
+}
+
+.ppv-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 32px 16px;
+  color: #94a3b8;
+  text-align: center;
+}
+
+.ppv-empty h4 {
+  margin: 2px 0 0;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ppv-empty p {
+  margin: 0;
+  max-width: 520px;
+  color: #94a3b8;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+/* ------------------------------------------------------------------ */
+/* Responsive + print                                                  */
+/* ------------------------------------------------------------------ */
+@media (max-width: 1024px) {
+  .ppv-overview-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ppv-summary {
+    position: static;
+  }
+}
+
+@media (max-width: 640px) {
+  .ppv-page {
+    padding: 12px;
+  }
+
+  .ppv-header-card {
+    padding: 16px;
+  }
+
+  .ppv-title {
+    font-size: 18px;
+  }
+
+  .ppv-field-row {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ppv-field-label {
+    width: auto;
+  }
+}
+
+@media print {
+  .ppv-header-sticky {
+    position: static;
+  }
+
+  .ppv-actions,
+  .ppv-tabs {
+    display: none !important;
+  }
+
+  .ppv-page {
+    padding: 0;
+  }
+
+  .ppv-card,
+  .ppv-table-card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
+
+/* ============================================================
+   Casting stage progress (Overview)
+   ------------------------------------------------------------
+   Completed stages are green (saved Completed/Skipped entries),
+   the current stage is highlighted, future stages stay neutral.
+   The Approval gate is its own step before the five Casting stages.
+   ============================================================ */
+.ppv-stage-card {
+  margin-bottom: 14px;
+}
+
+.ppv-stage-meter {
+  height: 8px;
+  margin: 4px 0 8px;
+  border-radius: 999px;
+  background: #E2E8F0;
+  overflow: hidden;
+}
+
+.ppv-stage-meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: #16A34A;
+  transition: width 0.25s ease;
+}
+
+.ppv-stage-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.ppv-stage-percent {
+  font-weight: 700;
+  color: #15803D;
+}
+
+.ppv-stage-current {
+  color: #64748B;
+}
+
+.ppv-stage-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.ppv-stage-step {
+  display: flex;
+  flex: 1 1 118px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  min-width: 104px;
+  padding: 8px 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  background: #FFFFFF;
+}
+
+.ppv-stage-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #CBD5E1;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #FFFFFF;
+}
+
+.ppv-stage-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.ppv-stage-status {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #64748B;
+}
+
+/* Completed → green */
+.ppv-stage-step.is-done {
+  border-color: #BBF7D0;
+  background: #F0FDF4;
+}
+.ppv-stage-step.is-done .ppv-stage-dot {
+  border-color: #16A34A;
+  background: #16A34A;
+}
+.ppv-stage-step.is-done .ppv-stage-name,
+.ppv-stage-step.is-done .ppv-stage-status {
+  color: #15803D;
+}
+
+/* Current → highlighted (still green when that stage is already completed) */
+.ppv-stage-step.is-current {
+  border-color: #F59E0B;
+  background: #FFFBEB;
+}
+.ppv-stage-step.is-current .ppv-stage-dot {
+  border-color: #D97706;
+  background: #F59E0B;
+}
+.ppv-stage-step.is-current .ppv-stage-name {
+  color: #92400E;
+}
+.ppv-stage-step.is-current .ppv-stage-status {
+  color: #B45309;
+}
+/* A completed stage that is also the one currently selected stays GREEN and
+   is highlighted with a ring — completion is never hidden by the "current"
+   styling. */
+.ppv-stage-step.is-done.is-current {
+  border-color: #16A34A;
+  background: #F0FDF4;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
+}
+.ppv-stage-step.is-done.is-current .ppv-stage-dot {
+  border-color: #16A34A;
+  background: #16A34A;
+}
+.ppv-stage-step.is-done.is-current .ppv-stage-name,
+.ppv-stage-step.is-done.is-current .ppv-stage-status {
+  color: #15803D;
+}
+
+.ppv-stage-step.is-pending {
+  opacity: 0.9;
+}
+
+.ppv-stage-connector {
+  align-self: center;
+  width: 14px;
+  min-width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: #E2E8F0;
+}
+.ppv-stage-connector.is-done {
+  background: #16A34A;
+}
+
+@media (max-width: 640px) {
+  .ppv-stage-step {
+    flex-basis: 100%;
+  }
+  .ppv-stage-connector {
+    display: none;
+  }
+}

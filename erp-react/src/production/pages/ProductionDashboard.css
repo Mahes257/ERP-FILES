@@ -1,0 +1,610 @@
+/* ============================================================
+   Production Dashboard — full monitoring view
+   ============================================================ */
+
+/* ---- KPI Grid ----
+   Matches the shared reference KPI card system used by Packing / Dispatch /
+   Quality and Production Orders (ModuleSummaryCards / .po-kpi-card):
+   42px icon tile beside a large value, 12px label under the value, 14px gap,
+   96px minimum card height, hover lift + focus ring.
+   ----------------------------------------------------------- */
+.dash-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+  width: 100%;
+  max-width: 100%;
+}
+@media (max-width: 1399px) {
+  .dash-kpi-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 1023px) {
+  .dash-kpi-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 899px) {
+  .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 599px) {
+  .dash-kpi-grid { grid-template-columns: 1fr; }
+}
+
+/* Card — icon tile left, value + label stacked right.
+   A <button> centres its text by default, which is what pulled the value and
+   the label out of alignment, so the text alignment is asserted here. */
+.dash-kpi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 20px;
+  min-height: 96px;
+  min-width: 0;
+  height: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid #dce8e4;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(7, 94, 84, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+  transition: all 0.2s ease;
+}
+.dash-kpi::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+.dash-kpi:hover {
+  border-color: #075e54;
+  box-shadow: 0 8px 28px rgba(7, 94, 84, 0.12);
+  transform: translateY(-2px);
+}
+.dash-kpi:focus-visible {
+  outline: 2px solid #075e54;
+  outline-offset: 2px;
+}
+
+/* Icon — 42px rounded tile with soft colored background */
+.dash-kpi-icon {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+}
+.dash-kpi-icon svg { width: 19px; height: 19px; }
+
+/* Icon tone variants — identical soft-bg + saturated-icon palette to the
+   shared reference cards (tone-neutral / tone-amber / … in
+   ModuleSummaryCards.css) so the tiles match across modules. */
+.dash-kpi-icon--neutral { background: rgba(10, 79, 68, 0.08); color: #0A4F44; }
+.dash-kpi-icon--gray    { background: rgba(100, 116, 139, 0.08); color: #64748B; }
+.dash-kpi-icon--amber   { background: rgba(217, 119, 6, 0.10); color: #D97706; }
+.dash-kpi-icon--blue    { background: rgba(59, 130, 246, 0.08); color: #3B82F6; }
+.dash-kpi-icon--green   { background: rgba(22, 163, 74, 0.10); color: #16A34A; }
+.dash-kpi-icon--teal    { background: rgba(7, 94, 84, 0.08); color: #075E54; }
+.dash-kpi-icon--purple  { background: rgba(124, 58, 237, 0.08); color: #7C3AED; }
+.dash-kpi-icon--red     { background: rgba(220, 38, 38, 0.08); color: #DC2626; }
+
+/* Value + label container */
+.dash-kpi-body {
+  min-width: 0;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+.dash-kpi-num {
+  font-size: clamp(20px, 2.2vw, 28px);
+  font-weight: 700;
+  color: #102a2a;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+}
+.dash-kpi-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #64748b;
+  margin: 3px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- Two-column & full-width ---- */
+.dash-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* ---- Card ---- */
+.dash-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.dash-card--full {
+  margin-bottom: 20px;
+}
+.dash-card-title {
+  font-size: var(--fs-section-title, 15px);
+  font-weight: var(--fw-semibold, 600);
+  color: #111827;
+  margin: 0 0 16px;
+}
+
+/* ================================================================
+   PRODUCTION FLOW — compact workflow cards in one horizontal strip
+
+   Each stage is a narrow card: a dark-green header with the module
+   icon + name, then a white body of label/value rows. The strip
+   scrolls horizontally on its own, so the page never overflows.
+   ================================================================ */
+.dash-flow-track {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 2px 0 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #D6E3DF transparent;
+}
+.dash-flow-track::-webkit-scrollbar { height: 8px; }
+.dash-flow-track::-webkit-scrollbar-track { background: transparent; }
+.dash-flow-track::-webkit-scrollbar-thumb {
+  background: #D6E3DF;
+  border-radius: 999px;
+}
+.dash-flow-track::-webkit-scrollbar-thumb:hover { background: #B6C7C2; }
+
+.dash-flow-card {
+  flex: 1 1 172px;
+  min-width: 172px;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  border: 1px solid #DCE8E4;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+/* Dark green header — icon + module name, white text */
+.dash-flow-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 42px;
+  padding: 6px 8px;
+  border: 0;
+  background: #075E54;
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.dash-flow-card-head svg { flex: 0 0 auto; }
+.dash-flow-card-head span {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.dash-flow-card-head:hover { background: #0A6E62; }
+.dash-flow-card-head:focus-visible { outline: 2px solid #064C44; outline-offset: -3px; }
+
+/* Light body — thin divider from the header, label left / value right */
+.dash-flow-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 4px 0;
+  background: #FFFFFF;
+  border-top: 1px solid #E7EFEC;
+}
+
+.dash-flow-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 10px;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.dash-flow-row span {
+  color: #64748B;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dash-flow-row strong {
+  color: #102A2A;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.dash-flow-row:hover { background: #F4F8F7; }
+.dash-flow-row:focus-visible { outline: 2px solid #075E54; outline-offset: -3px; }
+
+/* Per-stage breakdown for stages that have one (Fabrication). Kept out of
+   the cards so it cannot stretch them, and kept clickable. */
+.dash-flow-subline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #EEF2F1;
+}
+.dash-flow-subline-label {
+  margin-right: 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7A8F8A;
+}
+.dash-flow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid #DCE8E4;
+  border-radius: 999px;
+  background: #F7FBFA;
+  color: #64748B;
+  font-family: inherit;
+  font-size: 11.5px;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.dash-flow-chip strong {
+  color: #102A2A;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.dash-flow-chip:hover { background: #EEF6F4; border-color: #C6DCD6; }
+.dash-flow-chip:focus-visible { outline: 2px solid #075E54; outline-offset: 1px; }
+
+/* Connector between cards */
+.dash-flow-arrow {
+  flex: 0 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #93AAA4;
+}
+.dash-flow-arrow svg { flex: 0 0 auto; }
+
+/* ================================================================
+   PROGRESS
+   ================================================================ */
+.dash-progress {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.dash-progress-bar-wrap {
+  flex: 1;
+  height: 10px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.dash-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.dash-progress-pct {
+  font-size: 20px;
+  font-weight: 700;
+  color: #10b981;
+  min-width: 50px;
+  text-align: right;
+}
+.dash-progress-stats {
+  display: flex;
+  gap: 20px;
+}
+.dash-progress-stat { display: flex; flex-direction: column; }
+.dash-progress-stat-num { font-size: 18px; font-weight: var(--fw-bold, 700); color: #111827; }
+.dash-progress-stat-num--blue  { color: #3b82f6; }
+.dash-progress-stat-num--green { color: #10b981; }
+.dash-progress-stat-num--red   { color: #ef4444; }
+.dash-progress-stat-label { font-size: var(--fs-body-sm, 11px); color: #6b7280; font-weight: var(--fw-medium, 500); }
+
+/* ================================================================
+   PENDING ACTIONS
+   ================================================================ */
+.dash-actions-list { display: flex; flex-direction: column; gap: 6px; }
+.dash-action-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  color: #374151;
+  font-size: 13px;
+  text-align: left;
+  width: 100%;
+}
+.dash-action-item:hover { background: #f3f4f6; border-color: #d1d5db; }
+.dash-action-label { flex: 1; font-weight: var(--fw-medium, 500); }
+.dash-action-count {
+  font-weight: var(--fw-bold, 700);
+  font-size: 14px;
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.dash-action-arrow { color: #9ca3af; }
+
+/* ================================================================
+   ALERTS / ATTENTION REQUIRED
+   ================================================================ */
+.dash-alerts-list { display: flex; flex-direction: column; gap: 6px; }
+.dash-alert-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+  width: 100%;
+  border: 1px solid;
+  transition: background 0.15s;
+}
+.dash-alert-item--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #991b1b;
+}
+.dash-alert-item--error:hover { background: #fee2e2; }
+.dash-alert-item--warning {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #92400e;
+}
+.dash-alert-item--warning:hover { background: #fef3c7; }
+.dash-alert-item span { flex: 1; }
+
+/* ================================================================
+   EMPTY STATE
+   ================================================================ */
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px;
+  color: #9ca3af;
+  font-size: 13px;
+}
+.dash-empty--green { color: #10b981; }
+
+/* ================================================================
+   TABLES
+   ================================================================ */
+.dash-table-wrap { overflow-x: auto; }
+/* Sticky-grid scope: the dashboard summary tables have a transparent (white)
+   header, so the frozen first column keeps that instead of dark green. */
+.dash-table.sgrid.sgrid-prod {
+  --sgrid-prod-head-bg: #FFFFFF;
+}
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-body, 12px);
+}
+.dash-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-weight: var(--fw-semibold, 600);
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+  font-size: var(--fs-table-header, 11px);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.dash-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  white-space: nowrap;
+}
+.dash-table tbody tr:hover { background: #f9fafb; }
+.dash-table--compact th,
+.dash-table--compact td { padding: 6px 10px; }
+.dash-td-bold { font-weight: 600; color: #111827; }
+.dash-td-muted { color: #6b7280; }
+.dash-wo-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #1677ff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: inherit;
+}
+.dash-wo-link:hover { text-decoration: underline; }
+.dash-status-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.dash-priority-badge { font-size: 12px; font-weight: 600; }
+
+/* ================================================================
+   ACTIVE WORK ORDERS
+   ================================================================ */
+.dash-active-list { display: flex; flex-direction: column; gap: 6px; }
+.dash-active-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s;
+}
+.dash-active-item:hover { background: #f3f4f6; }
+.dash-active-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dash-active-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+/* ================================================================
+   PERFORMANCE
+   ================================================================ */
+.dash-perf-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.dash-perf-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.dash-perf-num {
+  font-size: 20px;
+  font-weight: var(--fw-bold, 700);
+  color: #111827;
+}
+.dash-perf-label {
+  font-size: var(--fs-body, 12px);
+  color: #6b7280;
+  font-weight: var(--fw-medium, 500);
+}
+.dash-perf-bar-wrap {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+.dash-perf-bar {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+.dash-perf-bar--green  { background: linear-gradient(90deg, #10b981, #059669); }
+.dash-perf-bar--blue   { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.dash-perf-bar--purple { background: linear-gradient(90deg, #8b5cf6, #7c3aed); }
+.dash-perf-summary {
+  display: flex;
+  gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+.dash-perf-stat { display: flex; flex-direction: column; }
+.dash-perf-stat-num { font-size: 16px; font-weight: var(--fw-bold, 700); color: #111827; }
+.dash-perf-stat-label { font-size: var(--fs-body-sm, 11px); color: #6b7280; font-weight: var(--fw-medium, 500); }
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 1200px) {
+  .dash-flow-card { min-width: 138px; }
+}
+@media (max-width: 1024px) {
+  .dash-two-col { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .dash-two-col { gap: 14px; }
+  .dash-card { padding: 14px; }
+  .dash-card-title { font-size: 14px; margin-bottom: 12px; }
+  /* The strip keeps scrolling horizontally rather than stacking: the cards
+     stay the same size, only the track gets narrower. */
+  .dash-flow-card { min-width: 132px; }
+  .dash-flow-card-head { font-size: 11px; padding: 7px 8px; }
+  .dash-flow-row { font-size: 11px; }
+  .dash-progress { gap: 10px; }
+  .dash-progress-pct { font-size: 16px; min-width: 40px; }
+  .dash-table { font-size: 12px; }
+  .dash-table th, .dash-table td { padding: 6px 8px; }
+}
+@media (max-width: 640px) {
+  .dash-two-col { gap: 12px; }
+  .dash-card { padding: 12px; border-radius: 10px; }
+  .dash-flow-arrow { flex: 0 0 20px; }
+  .dash-progress-stats { flex-wrap: wrap; gap: 12px; }
+  .dash-perf-summary { flex-wrap: wrap; gap: 12px; }
+  .dash-progress-bar-wrap { height: 8px; }
+}
+@media (max-width: 480px) {
+  .dash-kpi { gap: 10px; padding: 14px 16px; }
+  .dash-kpi-icon { flex: 0 0 36px; width: 36px; height: 36px; min-width: 36px; }
+}
+
+/* ================================================================
+   CLICKABLE ELEMENTS
+   ================================================================ */
+.dash-stage-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #1677ff;
+  font-weight: 500;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+.dash-stage-link:hover { text-decoration: underline; }

@@ -1,0 +1,455 @@
+/* =====================================================================
+   Proforma Invoice A4 document — base layer.
+   ---------------------------------------------------------------------
+   The on-screen preview, the printed output and the PDF export share this
+   one stylesheet (SalesDocumentDesign captures / prints the same
+   #salesdoc-sheet DOM), so they stay pixel-identical.
+
+   The document (ProformaInvoiceDocument) renders NAMED sections — head,
+   masthead, exporter, invoice meta, consignee, buyer, shipment,
+   destination, packing, items, finance, bank, terms, signature, footer —
+   inside one CSS grid. proforma-templates.css then gives each of the 10
+   Proforma templates its own `grid-template-areas` composition, typography,
+   cards, borders, table, financial summary, signature and footer.
+
+   This file only styles the shared base: the grid shell, section areas,
+   typography primitives and content-aware flow. Print/PDF safety rules
+   live in sales-document-design-print.css (as before).
+   ===================================================================== */
+
+.proforma-invoice-doc {
+  --pi-ink: #17202a;
+  --pi-muted: #64707c;
+  --pi-faint: #9aa5b1;
+  --pi-rule: #d7dde4;
+  --pi-accent: #17365d;
+  --pi-accent-2: #b08d3f;
+  --pi-soft: #f3f6f9;
+  --pi-bg: #ffffff;
+  box-sizing: border-box;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  color: var(--pi-ink);
+  font-size: 10px;
+  line-height: 1.5;
+  background: var(--pi-bg);
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-areas:
+    "head head head head head head"
+    "mast mast mast mast mast mast"
+    "exp exp exp meta meta meta"
+    "cons cons cons buyer buyer buyer"
+    "ship ship ship dest dest dest"
+    "pack pack pack pack pack pack"
+    "items items items items items items"
+    "fin fin fin fin fin fin"
+    "bank bank bank bank bank bank"
+    "terms terms terms terms terms terms"
+    "sig sig sig sig sig sig"
+    "foot foot foot foot foot foot";
+  /* Vertical rhythm comes from section margins (never gaps) so conditional
+     sections (packing / finance) don't leave phantom spacing behind. */
+  gap: 0 5mm;
+  align-items: start;
+  padding: 2mm 1mm;
+}
+
+.proforma-invoice-doc * {
+  box-sizing: border-box;
+}
+
+/* ---------- Grid area assignment (shared by every template) ---------- */
+.proforma-invoice-doc .pi-head { grid-area: head; min-width: 0; }
+.proforma-invoice-doc .pi-masthead { grid-area: mast; }
+.proforma-invoice-doc .pi-exporter { grid-area: exp; }
+.proforma-invoice-doc .pi-meta { grid-area: meta; }
+.proforma-invoice-doc .pi-consignee { grid-area: cons; }
+.proforma-invoice-doc .pi-buyer { grid-area: buyer; }
+.proforma-invoice-doc .pi-shipment { grid-area: ship; }
+.proforma-invoice-doc .pi-destination { grid-area: dest; }
+.proforma-invoice-doc .pi-packing { grid-area: pack; }
+.proforma-invoice-doc .pi-items { grid-area: items; }
+.proforma-invoice-doc .pi-finance { grid-area: fin; }
+.proforma-invoice-doc .pi-bank { grid-area: bank; }
+.proforma-invoice-doc .pi-terms { grid-area: terms; }
+.proforma-invoice-doc .pi-signature { grid-area: sig; }
+.proforma-invoice-doc .pi-footer { grid-area: foot; }
+
+/* ---------- Sections ---------- */
+.proforma-invoice-doc .pi-sec {
+  min-width: 0;
+  margin-bottom: 4mm;
+}
+
+.proforma-invoice-doc .pi-sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4mm;
+  margin-bottom: 2mm;
+}
+
+.proforma-invoice-doc .pi-sec-title {
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--pi-accent);
+}
+
+.proforma-invoice-doc .pi-sec-sub {
+  font-size: 7.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--pi-muted);
+}
+
+.proforma-invoice-doc .pi-sec-body {
+  min-width: 0;
+}
+
+/* ---------- Typography primitives ---------- */
+.proforma-invoice-doc .pi-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--pi-ink);
+}
+
+.proforma-invoice-doc .pi-addr {
+  font-size: 9.5px;
+  color: var(--pi-muted);
+  margin-top: 1.5px;
+  white-space: pre-wrap;
+}
+
+.proforma-invoice-doc .pi-contact {
+  margin-top: 3px;
+  font-size: 9px;
+  color: var(--pi-muted);
+}
+
+.proforma-invoice-doc .pi-contact-line {
+  display: block;
+}
+
+.proforma-invoice-doc .pi-party-extra {
+  font-size: 9px;
+  color: var(--pi-muted);
+  margin-top: 1.5px;
+  white-space: pre-wrap;
+}
+
+/* ---------- Label / value rows ---------- */
+.proforma-invoice-doc .pi-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4mm;
+  padding: 1.5px 0;
+}
+
+.proforma-invoice-doc .pi-lbl {
+  font-size: 7.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: var(--pi-muted);
+  flex: 0 0 auto;
+  padding-top: 2px;
+}
+
+.proforma-invoice-doc .pi-val {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--pi-ink);
+  flex: 1 1 auto;
+  text-align: right;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
+}
+
+.proforma-invoice-doc .pi-row--left .pi-val {
+  text-align: left;
+}
+
+.proforma-invoice-doc .pi-field-wide {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1px;
+  padding: 1.5px 0;
+}
+
+.proforma-invoice-doc .pi-field-wide .pi-val {
+  text-align: left;
+}
+
+/* ---------- Masthead ---------- */
+.proforma-invoice-doc .pi-masthead {
+  margin-bottom: 4mm;
+}
+
+.proforma-invoice-doc .pi-doc-title {
+  display: block;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: .18em;
+  color: var(--pi-ink);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ---------- Item / packing tables ---------- */
+.proforma-invoice-doc .pi-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.proforma-invoice-doc .pi-table th,
+.proforma-invoice-doc .pi-table td {
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.proforma-invoice-doc .pi-table th {
+  padding: 2.5mm 2mm;
+  font-size: 7.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  text-align: left;
+  vertical-align: bottom;
+  line-height: 1.35;
+  color: var(--pi-ink);
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+.proforma-invoice-doc .pi-table td {
+  padding: 2mm;
+  font-size: 9.5px;
+  vertical-align: top;
+  line-height: 1.4;
+  border-bottom: 1px solid var(--pi-rule);
+}
+
+.proforma-invoice-doc .pi-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.proforma-invoice-doc .pi-col-sno { width: 4%; }
+.proforma-invoice-doc .pi-col-marks { width: 8%; }
+.proforma-invoice-doc .pi-col-pkgs { width: 8%; }
+.proforma-invoice-doc .pi-col-desc { width: 26%; }
+.proforma-invoice-doc .pi-col-sku { width: 7%; }
+.proforma-invoice-doc .pi-col-drawing { width: 7%; }
+.proforma-invoice-doc .pi-col-material { width: 7%; }
+.proforma-invoice-doc .pi-col-hsn { width: 6%; }
+.proforma-invoice-doc .pi-col-manufacturer { width: 9%; }
+.proforma-invoice-doc .pi-col-qty { width: 6%; }
+.proforma-invoice-doc .pi-col-uom { width: 6%; }
+.proforma-invoice-doc .pi-col-rate { width: 7%; }
+.proforma-invoice-doc .pi-col-amount { width: 9%; }
+
+.proforma-invoice-doc .pi-col-sno,
+.proforma-invoice-doc .pi-col-qty,
+.proforma-invoice-doc .pi-col-rate,
+.proforma-invoice-doc .pi-col-amount,
+.proforma-invoice-doc .pi-cell-num {
+  text-align: right;
+}
+
+.proforma-invoice-doc .pi-cell-sno {
+  text-align: center;
+  color: var(--pi-muted);
+}
+
+.proforma-invoice-doc .pi-cell-desc .pi-desc-main {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--pi-ink);
+}
+
+.proforma-invoice-doc .pi-cell-desc .pi-desc-sub {
+  font-size: 8px;
+  color: var(--pi-muted);
+  padding-left: 2mm;
+}
+
+.proforma-invoice-doc .pi-cell-total {
+  font-weight: 700;
+  color: var(--pi-ink);
+}
+
+.proforma-invoice-doc .pi-empty {
+  padding: 6mm 2mm;
+  text-align: center;
+  color: var(--pi-faint);
+}
+
+.proforma-invoice-doc .pi-total-row td {
+  padding: 2.5mm 2mm;
+  border-top: 2px solid var(--pi-accent);
+  border-bottom: none;
+}
+
+.proforma-invoice-doc .pi-total-label {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--pi-accent);
+  text-align: left;
+}
+
+.proforma-invoice-doc .pi-total-qty,
+.proforma-invoice-doc .pi-total-amount {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-align: right;
+  color: var(--pi-ink);
+}
+
+/* ---------- Financial summary ---------- */
+.proforma-invoice-doc .pi-finance-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.proforma-invoice-doc .pi-fin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4mm;
+  padding: 1.5px 0;
+}
+
+.proforma-invoice-doc .pi-fin-value {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-align: right;
+  color: var(--pi-ink);
+}
+
+.proforma-invoice-doc .pi-fin-row--total {
+  margin-top: 1mm;
+  padding-top: 2mm;
+  border-top: 1px solid var(--pi-rule);
+}
+
+.proforma-invoice-doc .pi-fin-row--total .pi-fin-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--pi-accent);
+}
+
+.proforma-invoice-doc .pi-fin-words {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 4mm;
+  margin-top: 2mm;
+  padding-top: 2mm;
+  border-top: 1px solid var(--pi-rule);
+}
+
+.proforma-invoice-doc .pi-fin-words-value {
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* ---------- Signature ---------- */
+.proforma-invoice-doc .pi-signature-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.proforma-invoice-doc .pi-stamp {
+  max-height: 20mm;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.proforma-invoice-doc .pi-stamp-placeholder {
+  width: 22mm;
+  height: 22mm;
+  border-radius: 50%;
+  border: 2px dashed var(--pi-rule);
+  color: var(--pi-faint);
+  font-size: 8px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proforma-invoice-doc .pi-signature-name {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 2mm;
+  color: var(--pi-ink);
+}
+
+.proforma-invoice-doc .pi-signature-designation {
+  font-size: 8.5px;
+  color: var(--pi-muted);
+  margin-top: 0.5mm;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.proforma-invoice-doc .pi-signature-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1mm;
+  margin-top: 1.5mm;
+  font-size: 9px;
+  color: var(--pi-muted);
+}
+
+.proforma-invoice-doc .pi-meta-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.proforma-invoice-doc .pi-meta-sep {
+  width: 2mm;
+  height: 1px;
+  background: var(--pi-rule);
+}
+
+/* ---------- Footer ---------- */
+.proforma-invoice-doc .pi-footer {
+  margin-top: 3mm;
+  padding-top: 2mm;
+  border-top: 1px solid var(--pi-rule);
+  text-align: center;
+}
+
+.proforma-invoice-doc .pi-footer span {
+  font-size: 7.5px;
+  color: var(--pi-muted);
+  letter-spacing: .1em;
+  font-weight: 700;
+}
+
+/* ---------- Edit-mode affordance (dormant for the Proforma view) ---------- */
+.proforma-invoice-doc--edit .pi-row--editable .pi-lbl {
+  color: var(--pi-accent);
+}
+
+.proforma-invoice-doc--edit .pi-row--editable .pi-val input,
+.proforma-invoice-doc--edit .pi-row--editable .pi-val select,
+.proforma-invoice-doc--edit .pi-row--editable .pi-val textarea {
+  background: #fff;
+  border: 1px solid var(--pi-rule);
+  padding: 1.5px 2.5px;
+  border-radius: 2px;
+}

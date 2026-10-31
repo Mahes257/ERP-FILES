@@ -1,0 +1,958 @@
+/* ============================================================================
+   Canonical document-template render layer.
+   The data DOM is shared; each layout below owns its visual composition.
+   No legacy template cascade is retained.
+   ============================================================================ */
+
+#quotation-sheet,
+#salesdoc-sheet {
+  --tpl-ink: #17202a;
+  --tpl-muted: #65727e;
+  --tpl-rule: #c8d2dc;
+  --tpl-accent: #17365d;
+  --tpl-soft: #eef3f7;
+  box-sizing: border-box;
+  color: var(--tpl-ink);
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  /* Word-aware wrapping — values are never broken mid-token. */
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+#quotation-sheet *,
+#salesdoc-sheet * {
+  box-sizing: border-box;
+}
+
+#quotation-sheet .qpo-letterhead,
+#salesdoc-sheet .qpo-letterhead {
+  display: block;
+  flex-shrink: 0;
+  margin-bottom: 7mm !important;
+}
+
+#quotation-sheet .qpo-header-area,
+#salesdoc-sheet .qpo-header-area {
+  display: block;
+  margin-bottom: 6mm;
+}
+
+#quotation-sheet .qpo-title-block,
+#salesdoc-sheet .qpo-title-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6mm;
+  min-width: 0;
+  margin: 0 0 6mm;
+  padding: 5mm 6mm;
+  border: 0;
+  background: var(--tpl-accent);
+  color: #fff;
+}
+
+#quotation-sheet .qpo-doc-title,
+#salesdoc-sheet .qpo-doc-title {
+  color: #fff !important;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  line-height: 1.1;
+}
+
+#quotation-sheet .qpo-title-meta,
+#salesdoc-sheet .qpo-title-meta {
+  min-width: 0;
+  color: inherit !important;
+  font-size: 10px;
+}
+
+#quotation-sheet .qpo-title-meta .font-bold,
+#salesdoc-sheet .qpo-title-meta .font-bold {
+  color: inherit !important;
+}
+
+#quotation-sheet .qpo-party-grid,
+#salesdoc-sheet .qpo-party-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5mm;
+  min-width: 0;
+  margin-bottom: 6mm;
+}
+
+#quotation-sheet .qpo-party-card,
+#salesdoc-sheet .qpo-party-card,
+#salesdoc-sheet .qpo-info-card {
+  min-width: 0;
+  border: 1px solid var(--tpl-rule);
+  border-top: 3px solid var(--tpl-accent);
+  border-radius: 0;
+  background: #fff;
+  padding: 4mm;
+}
+
+#quotation-sheet .qpo-card-label,
+#salesdoc-sheet .qpo-card-label,
+#quotation-sheet .qpo-section-head,
+#salesdoc-sheet .qpo-section-head {
+  color: var(--tpl-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+#quotation-sheet .qpo-info-region,
+#salesdoc-sheet .qpo-info-region {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(52mm, 1fr));
+  gap: 3mm;
+  margin-bottom: 6mm;
+}
+
+#quotation-sheet .qpo-items-region,
+#salesdoc-sheet .qpo-items-region {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 6mm;
+}
+
+#quotation-sheet .salesdoc-item-grid,
+#salesdoc-sheet .salesdoc-item-grid {
+  --it-primary: var(--tpl-accent);
+  --it-primary-dark: var(--tpl-accent);
+  --it-header-bg: var(--tpl-accent);
+  --it-header-text: #fff;
+  --it-border: var(--tpl-rule);
+  --it-text: var(--tpl-ink);
+  --it-text-secondary: var(--tpl-muted);
+  width: 100%;
+  border: 1px solid var(--tpl-rule);
+  border-radius: 0;
+  overflow: visible;
+}
+
+#quotation-sheet .salesdoc-item-grid .item-table-wrap,
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap {
+  width: 100%;
+  overflow: visible;
+}
+
+#quotation-sheet .salesdoc-item-grid table,
+#salesdoc-sheet .salesdoc-item-grid table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+#quotation-sheet .salesdoc-item-grid thead,
+#salesdoc-sheet .salesdoc-item-grid thead {
+  display: table-header-group;
+}
+
+#quotation-sheet .salesdoc-item-grid thead th,
+#salesdoc-sheet .salesdoc-item-grid thead th {
+  background: var(--tpl-accent);
+  color: #fff;
+  border-color: var(--tpl-accent);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  white-space: normal;
+}
+
+#quotation-sheet .salesdoc-item-grid tbody td,
+#salesdoc-sheet .salesdoc-item-grid tbody td {
+  min-width: 0;
+  vertical-align: top;
+  border-color: var(--tpl-rule);
+  white-space: normal;
+  /* Was `anywhere`: it let every cell's content be broken character by
+     character (₹3,909.78 → ₹3,909. + 78). Numeric cells are pinned to
+     nowrap in styles/value-integrity.css. */
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+#quotation-sheet .salesdoc-item-grid tbody tr,
+#salesdoc-sheet .salesdoc-item-grid tbody tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#quotation-sheet .salesdoc-item-grid .item-table-footer,
+#salesdoc-sheet .salesdoc-item-grid .item-table-footer {
+  border-top: 2px solid var(--tpl-accent);
+  background: var(--tpl-soft);
+}
+
+#quotation-sheet .qpo-totals,
+#salesdoc-sheet .qpo-totals {
+  width: min(100%, 92mm);
+  margin: 0 0 6mm auto;
+  border: 1px solid var(--tpl-rule);
+  border-radius: 0;
+  background: #fff;
+  padding: 3mm;
+}
+
+#quotation-sheet .qpo-totals .qpo-grand-value,
+#salesdoc-sheet .qpo-totals .qpo-grand-value,
+#salesdoc-sheet .qpo-totals .sd-grand-row {
+  background: var(--tpl-soft);
+  color: var(--tpl-accent) !important;
+  border: 1px solid var(--tpl-rule);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+#quotation-sheet .qpo-sign-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8mm;
+  align-items: end;
+  margin-bottom: 6mm;
+}
+
+#quotation-sheet .qpo-words,
+#salesdoc-sheet .qpo-words {
+  min-width: 0;
+  justify-content: flex-start;
+  margin-bottom: 0;
+}
+
+#quotation-sheet .qpo-words > div,
+#salesdoc-sheet .qpo-words > div {
+  max-width: none;
+  text-align: left;
+}
+
+#quotation-sheet .qpo-signature,
+#salesdoc-sheet .qpo-signature {
+  margin-top: 5mm;
+}
+
+#quotation-sheet .qpo-terms-grid,
+#quotation-sheet .qpo-footer,
+#salesdoc-sheet .qpo-terms-region {
+  border-top: 2px solid var(--tpl-accent);
+  padding-top: 4mm;
+}
+
+#quotation-sheet .qpo-bank-strip {
+  border: 1px solid var(--tpl-rule);
+  border-radius: 0;
+  background: var(--tpl-soft);
+  padding: 4mm;
+}
+
+#quotation-sheet .qpo-bank-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(35mm, 1fr));
+  gap: 3mm 5mm;
+}
+
+#quotation-sheet .qpo-bank-item {
+  min-width: 0;
+}
+
+#quotation-sheet .qpo-bank-item span {
+  display: block;
+  color: var(--tpl-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+#quotation-sheet .qpo-bank-item b {
+  color: var(--tpl-ink);
+  font-size: 10px;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* 1 Classic Corporate */
+#quotation-sheet[data-layout='teal-sidebar'],
+#salesdoc-sheet[data-layout='teal-sidebar'] {
+  --tpl-accent: #0b4a3d;
+  --tpl-soft: #edf5f1;
+  padding: 13mm 15mm 16mm;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+#quotation-sheet[data-layout='teal-sidebar'] .qpo-title-block,
+#salesdoc-sheet[data-layout='teal-sidebar'] .qpo-title-block {
+  display: block;
+  text-align: center;
+  background: transparent;
+  color: var(--tpl-ink);
+  border-top: 2px solid var(--tpl-ink);
+  border-bottom: 1px solid var(--tpl-ink);
+}
+#quotation-sheet[data-layout='teal-sidebar'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='teal-sidebar'] .qpo-doc-title {
+  color: var(--tpl-ink) !important;
+  font: 700 21px Georgia, serif;
+  letter-spacing: .18em;
+}
+#quotation-sheet[data-layout='teal-sidebar'] .qpo-title-meta,
+#salesdoc-sheet[data-layout='teal-sidebar'] .qpo-title-meta {
+  display: flex;
+  justify-content: center;
+  gap: 7mm;
+  font-family: Arial, sans-serif;
+}
+#quotation-sheet[data-layout='teal-sidebar'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='teal-sidebar'] .salesdoc-item-grid {
+  border: 0;
+}
+#quotation-sheet[data-layout='teal-sidebar'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='teal-sidebar'] .salesdoc-item-grid thead th {
+  background: #fff;
+  color: var(--tpl-ink);
+  border-top: 2px solid var(--tpl-ink);
+  border-bottom: 1px solid var(--tpl-ink);
+}
+#quotation-sheet[data-layout='teal-sidebar'] .salesdoc-item-grid tbody td,
+#salesdoc-sheet[data-layout='teal-sidebar'] .salesdoc-item-grid tbody td {
+  border-width: 0 0 1px;
+}
+
+/* 2 Editorial Minimal */
+#quotation-sheet[data-layout='classic-minimal'],
+#salesdoc-sheet[data-layout='classic-minimal'] {
+  --tpl-accent: #263b53;
+  padding: 21mm 20mm;
+  font-family: 'Trebuchet MS', Arial, sans-serif;
+}
+#quotation-sheet[data-layout='classic-minimal'] .qpo-title-block,
+#salesdoc-sheet[data-layout='classic-minimal'] .qpo-title-block {
+  align-items: baseline;
+  background: transparent;
+  color: var(--tpl-ink);
+  border-bottom: 1px solid var(--tpl-accent);
+  padding: 0 0 7mm;
+}
+#quotation-sheet[data-layout='classic-minimal'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='classic-minimal'] .qpo-doc-title {
+  color: var(--tpl-accent) !important;
+  font-size: 29px;
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+#quotation-sheet[data-layout='classic-minimal'] .qpo-party-grid,
+#salesdoc-sheet[data-layout='classic-minimal'] .qpo-party-grid {
+  border-left: 1px solid var(--tpl-accent);
+  padding-left: 6mm;
+}
+#quotation-sheet[data-layout='classic-minimal'] .qpo-party-card,
+#salesdoc-sheet[data-layout='classic-minimal'] .qpo-party-card {
+  border: 0;
+  border-bottom: 1px solid var(--tpl-rule);
+  padding: 2mm 0 4mm;
+}
+#quotation-sheet[data-layout='classic-minimal'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='classic-minimal'] .salesdoc-item-grid {
+  border: 0;
+}
+#quotation-sheet[data-layout='classic-minimal'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='classic-minimal'] .salesdoc-item-grid thead th {
+  background: transparent;
+  color: var(--tpl-accent);
+  border-top: 2px solid var(--tpl-accent);
+  border-bottom: 1px solid var(--tpl-accent);
+}
+#quotation-sheet[data-layout='classic-minimal'] .salesdoc-item-grid tbody td,
+#salesdoc-sheet[data-layout='classic-minimal'] .salesdoc-item-grid tbody td {
+  border-width: 0 0 1px;
+}
+#quotation-sheet[data-layout='classic-minimal'] .qpo-totals,
+#salesdoc-sheet[data-layout='classic-minimal'] .qpo-totals {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--tpl-accent);
+  border-bottom: 3px double var(--tpl-accent);
+}
+
+/* 3 Engineering Technical */
+#quotation-sheet[data-layout='technical-blueprint'],
+#salesdoc-sheet[data-layout='technical-blueprint'] {
+  --tpl-accent: #123b63;
+  --tpl-rule: #7d9ab3;
+  --tpl-soft: #eaf5fb;
+  padding: 9mm;
+  background: #f5f9fc;
+  border: 1px solid var(--tpl-rule);
+  font-family: 'Courier New', monospace;
+}
+#quotation-sheet[data-layout='technical-blueprint'] .qpo-title-block,
+#salesdoc-sheet[data-layout='technical-blueprint'] .qpo-title-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--tpl-accent);
+  border: 2px solid var(--tpl-accent);
+  padding: 4mm;
+}
+#quotation-sheet[data-layout='technical-blueprint'] .qpo-party-grid,
+#salesdoc-sheet[data-layout='technical-blueprint'] .qpo-party-grid {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2mm;
+}
+#quotation-sheet[data-layout='technical-blueprint'] .qpo-party-card,
+#salesdoc-sheet[data-layout='technical-blueprint'] .qpo-party-card,
+#quotation-sheet[data-layout='technical-blueprint'] .qpo-info-card,
+#salesdoc-sheet[data-layout='technical-blueprint'] .qpo-info-card {
+  border: 1px dashed var(--tpl-rule);
+  background: transparent;
+  padding: 3mm;
+}
+#quotation-sheet[data-layout='technical-blueprint'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='technical-blueprint'] .salesdoc-item-grid {
+  border: 1px dashed var(--tpl-rule);
+}
+#quotation-sheet[data-layout='technical-blueprint'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='technical-blueprint'] .salesdoc-item-grid thead th {
+  background: var(--tpl-soft);
+  color: var(--tpl-accent);
+  border: 1px dashed var(--tpl-rule);
+}
+#quotation-sheet[data-layout='technical-blueprint'] .qpo-totals,
+#salesdoc-sheet[data-layout='technical-blueprint'] .qpo-totals {
+  width: 100%;
+  border: 1px dashed var(--tpl-accent);
+  background: var(--tpl-soft);
+}
+
+/* 4 Modern Modular */
+#quotation-sheet[data-layout='modular-cards'],
+#salesdoc-sheet[data-layout='modular-cards'] {
+  --tpl-accent: #2f75b5;
+  --tpl-rule: #d1dce6;
+  --tpl-soft: #eef3f7;
+  padding: 13mm;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+#quotation-sheet[data-layout='modular-cards'] .qpo-title-block,
+#salesdoc-sheet[data-layout='modular-cards'] .qpo-title-block {
+  display: grid;
+  grid-template-columns: 1.4fr .6fr;
+  background: var(--tpl-soft);
+  color: var(--tpl-ink);
+  border-left: 8px solid var(--tpl-accent);
+  padding: 6mm;
+}
+#quotation-sheet[data-layout='modular-cards'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='modular-cards'] .qpo-doc-title {
+  color: var(--tpl-accent) !important;
+  justify-self: start;
+  font-size: 23px;
+}
+#quotation-sheet[data-layout='modular-cards'] .qpo-party-card,
+#salesdoc-sheet[data-layout='modular-cards'] .qpo-party-card,
+#salesdoc-sheet[data-layout='modular-cards'] .qpo-info-card {
+  border: 1px solid var(--tpl-rule);
+  border-radius: 8px;
+  box-shadow: 0 2px 7px rgba(23,54,93,.08);
+}
+#quotation-sheet[data-layout='modular-cards'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='modular-cards'] .salesdoc-item-grid {
+  border-radius: 8px;
+  overflow: hidden;
+}
+#quotation-sheet[data-layout='modular-cards'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='modular-cards'] .salesdoc-item-grid thead th {
+  padding-top: 4mm;
+  padding-bottom: 4mm;
+}
+#quotation-sheet[data-layout='modular-cards'] .qpo-totals,
+#salesdoc-sheet[data-layout='modular-cards'] .qpo-totals {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(23,54,93,.1);
+}
+
+/* 5 Luxury Fine-line */
+#quotation-sheet[data-layout='premium-editorial'],
+#salesdoc-sheet[data-layout='premium-editorial'] {
+  --tpl-accent: #6e5960;
+  padding: 23mm 21mm;
+  font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+}
+#quotation-sheet[data-layout='premium-editorial'] .qpo-title-block,
+#salesdoc-sheet[data-layout='premium-editorial'] .qpo-title-block {
+  align-items: baseline;
+  background: transparent;
+  color: var(--tpl-ink);
+  border-bottom: 1px solid var(--tpl-accent);
+  padding: 0 0 8mm;
+}
+#quotation-sheet[data-layout='premium-editorial'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='premium-editorial'] .qpo-doc-title {
+  color: var(--tpl-accent) !important;
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: .08em;
+}
+#quotation-sheet[data-layout='premium-editorial'] .qpo-party-card,
+#salesdoc-sheet[data-layout='premium-editorial'] .qpo-party-card {
+  border: 0;
+  border-right: 1px solid var(--tpl-rule);
+  padding: 2mm 6mm 4mm 0;
+}
+#quotation-sheet[data-layout='premium-editorial'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='premium-editorial'] .salesdoc-item-grid {
+  border: 0;
+}
+#quotation-sheet[data-layout='premium-editorial'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='premium-editorial'] .salesdoc-item-grid thead th {
+  background: transparent;
+  color: var(--tpl-accent);
+  border-top: 1px solid var(--tpl-accent);
+  border-bottom: 1px solid var(--tpl-accent);
+}
+#quotation-sheet[data-layout='premium-editorial'] .salesdoc-item-grid tbody td,
+#salesdoc-sheet[data-layout='premium-editorial'] .salesdoc-item-grid tbody td {
+  border-width: 0 0 1px;
+}
+#quotation-sheet[data-layout='premium-editorial'] .qpo-totals,
+#salesdoc-sheet[data-layout='premium-editorial'] .qpo-totals {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--tpl-accent);
+  border-bottom: 3px double var(--tpl-accent);
+}
+
+/* 6 Dark Executive */
+#quotation-sheet[data-layout='structured-blue-grey'],
+#salesdoc-sheet[data-layout='structured-blue-grey'] {
+  --tpl-accent: #102a43;
+  --tpl-rule: #526170;
+  --tpl-soft: #263442;
+  background: #1f2429;
+  color: #f3f5f7;
+  border: 1px solid #535d66;
+  padding: 10mm 12mm 15mm;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .qpo-title-block,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-title-block {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: transparent;
+  border-bottom: 1px solid var(--tpl-rule);
+  padding: 8mm 4mm;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-doc-title {
+  justify-self: start;
+  color: #fff !important;
+  font-size: 25px;
+  font-weight: 300;
+  letter-spacing: .25em;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .qpo-party-card,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-party-card,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-info-card {
+  border-color: var(--tpl-rule);
+  background: #252b31;
+  color: #f3f5f7;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .qpo-card-label,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-card-label,
+#quotation-sheet[data-layout='structured-blue-grey'] .qpo-section-head,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-section-head {
+  color: #c6d0d9 !important;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid {
+  --it-header-bg: #2b333a;
+  --it-header-text: #f3f5f7;
+  --it-border: var(--tpl-rule);
+  --it-text: #f3f5f7;
+  --it-text-secondary: #aeb8c2;
+  border-color: var(--tpl-rule);
+  background: #22282e;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid thead th {
+  background: #2b333a;
+  border-color: var(--tpl-rule);
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid tbody td,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid tbody td {
+  color: #f3f5f7;
+  background: #22282e;
+  border-color: #3d464f;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid tbody tr:nth-child(even) td,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .salesdoc-item-grid tbody tr:nth-child(even) td {
+  background: #282f36;
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .qpo-totals,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-totals {
+  width: 100%;
+  background: #252b31;
+  border-color: var(--tpl-rule);
+}
+#quotation-sheet[data-layout='structured-blue-grey'] .qpo-totals td,
+#salesdoc-sheet[data-layout='structured-blue-grey'] .qpo-totals td {
+  color: #f3f5f7 !important;
+}
+
+/* 7 Blueprint Industrial */
+#quotation-sheet[data-layout='fresh-tech-green'],
+#salesdoc-sheet[data-layout='fresh-tech-green'] {
+  --tpl-accent: #0b6b50;
+  --tpl-soft: #eef8f3;
+  padding: 11mm 15mm 17mm;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+#quotation-sheet[data-layout='fresh-tech-green'] .qpo-title-block,
+#salesdoc-sheet[data-layout='fresh-tech-green'] .qpo-title-block {
+  display: grid;
+  grid-template-columns: .2fr 1fr .8fr;
+  background: var(--tpl-accent);
+  border-radius: 0 16px 0 16px;
+  padding: 7mm;
+}
+#quotation-sheet[data-layout='fresh-tech-green'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='fresh-tech-green'] .qpo-doc-title {
+  grid-column: 2;
+  justify-self: start;
+  font-size: 23px;
+}
+#quotation-sheet[data-layout='fresh-tech-green'] .qpo-title-meta {
+  grid-column: 3;
+}
+#quotation-sheet[data-layout='fresh-tech-green'] .qpo-party-grid,
+#salesdoc-sheet[data-layout='fresh-tech-green'] .qpo-party-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+#quotation-sheet[data-layout='fresh-tech-green'] .qpo-party-card,
+#salesdoc-sheet[data-layout='fresh-tech-green'] .qpo-party-card {
+  border: 0;
+  border-bottom: 4px solid var(--tpl-accent);
+  border-radius: 0 10px;
+  background: var(--tpl-soft);
+}
+#quotation-sheet[data-layout='fresh-tech-green'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='fresh-tech-green'] .salesdoc-item-grid {
+  border-radius: 0 10px;
+  overflow: hidden;
+}
+#quotation-sheet[data-layout='fresh-tech-green'] .qpo-totals,
+#salesdoc-sheet[data-layout='fresh-tech-green'] .qpo-totals {
+  border: 0;
+  border-radius: 0 12px;
+  background: var(--tpl-soft);
+}
+
+/* 8 Financial Report */
+#quotation-sheet[data-layout='dark-corporate'],
+#salesdoc-sheet[data-layout='dark-corporate'] {
+  --tpl-accent: #29465f;
+  --tpl-soft: #eef2f5;
+  padding: 15mm 16mm 18mm;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+#quotation-sheet[data-layout='dark-corporate'] .qpo-title-block,
+#salesdoc-sheet[data-layout='dark-corporate'] .qpo-title-block {
+  display: block;
+  background: transparent;
+  color: var(--tpl-ink);
+  border-top: 3px solid var(--tpl-accent);
+  border-bottom: 1px solid var(--tpl-accent);
+  padding: 5mm 0;
+}
+#quotation-sheet[data-layout='dark-corporate'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='dark-corporate'] .qpo-doc-title {
+  color: var(--tpl-accent) !important;
+  font-size: 22px;
+  letter-spacing: .06em;
+}
+#quotation-sheet[data-layout='dark-corporate'] .qpo-party-grid,
+#salesdoc-sheet[data-layout='dark-corporate'] .qpo-party-grid {
+  grid-template-columns: 1fr 1fr;
+}
+#quotation-sheet[data-layout='dark-corporate'] .qpo-party-card,
+#salesdoc-sheet[data-layout='dark-corporate'] .qpo-party-card {
+  border: 0;
+  border-bottom: 1px solid var(--tpl-rule);
+  padding: 3mm 0;
+}
+#quotation-sheet[data-layout='dark-corporate'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='dark-corporate'] .salesdoc-item-grid {
+  border: 0;
+}
+#quotation-sheet[data-layout='dark-corporate'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='dark-corporate'] .salesdoc-item-grid thead th {
+  background: transparent;
+  color: var(--tpl-accent);
+  border-top: 2px solid var(--tpl-accent);
+  border-bottom: 1px solid var(--tpl-accent);
+}
+#quotation-sheet[data-layout='dark-corporate'] .salesdoc-item-grid tbody td,
+#salesdoc-sheet[data-layout='dark-corporate'] .salesdoc-item-grid tbody td {
+  border-width: 0 0 1px;
+}
+#quotation-sheet[data-layout='dark-corporate'] .qpo-totals,
+#salesdoc-sheet[data-layout='dark-corporate'] .qpo-totals {
+  width: 100%;
+  border: 0;
+  border-top: 2px solid var(--tpl-accent);
+  background: var(--tpl-soft);
+}
+#quotation-sheet[data-layout='dark-corporate'] .qpo-grand-value,
+#salesdoc-sheet[data-layout='dark-corporate'] .qpo-grand-value {
+  font-size: 18px;
+}
+
+/* 9 Modern Technology */
+#quotation-sheet[data-layout='high-data-dashboard'],
+#salesdoc-sheet[data-layout='high-data-dashboard'] {
+  --tpl-accent: #087dcc;
+  --tpl-soft: #eaf4fb;
+  padding: 9mm 11mm 14mm;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+#quotation-sheet[data-layout='high-data-dashboard'] .qpo-title-block,
+#salesdoc-sheet[data-layout='high-data-dashboard'] .qpo-title-block {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: #102a43;
+  border-left: 12px solid var(--tpl-accent);
+  padding: 6mm;
+}
+#quotation-sheet[data-layout='high-data-dashboard'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='high-data-dashboard'] .qpo-doc-title {
+  justify-self: start;
+  font-size: 24px;
+}
+#quotation-sheet[data-layout='high-data-dashboard'] .qpo-party-grid,
+#salesdoc-sheet[data-layout='high-data-dashboard'] .qpo-party-grid {
+  grid-template-columns: 1.6fr .4fr;
+}
+#quotation-sheet[data-layout='high-data-dashboard'] .qpo-party-card,
+#salesdoc-sheet[data-layout='high-data-dashboard'] .qpo-party-card {
+  border-color: #9fb6ca;
+  background: var(--tpl-soft);
+}
+#quotation-sheet[data-layout='high-data-dashboard'] .qpo-totals,
+#salesdoc-sheet[data-layout='high-data-dashboard'] .qpo-totals {
+  width: 100%;
+  border-left: 10px solid var(--tpl-accent);
+  background: var(--tpl-soft);
+}
+
+/* 10 Architectural Grid */
+#quotation-sheet[data-layout='architectural-grid'],
+#salesdoc-sheet[data-layout='architectural-grid'] {
+  --tpl-accent: #17202a;
+  padding: 15mm 15mm 19mm;
+  border-top: 10px solid var(--tpl-accent);
+  font-family: 'Palatino Linotype', Palatino, Georgia, serif;
+}
+#quotation-sheet[data-layout='architectural-grid'] .qpo-title-block,
+#salesdoc-sheet[data-layout='architectural-grid'] .qpo-title-block {
+  display: grid;
+  grid-template-columns: .7fr 1.3fr;
+  background: #fff;
+  color: var(--tpl-ink);
+  border: 1px solid var(--tpl-accent);
+  border-left: 18px solid var(--tpl-accent);
+  padding: 6mm;
+}
+#quotation-sheet[data-layout='architectural-grid'] .qpo-doc-title,
+#salesdoc-sheet[data-layout='architectural-grid'] .qpo-doc-title {
+  justify-self: start;
+  color: var(--tpl-accent) !important;
+  font-size: 25px;
+  letter-spacing: .02em;
+}
+#quotation-sheet[data-layout='architectural-grid'] .qpo-party-grid,
+#salesdoc-sheet[data-layout='architectural-grid'] .qpo-party-grid {
+  gap: 0;
+  border-top: 1px solid var(--tpl-accent);
+  border-bottom: 1px solid var(--tpl-accent);
+}
+#quotation-sheet[data-layout='architectural-grid'] .qpo-party-card,
+#salesdoc-sheet[data-layout='architectural-grid'] .qpo-party-card {
+  border: 0;
+  border-right: 1px solid var(--tpl-accent);
+  padding: 5mm;
+}
+#quotation-sheet[data-layout='architectural-grid'] .salesdoc-item-grid,
+#salesdoc-sheet[data-layout='architectural-grid'] .salesdoc-item-grid {
+  border: 0;
+  border-top: 3px solid var(--tpl-accent);
+}
+#quotation-sheet[data-layout='architectural-grid'] .salesdoc-item-grid thead th,
+#salesdoc-sheet[data-layout='architectural-grid'] .salesdoc-item-grid thead th {
+  background: #fff;
+  color: var(--tpl-accent);
+  border-bottom: 1px solid var(--tpl-accent);
+}
+#quotation-sheet[data-layout='architectural-grid'] .salesdoc-item-grid tbody td,
+#salesdoc-sheet[data-layout='architectural-grid'] .salesdoc-item-grid tbody td {
+  border-width: 0 0 1px;
+}
+#quotation-sheet[data-layout='architectural-grid'] .qpo-totals,
+#salesdoc-sheet[data-layout='architectural-grid'] .qpo-totals {
+  border-color: var(--tpl-accent);
+}
+
+/* Content-safe flow and print/PDF parity. */
+#quotation-sheet[data-layout],
+#salesdoc-sheet[data-layout] {
+  min-height: 297mm;
+  isolation: isolate;
+}
+
+#quotation-sheet[data-layout] .qpo-terms-region,
+#quotation-sheet[data-layout] .qpo-footer-region,
+#quotation-sheet[data-layout] .qpo-bank-region,
+#salesdoc-sheet[data-layout] .qpo-terms-region,
+#salesdoc-sheet[data-layout] .qpo-footer-region,
+#salesdoc-sheet[data-layout] .qpo-bank-region {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+@media print {
+  #quotation-sheet[data-layout],
+  #salesdoc-sheet[data-layout] {
+    width: 210mm !important;
+    max-width: none !important;
+    min-height: 297mm;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  #quotation-sheet[data-layout] .salesdoc-item-grid thead,
+  #salesdoc-sheet[data-layout] .salesdoc-item-grid thead {
+    display: table-header-group;
+  }
+  #quotation-sheet[data-layout] .qpo-totals,
+  #quotation-sheet[data-layout] .qpo-sign-area,
+  #quotation-sheet[data-layout] .qpo-terms-grid,
+  #salesdoc-sheet[data-layout] .qpo-totals,
+  #salesdoc-sheet[data-layout] .qpo-words,
+  #salesdoc-sheet[data-layout] .qpo-signature,
+  #salesdoc-sheet[data-layout] .qpo-terms-region {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================================================================
+   Quotation preview — landscape metadata strip.
+   The four document metadata fields (Quotation No / Reference PR No / Date /
+   Valid Till) render as ONE horizontal row of equal-width columns directly
+   below the QUOTATION title. Scoped to #quotation-sheet so the shared Sales
+   Document workspace (#salesdoc-sheet) keeps its own title layout. Placed
+   last so the strip wins the cascade in every template.
+   ============================================================================ */
+
+/* Stack the title bar: title row on top, metadata strip below. */
+#quotation-sheet[data-layout] .qpo-title-block {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 3mm;
+  text-align: left;
+  padding: 4.5mm 0;
+}
+
+/* Title + status badge share one centered row above the strip. */
+#quotation-sheet[data-layout] .qpo-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3mm;
+  min-width: 0;
+}
+
+/* Horizontal metadata strip — the four fields side by side, each column an
+   equal quarter of the available width, separated by thin vertical rules.
+   Values may wrap inside their own column without overlapping neighbours. */
+#quotation-sheet[data-layout] .qpo-title-meta {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0;
+  width: 100%;
+  margin-top: 0;
+  padding-top: 3mm;
+  border-top: 1px solid rgba(255, 255, 255, 0.32);
+  font-family: inherit;
+}
+
+#quotation-sheet[data-layout] .qpo-meta-cell {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1mm;
+  min-width: 0;
+  padding: 2mm 4mm;
+  border-left: 1px solid rgba(255, 255, 255, 0.32);
+}
+
+#quotation-sheet[data-layout] .qpo-meta-cell:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+#quotation-sheet[data-layout] .qpo-meta-label {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+
+#quotation-sheet[data-layout] .qpo-meta-value {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Optional extra field (Place of Supply) — its own compact line under the
+   strip so the four metadata columns keep their equal 25% widths. */
+#quotation-sheet[data-layout] .qpo-title-extra {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 2mm;
+  min-width: 0;
+  padding-top: 1.5mm;
+}
+
+/* Dark-ink templates: swap the light separator for a subtle dark rule. */
+#quotation-sheet[data-layout='teal-sidebar'] .qpo-title-meta,
+#quotation-sheet[data-layout='classic-minimal'] .qpo-title-meta,
+#quotation-sheet[data-layout='modular-cards'] .qpo-title-meta,
+#quotation-sheet[data-layout='premium-editorial'] .qpo-title-meta,
+#quotation-sheet[data-layout='dark-corporate'] .qpo-title-meta,
+#quotation-sheet[data-layout='architectural-grid'] .qpo-title-meta {
+  border-top-color: rgba(23, 32, 42, 0.3);
+}
+
+#quotation-sheet[data-layout='teal-sidebar'] .qpo-meta-cell,
+#quotation-sheet[data-layout='classic-minimal'] .qpo-meta-cell,
+#quotation-sheet[data-layout='modular-cards'] .qpo-meta-cell,
+#quotation-sheet[data-layout='premium-editorial'] .qpo-meta-cell,
+#quotation-sheet[data-layout='dark-corporate'] .qpo-meta-cell,
+#quotation-sheet[data-layout='architectural-grid'] .qpo-meta-cell {
+  border-left-color: rgba(23, 32, 42, 0.3);
+}

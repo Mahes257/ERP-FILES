@@ -1,0 +1,228 @@
+/* ============================================================
+   KPI Details Page — shared by all Production module KPI cards
+   ============================================================ */
+
+/* Detail pages inside production layout — allow scrolling */
+.page > .kpi-details-header,
+.page > .kpi-details-summary,
+.page > .kpi-details-table-wrap,
+.page > .kpi-details-empty,
+.page > h3,
+.page > div {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.kpi-details-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.kpi-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+  padding: 0 12px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #fff;
+  color: #64748B;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.kpi-back-btn:hover {
+  background: #F7F9FA;
+  border-color: #CBD5E1;
+  color: #102A2A;
+}
+
+.kpi-details-content {
+  padding: 0 20px 40px;
+}
+
+.kpi-details-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.kpi-details-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #fff;
+  flex: 1;
+  min-width: 180px;
+  max-width: 320px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.kpi-details-search:focus-within {
+  border-color: #075E54;
+  box-shadow: 0 0 0 2px rgba(7,94,84,0.1);
+}
+.kpi-details-search svg { color: #94A3B8; flex-shrink: 0; }
+.kpi-details-search input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  font-size: 12px;
+  color: #102A2A;
+  background: none;
+}
+
+.kpi-details-filter {
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+  font-family: 'Inter', 'Plus Jakarta Sans', 'Segoe UI', -apple-system, sans-serif;
+  color: #102A2A;
+  outline: none;
+  cursor: pointer;
+}
+.kpi-details-filter:focus {
+  border-color: #075E54;
+  box-shadow: 0 0 0 2px rgba(7,94,84,0.1);
+}
+
+/* Table Card */
+.kpi-details-table-card {
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15,23,42,0.04);
+  overflow: hidden;
+  overflow-x: auto;
+}
+
+.kpi-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.kpi-details-table-wrap {
+  overflow-x: auto;
+}
+
+/* Sticky-grid scope: this table family has a LIGHT header, so the frozen
+   first column must keep that palette instead of the dark-green default. */
+.kpi-details-table.sgrid.sgrid-prod {
+  --sgrid-prod-head-bg: #F8FAFC;
+}
+
+.kpi-details-table thead th {
+  padding: 0 14px;
+  height: 40px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #64748B;
+  background: #F8FAFC;
+  border-bottom: 1px solid #E2E8F0;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.kpi-details-table thead th.col-actions-th { width: 60px; }
+
+.kpi-details-table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #F1F5F9;
+  color: #102A2A;
+  vertical-align: middle;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+.kpi-details-table tbody td:last-child { text-align: center; }
+.kpi-details-table tbody td.col-actions { width: 60px; }
+
+.kpi-details-row {
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.kpi-details-row:hover td {
+  background: #F0FAF7;
+}
+/* Keep pending Work Order cell color on hover */
+.kpi-details-row.kpi-row-pending:hover td:first-child,
+.kpi-details-row.kpi-row-pending:hover .cell-strong {
+  background: #FFF7E6 !important;
+  color: #B45309;
+}
+
+/* Status badges */
+.kpi-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.kpi-badge-draft,
+.kpi-badge-all { background: #F1F5F9; color: #64748B; }
+.kpi-badge-pending,
+.kpi-badge-pending-production-approval,
+.kpi-badge-pending-admin-approval,
+.kpi-badge-pending-qc { background: #FFF7E6; color: #B45309; }
+.kpi-badge-approved,
+.kpi-badge-completed,
+.kpi-badge-passed,
+.kpi-badge-packed { background: #EAF7F3; color: #08785F; }
+.kpi-badge-in-progress { background: #EEF4FF; color: #3B82F6; }
+.kpi-badge-rejected { background: #FEF2F2; color: #B91C1C; }
+.kpi-badge-hold,
+.kpi-badge-on-hold { background: #F1F5F9; color: #64748B; }
+.kpi-badge-ready { background: #E0F2FE; color: #0369A1; }
+.kpi-badge-dispatched { background: #EEF4FF; color: #3B82F6; }
+.kpi-badge-in-transit { background: #FFF7E6; color: #B45309; }
+.kpi-badge-delivered { background: #EAF7F3; color: #08785F; }
+.kpi-badge-ready-for-dispatch { background: #E0F2FE; color: #0369A1; }
+.kpi-badge-production-approved,
+.kpi-badge-admin-approved { background: #EEF4FF; color: #3B82F6; }
+
+/* Empty state */
+.kpi-details-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 48px 20px;
+  text-align: center;
+  color: #94A3B8;
+}
+.kpi-details-empty h4 { font-size: 15px; font-weight: 600; color: #102A2A; }
+.kpi-details-empty p { font-size: 13px; color: #64748B; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .kpi-details-content { padding: 0 12px 30px; }
+  .kpi-details-search { max-width: 100%; }
+  .kpi-details-toolbar { flex-direction: column; align-items: stretch; }
+}
+@media (max-width: 480px) {
+  .kpi-details-content { padding: 0 8px 24px; }
+}

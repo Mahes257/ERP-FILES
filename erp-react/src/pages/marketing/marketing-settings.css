@@ -1,0 +1,30 @@
+/* ==========================================================================
+   MARKETING SETTINGS — MODULE THEME
+   --------------------------------------------------------------------------
+   The settings shell itself (grouped left rail, section title + description,
+   cards, field grid, tables, health card, banners, sticky save bar) lives in
+   src/styles/settings-shell.css and is shared with the Sales and Production
+   Settings modules. This file only binds that shell to the Marketing palette,
+   exactly as pages/sales/sales-settings.css does for Sales — same values, so
+   Marketing Settings renders the same design in the same ERP dark-teal accent
+   and reads as another settings module of the same application.
+   ========================================================================== */
+
+.ss-page {
+  --ss-primary: var(--purchase-primary, #0B4A3D);
+  --ss-primary-hover: var(--purchase-primary-dark, #083D34);
+  --ss-primary-light: var(--purchase-primary-light, #EDF7F4);
+  --ss-primary-soft: #E8F0EE;
+  --ss-primary-border: #BFE0D6;
+  --ss-text: var(--purchase-text, #102A2A);
+  --ss-text-2: #64748B;
+  --ss-muted: #94A3B8;
+  --ss-border: var(--purchase-border, #E2E8F0);
+  --ss-border-strong: #CBD5E1;
+  --ss-card: var(--purchase-card, #FFFFFF);
+  --ss-danger: #DC2626;
+  --ss-danger-light: #FEF2F2;
+  --ss-danger-border: #FCA5A5;
+  --ss-focus-ring: 0 0 0 3px rgba(11, 74, 61, 0.16);
+  min-width: 0;
+}

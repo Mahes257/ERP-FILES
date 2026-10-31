@@ -1,0 +1,124 @@
+/*
+ * Document Selection dialog — "Upload Document → Inside ERP".
+ *
+ * Only the pieces the shared repository stylesheet does not already provide:
+ * the dialog's own layout (intro, toolbar, scrolling result area, pager gap),
+ * the selected-row highlight and the footer summary. Everything inside the
+ * table — file tile, name typography, badges, cells, pager buttons — comes from
+ * the shared stylesheet the repository uses, so a row here is the same row the
+ * page behind the dialog renders.
+ */
+
+.doc-picker-intro {
+  margin: 0 0 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.doc-picker-intro strong { color: #0B4A3D; font-weight: 700; }
+
+.doc-picker-toolbar {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.doc-picker-search { flex: 1 1 auto; min-width: 0; }
+.doc-picker-search .po-search-box { width: 100%; }
+
+.doc-picker-clear {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #94A3B8;
+  display: inline-flex;
+}
+.doc-picker-clear:hover { color: #0B4A3D; }
+
+.doc-picker-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0 0 10px;
+  padding: 8px 10px;
+  border: 1px solid #FECDD3;
+  background: #FFF1F2;
+  border-radius: 8px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #BE123C;
+}
+
+/* The result area owns the scrolling; the dialog itself stays one height. */
+.doc-picker-results { display: flex; flex-direction: column; gap: 8px; }
+.doc-picker-results .doc-table-scroll { max-height: 48vh; }
+
+.doc-picker-radio { width: 34px; }
+
+/*
+ * A candidate the target context already holds: visible (so the operator can
+ * see the file exists) but not selectable, because filing it again could only
+ * create a duplicate entry. The backend refuses it as well.
+ */
+.doc-picker-results .doc-table tbody tr.is-filed { cursor: default; }
+.doc-picker-results .doc-table tbody tr.is-filed .doc-name-text { color: #64748B; }
+.doc-picker-results .doc-table tbody tr.is-filed .doc-file-icon { opacity: 0.6; }
+.doc-picker-results .doc-table tbody tr.is-filed .doc-checkbox { cursor: not-allowed; }
+.doc-picker-results .doc-name-sub { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+.doc-picker-results .doc-table tbody tr { cursor: pointer; }
+.doc-picker-results .doc-table tbody tr.is-selected { background: #F0FAF7; }
+.doc-picker-results .doc-table tbody tr.is-selected td { border-top-color: #99D3C4; }
+.doc-picker-results .doc-table tbody tr.is-selected .doc-name-text { color: #0B4A3D; font-weight: 700; }
+
+.doc-picker-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.doc-picker-footer-info {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  font-size: 11.5px;
+  color: #475569;
+}
+
+.doc-picker-footer-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #94A3B8;
+}
+
+.doc-picker-footer-name {
+  font-weight: 700;
+  color: #0F172A;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc-picker-footer-hint { color: #94A3B8; }
+
+.doc-picker-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.dark .doc-picker-intro { color: #CBD5E1; }
+.dark .doc-picker-intro strong { color: #7DD3C0; }
+.dark .doc-picker-alert { background: rgba(190, 18, 60, 0.18); border-color: rgba(254, 205, 211, 0.3); color: #FDA4AF; }
+.dark .doc-picker-results .doc-table tbody tr.is-selected { background: rgba(11, 74, 61, 0.28); }
+.dark .doc-picker-footer-name { color: #E2E8F0; }

@@ -1,0 +1,245 @@
+/* ============================================================
+   Status badge — semantic light pills (Purchase-aligned)
+   ============================================================ */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: var(--fs-badge, 11px);
+  font-weight: var(--fw-semibold, 600);
+  white-space: nowrap;
+  letter-spacing: 0.1px;
+  line-height: 1.4;
+}
+
+.status-badge::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* Pending — light orange/yellow (Purchase reference) */
+.status-pending {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+/* In Progress — light blue */
+.status-in-progress {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+/* Completed — light green */
+.status-completed {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Pending QC — light orange */
+.status-pending-qc {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+/* Packed — light teal */
+.status-packed {
+  background: #E0F2F1;
+  color: #00695C;
+}
+
+/* Ready for Dispatch — light indigo */
+.status-ready-for-dispatch {
+  background: #E8EAF6;
+  color: #283593;
+}
+
+/* Dispatched — light teal */
+.status-dispatched {
+  background: #E0F2F1;
+  color: #00695C;
+}
+
+/* Passed — light green */
+.status-passed {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Rejected — light red */
+.status-rejected {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+/* Failed — light red */
+.status-failed {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+/* Not Started — light neutral */
+.status-not-started {
+  background: #F5F5F5;
+  color: #616161;
+}
+
+/* Issued — light blue */
+.status-issued {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+/* Partially Issued — light orange */
+.status-partially-issued {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+/* Consumed — light teal */
+.status-consumed {
+  background: #E0F2F1;
+  color: #00695C;
+}
+
+/* Hold / On Hold — light gray */
+.status-hold {
+  background: #F5F5F5;
+  color: #616161;
+}
+
+/* Skipped — muted */
+.status-skipped {
+  background: #F5F5F5;
+  color: #9E9E9E;
+  text-decoration: line-through;
+}
+
+/* Cancelled — light red with red cross mark */
+.status-cancelled {
+  background: #FFEBEE;
+  color: #C62828;
+}
+.status-cancelled-mark::before {
+  display: none;
+}
+
+/* Production Rejected — light red */
+.status-production-rejected {
+  background: #FFEBEE;
+  color: #C62828;
+}
+.status-production-rejected-mark::before {
+  display: none;
+}
+
+/* Admin Rejected — light red */
+.status-admin-rejected {
+  background: #FFEBEE;
+  color: #C62828;
+}
+.status-admin-rejected-mark::before {
+  display: none;
+}
+
+/* Active — light green */
+.status-active {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Inactive — light neutral */
+.status-inactive {
+  background: #F5F5F5;
+  color: #616161;
+}
+
+/* Available — light green */
+.status-available {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Running — light blue */
+.status-running {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+/* Maintenance — light amber */
+.status-maintenance {
+  background: #FFF8E1;
+  color: #F57F17;
+}
+
+/* ============================================================
+   Draft & Approval statuses
+   ============================================================ */
+/* Draft — light neutral/gray */
+.status-draft {
+  background: #F5F5F5;
+  color: #616161;
+}
+
+/* Pending Production Approval — light orange */
+.status-pending-production-approval {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+/* Production Approved — light green */
+.status-production-approved {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Pending Admin Approval — light orange */
+.status-pending-admin-approval {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+/* Admin Approved — light green */
+.status-admin-approved {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* Approved — light green */
+.status-approved {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+/* ============================================================
+   Additional Production statuses (for completeness)
+   ============================================================ */
+.status-ready {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+.status-delivered {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.status-in-transit {
+  background: #FFF8E1;
+  color: #F57F17;
+}
+
+.status-verified {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.status-awaiting {
+  background: #FFF3E0;
+  color: #E65100;
+}

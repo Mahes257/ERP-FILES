@@ -1,0 +1,115 @@
+/* ============================================================
+   Production Workflow — lifecycle stages with position numbers.
+   Stays one clean horizontal row; scrolls within the card on
+   smaller screens so the layout never breaks.
+   ============================================================ */
+.workflow-card {
+  padding: 22px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.workflow-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.workflow-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.workflow-subtitle {
+  margin-top: 2px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.workflow-badge {
+  flex: 0 0 auto;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Contained horizontal scroll on smaller screens */
+.workflow-scroll {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.workflow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 1120px;
+}
+
+.workflow-step {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.workflow-step-num {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.workflow-step-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.workflow-arrow {
+  flex: 0 0 auto;
+  color: #b9c8bf;
+}
+
+@media (max-width: 640px) {
+  .workflow-card {
+    padding: 14px;
+  }
+  .workflow-steps {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+  .workflow-step {
+    padding: 6px 10px;
+    gap: 4px;
+  }
+  .workflow-step-num {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+  .workflow-step-name {
+    font-size: 11px;
+  }
+}

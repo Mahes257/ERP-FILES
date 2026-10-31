@@ -1,0 +1,125 @@
+# ============================================================
+#  VishakTech ERP — repository ignore rules
+# ============================================================
+# Goal: only source code, configuration and required assets are
+# committed. Local runtime data, generated output, secrets and
+# developer scratch files stay on disk but never enter Git.
+#
+# NOTE: patterns like `.env` / `venv/` / `uploads/` contain no
+# slash, so they match at ANY depth — erp-backend/.env and
+# erp-backend/uploads/ are covered by this root file too.
+# ============================================================
+
+
+# ------------------------------------------------------------
+# Dependencies
+# ------------------------------------------------------------
+node_modules/
+
+
+# ------------------------------------------------------------
+# Build output / generated artifacts
+# ------------------------------------------------------------
+dist/
+dist-ssr/
+# Maven output, including alternate output dirs (target_test-classes, etc.)
+target/
+target*/
+# Tooling caches
+.vite/
+.cache/
+coverage/
+out/
+
+
+# ------------------------------------------------------------
+# Environment & secrets — never commit real values
+# ------------------------------------------------------------
+# Real .env files hold the DB password and the JWT secret.
+# .env.* also covers Vite convention files (.env.production, .env.ui-test).
+# .env.example files contain placeholders only and MUST stay tracked.
+.env
+.env.*
+!.env.example
+# Explicit safety net for the backend env
+erp-backend/.env
+# Key material / certificates
+*.pem
+*.key
+*.p12
+*.jks
+
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+
+
+# ------------------------------------------------------------
+# Local runtime data — real user/app data, kept locally only
+# ------------------------------------------------------------
+# Uploaded documents/attachments written by the running app
+# (covers erp-backend/uploads/ and the root uploads/ folder).
+uploads/
+
+
+# ------------------------------------------------------------
+# Database dumps & snapshots — may contain real user data
+# ------------------------------------------------------------
+# Scoped to these exact names so the required migration scripts
+# in erp-backend/docs/*.sql stay tracked.
+erp-backend/erp_db_backup_*.sql
+erp-backend/erp_db_schema*.sql
+
+
+# ------------------------------------------------------------
+# Python virtual environment (generic ignores)
+# ------------------------------------------------------------
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+
+# ------------------------------------------------------------
+# Developer scratch / evidence / conflict leftovers
+# ------------------------------------------------------------
+evidence/
+.audit-e2e/
+test-screenshots/
+tmp/
+*.mine
+*.orig
+*.rej
+*.bak
+*.tmp
+*.temp
+
+
+# ------------------------------------------------------------
+# Editor / IDE / OS metadata
+# ------------------------------------------------------------
+.vscode/
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+
+
+# ------------------------------------------------------------
+# Local agent / tooling metadata
+# ------------------------------------------------------------
+.freebuff/
+.tmp-clean/

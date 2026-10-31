@@ -1,0 +1,267 @@
+/* ==========================================================================
+   purchase/styles/vendor-reports.css
+   --------------------------------------------------------------------------
+   Vendor Reports — single-row toolbar that NEVER scrolls as a whole.
+
+   Layout (one row, no wrap, no scrollbars):
+     [ Refresh | Spend | Performance | Approval | Category | GST | Activity ]
+                                   [ Search | From → To | 11 Vendors ]
+
+   Shrink order on narrow screens (requirement #7):
+     1. gaps          → 2. search width  → 3. date-picker widths
+     4. LAST FALLBACK → the report tabs wrap onto a second line inside the
+        toolbar (all six reports stay visible and identically styled).
+
+   Only the report body (tables / charts) may scroll — the toolbar wrapper
+   itself uses overflow: hidden and reserves no scrollbar gutter (#8).
+   All rules are scoped under .vr-page so other cpr-page lists keep their
+   existing wrapping toolbar. Imported AFTER cpr-list.css + polish css so
+   equal-specificity overrides win.
+   ========================================================================== */
+
+/* ---- 3/4. Toolbar wrapper: flex, one row, no wrap, no overflow ---- */
+.vr-page .pr-toolbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+
+/* ---- Left (Refresh + tabs) / Right (search + dates + count) ---- */
+.vr-page .pr-toolbar-left,
+.vr-page .pr-toolbar-right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  min-width: 0;
+  width: auto;
+}
+.vr-page .pr-toolbar-left {
+  flex: 1 1 auto;
+  gap: 10px;
+}
+.vr-page .pr-toolbar-right {
+  flex: 0 1 auto;   /* may shrink on very narrow screens before anything clips */
+  gap: 12px;
+}
+
+/* Keep the vendor filters as one consistent control group. The shared search
+   input is 36px high, so date fields use the same height and box model. */
+.vr-page .pr-toolbar-right {
+  gap: 10px;
+}
+.vr-page .pr-toolbar-right .pr-search-input {
+  flex: 0 1 240px;
+  width: 240px;
+  height: 36px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #334155;
+}
+.vr-page .vr-date-range {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  min-width: max-content;
+  height: 36px;
+}
+.vr-page .vr-date-input {
+  width: 122px;
+  min-width: 122px;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 0 9px;
+  border-radius: 8px;
+  border-color: #e2e8f0;
+  font-size: 12px;
+  line-height: 34px;
+  color: #334155;
+  text-align: center;
+}
+.vr-page .vr-date-input:focus {
+  border-color: #075e54;
+  box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.1);
+}
+.vr-page .vr-date-arrow {
+  flex: 0 0 auto;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+.vr-page .pr-toolbar-right .toolbar-count {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 2px;
+  line-height: 1;
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Refresh / Clear buttons must never be crushed by the flex layout */
+.vr-page .pr-toolbar .btn { flex-shrink: 0; }
+
+/* ---- Report tabs: ONE consistent box model for all six report items ----
+   Vendor Spend · Vendor Performance · Vendor Approval · Vendor Category ·
+   GST Report · Vendor Activity.
+
+   Every item shares the same height, padding, type size, icon size, icon/text
+   gap and border box, and the active item stays distinct purely through the
+   accent colour + underline + weight — never through a taller or shorter box.
+
+   The row WRAPS instead of scrolling inside itself: with a hidden scrollbar
+   the trailing reports were silently clipped at the container edge (two of the
+   six at ~1440px, three at narrow widths), so the sub-navigation looked
+   misaligned and part of it was unreachable. Wrapping keeps all six visible
+   and identically styled while each toolbar line stays compact. ---- */
+.vr-page .po-tabs {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px;
+  overflow: visible;
+}
+.vr-page .po-tab {
+  flex: 0 0 auto;          /* every item keeps its natural width (never squished) */
+  display: inline-flex;
+  align-items: center;     /* icon + label share one baseline on all six */
+  gap: 6px;                /* identical icon ↔ text gap */
+  padding: 8px 14px;       /* pill-button padding matching rfq-tab */
+  border-radius: 8px;      /* pill-button radius matching rfq-tab */
+  border: 1px solid #e2e8f0;  /* pill-button border matching rfq-tab */
+  background: #ffffff;     /* pill-button white background matching rfq-tab */
+  color: #64748b;          /* pill-button text color matching rfq-tab */
+  font-size: 11px;         /* pill-button font size matching rfq-tab */
+  font-weight: 700;        /* pill-button font weight matching rfq-tab */
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.vr-page .po-tab svg {     /* identical icon size on all six */
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.vr-page .po-tab:hover {
+  color: #334155;          /* pill-button hover text matching rfq-tab */
+  background: #f8fafc;     /* pill-button hover background matching rfq-tab */
+  border-color: #cbd5e1;   /* pill-button hover border matching rfq-tab */
+}
+.vr-page .po-tab.active {
+  background: #0F5A46;     /* pill-button active background matching rfq-tab */
+  border-color: #0F5A46;   /* pill-button active border matching rfq-tab */
+  color: #ffffff;          /* pill-button active text matching rfq-tab */
+}
+
+/* ---- Performance summary cards: white background (override dark mode) ----
+   The performance tab's four summary items — Top Rated, Avg On-Time,
+   Avg Quality, Highest Spend — use the white-card KPI look already
+   present on the same page. ---- */
+.vr-page .vr-perf-white > div {
+  background-color: #ffffff;
+  border-color: #e2e8f0;
+}
+
+/* ---- Search: flexible — shrinks before the tabs do ---- */
+.vr-page .pr-search-input {
+  flex: 0 1 auto;   /* shrinks before the date pickers do */
+  width: 240px;
+  max-width: 100%;
+  min-width: 90px;
+}
+
+/* ---- Date-range inputs: width controlled here so they can shrink ---- */
+.vr-page .pr-toolbar input[type='date'] {
+  flex-shrink: 0;   /* date pickers keep their width — never squished */
+  width: 118px;
+  min-width: 0;
+}
+
+/* ---- Vendor count badge never compresses ---- */
+.vr-page .pr-toolbar .toolbar-count {
+  flex-shrink: 0;
+}
+
+/* ---- 7. Shrink order: gaps first, then search, then date widths ---- */
+@media (max-width: 1560px) {
+  .vr-page .pr-toolbar { gap: 12px; }
+  .vr-page .pr-toolbar-left,
+  .vr-page .pr-toolbar-right { gap: 8px; }
+  .vr-page .pr-search-input { width: 210px; min-width: 80px; }
+  .vr-page .pr-toolbar-right .pr-search-input { flex-basis: 210px; }
+  .vr-page .vr-date-input { width: 112px; min-width: 112px; }
+}
+
+@media (max-width: 1400px) {
+  .vr-page .pr-toolbar {
+    flex-wrap: wrap;
+  }
+  .vr-page .pr-toolbar-left {
+    flex: 1 1 100%;
+  }
+  .vr-page .pr-toolbar-right {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+  .vr-page .pr-search-input { width: 180px; min-width: 70px; }
+  .vr-page .pr-toolbar-right .pr-search-input { flex-basis: 180px; }
+  .vr-page .vr-date-input { width: 104px; min-width: 104px; }
+}
+
+@media (max-width: 1240px) {
+  .vr-page .pr-toolbar { gap: 10px; }
+  .vr-page .pr-search-input { width: 150px; min-width: 64px; }
+  .vr-page .pr-toolbar-right .pr-search-input { flex-basis: 150px; }
+  .vr-page .vr-date-input { width: 92px; min-width: 92px; }
+}
+
+/* Keep the toolbar's own rows compact on small screens — the report tabs
+   wrap internally instead of overflowing. */
+@media (max-width: 768px) {
+  .vr-page .pr-toolbar,
+  .vr-page .pr-toolbar-left,
+  .vr-page .pr-toolbar-right {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .vr-page .pr-toolbar-left,
+  .vr-page .pr-toolbar-right {
+    align-items: center;
+  }
+  .vr-page .pr-toolbar-right {
+    gap: 8px;
+    justify-content: flex-start;
+  }
+  .vr-page .vr-date-range {
+    gap: 5px;
+    width: 100%;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .vr-page .pr-toolbar-right .pr-search-input {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+  }
+  .vr-page .vr-date-input {
+    flex: 1 1 0;
+    width: 0;
+    min-width: 0 !important;
+  }
+  .vr-page .pr-toolbar-right .toolbar-count {
+    flex: 0 0 auto;
+  }
+}

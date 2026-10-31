@@ -1,0 +1,525 @@
+/* =====================================================================
+   SHARED STICKY DATA GRID — fixed first column + fixed Actions column
+   ---------------------------------------------------------------------
+   ONE implementation of the pinned-column behaviour used by the wide,
+   horizontally scrolling list tables of the Sales module (CRM, CPR,
+   Sales Execution, Sales documents). The behaviour was originally
+   established by the Leads / Clients / Follow-ups list
+   (components/CRM/CrmErpList) and is now shared by all of them:
+
+     [ checkbox ] [ record No ]  |  scrolling columns  |  [ Actions ]
+
+   MARKUP CONTRACT
+   --------------
+     <table class="sgrid sgrid-sales ...">     opt-in marker
+       <thead><tr>
+         <th class="sgrid-pin sgrid-first" style={{ left: 0 }}>
+         <th class="sgrid-pin" style={{ left: measuredCheckboxWidth }}>
+         <th class="sgrid-pin-actions">
+       <tbody><tr>
+         <td class="sgrid-pin sgrid-first">
+         <td class="sgrid-pin" style={{ left: measuredCheckboxWidth }}>
+         <td class="sgrid-pin-actions">
+
+   THE SCOPE GATE
+   --------------
+   `sgrid` is the opt-in marker for the shared grid markup, and several
+   Marketing lists carry it too. The rules below are dormant until a
+   table also declares its MODULE scope, so nothing changes for a table
+   that carries only `sgrid`:
+
+     * `sgrid-sales` — Sales-module tables (CRM, CPR, Sales Execution,
+       Sales documents).
+     * `sgrid-mkt`   — Marketing-module list/table pages (Q Forms,
+       Travel Planners, Follow-ups & Extensions, Marketing Expenses,
+       Visit Summary). Purely additive: Marketing reuses the exact same
+       pinned-column machinery, so there is ONE sticky-grid system for
+       the whole ERP — never a second, duplicate one.
+
+   Opt a table in by adding the matching scope class next to `sgrid`.
+   A table that carries only `sgrid` is markup-compatible but receives
+   no pinning.
+
+   * `left` for every pinned-left cell is written INLINE (and for the
+     header AND the body of the same column) by hooks/useStickyColumnLeft —
+     the real rendered width of the pinned column before it. Never a
+     hardcoded number, so hiding / showing / reordering / resizing columns
+     keeps the frozen columns flush against each other.
+   * `sgrid-first` marks the INNERMOST pinned-left cell (the checkbox when
+     a table has one): it sits at left: 0 and carries a hairline edge, while
+     the outermost pinned cell carries the soft panel shadow. A table whose
+     only pinned-left column is its record number marks that cell
+     `sgrid-pin` alone (with the inline left) so it gets the panel shadow.
+
+   WHY THE Z-INDEX LADDER MATTERS
+   ------------------------------
+   The shared `.cpr-page .pr-table thead th` / `.po-table thead` rules give
+   EVERY header cell/row a z-index of 10. With pinned headers left at that
+   same z, DOM order decided the paint order and scrolled headers painted
+   ON TOP of the frozen ones. Hence the ladder below — the pinned cells
+   carry !important so they win no matter which stylesheet loaded last:
+
+     auto   scrolling body cells
+     10     scrolling headers (unchanged shared base — still above the
+            scrolling body, still below every pinned cell below)
+     3      pinned body columns (checkbox / record No)
+     4      pinned Actions body cell
+     11     pinned checkbox / record-No header cells
+     12     pinned Actions header cell (the sticky-header ∩ sticky-column
+            corner — highest, never overlapped)
+
+   PALETTE
+   -------
+   Pinned backgrounds are OPAQUE so scrolled content can never show through
+   a frozen cell. The defaults match the `.cpr-page` table palette (CRM,
+   CPR, Sales documents); `.sgrid-po` covers the po-table lists and any
+   page can override the hooks:
+
+     --sgrid-bg / --sgrid-bg-alt / --sgrid-bg-hover / --sgrid-bg-selected
+     --sgrid-edge-shadow / --sgrid-hairline / --sgrid-head-hairline
+
+   Border trimming note: sticky cells need border-collapse: separate (see
+   hooks/useStickyColumnLeft.js), which would double adjacent 1px header
+   borders. Tables that set it therefore keep only the right + bottom
+   header edges themselves (e.g. `.cpr-page #crmErpTable thead th`).
+   ===================================================================== */
+
+/* --- geometry prerequisite: separate borders so sticky cells mask the
+       hairline borders of the cells scrolling beneath them --------------- */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Marketing scope (`sgrid-mkt`) lives on `.cpr-page` list tables, whose
+   header cells carry a full 1px border on all four sides. With separate
+   borders each adjacent pair would read as 2px, so keep only the right +
+   bottom edge — the same trim CRM applies to #crmErpTable. Scoped to
+   `.sgrid-mkt`, so no Sales/Purchase table is touched. */
+.cpr-page .sgrid.sgrid-mkt > thead th {
+  border-top: 0;
+  border-left: 0;
+}
+
+/* --- pinned-left cells (checkbox / record number) --------------------- */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin {
+  position: sticky !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-first,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-first {
+  left: 0 !important;
+}
+
+/* --- pinned-right cell (Actions) ------------------------------------- */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-pin-actions,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin-actions {
+  position: sticky !important;
+  right: 0 !important;
+}
+
+/* --- z ladder -------------------------------------------------------- */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin {
+  z-index: 3 !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin-actions {
+  z-index: 4 !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-pin {
+  z-index: 11 !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-pin-actions {
+  z-index: 12 !important;
+}
+
+/* --- opaque fills: base / zebra / hover / selected, light + dark ------ */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin-actions {
+  background: var(--sgrid-bg, #ffffff) !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr:nth-child(even) td.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr:nth-child(even) td.sgrid-pin-actions {
+  background: var(--sgrid-bg-alt, #f8fbfa) !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr:hover td.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr:hover td.sgrid-pin-actions,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr:nth-child(even):hover td.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr:nth-child(even):hover td.sgrid-pin-actions {
+  background: var(--sgrid-bg-hover, #f0faf7) !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr.is-selected td.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr.is-selected td.sgrid-pin-actions,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr.is-selected:hover td.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr.is-selected:hover td.sgrid-pin-actions {
+  background: var(--sgrid-bg-selected, #e8f0ee) !important;
+}
+
+.dark .sgrid:is(.sgrid-sales, .sgrid-mkt) {
+  --sgrid-bg: #141c2e;
+  --sgrid-bg-alt: #1a2438;
+  --sgrid-bg-hover: #1e293b;
+  /* opaque composites of the shared translucent status washes over #141c2e */
+  --sgrid-tint-warning: #26262b;
+  --sgrid-tint-success: #142730;
+  --sgrid-tint-danger: #241d2d;
+}
+
+/* --- po-table lists (Quotation / Sales Contract / CPO / QC / …) get the
+       po-table palette instead of the .cpr-page one -------------------- */
+.sgrid-po.sgrid-po {
+  --sgrid-bg: #ffffff;
+  --sgrid-bg-alt: #f8fbfa;
+  --sgrid-bg-hover: #f0faf7;
+  --sgrid-bg-selected: #e8f0ee;
+  --sgrid-tint-warning: #fef9f0;
+  --sgrid-tint-success: #f0fdf4;
+  --sgrid-tint-danger: #fef2f2;
+}
+.dark .sgrid-po.sgrid-po {
+  --sgrid-bg: #1a1a2e;
+  --sgrid-bg-alt: #1a2a33;
+  --sgrid-bg-hover: #1f3a2f;
+  --sgrid-tint-warning: #2b2724;
+  --sgrid-tint-success: #172b24;
+  --sgrid-tint-danger: #2a2025;
+}
+
+/* --- separators: the frozen areas read as solid panels with a crisp edge
+       over the scrolling content (hairline for the inner edge between two
+       pinned columns, soft shadow for the outer edge) ----------------- */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-pin-actions,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin-actions {
+  box-shadow: 6px 0 12px -9px var(--sgrid-edge-shadow, rgba(15, 23, 42, 0.35));
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-pin-actions,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-pin-actions {
+  box-shadow: -6px 0 12px -9px var(--sgrid-edge-shadow, rgba(15, 23, 42, 0.35));
+}
+/* innermost pinned-left cell: no panel shadow, just the hairline that
+   separates it from the next pinned column */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > thead th.sgrid-first {
+  box-shadow: 1px 0 0 0 var(--sgrid-head-hairline, #083d34);
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody td.sgrid-first {
+  box-shadow: 1px 0 0 0 var(--sgrid-hairline, #e2e8f0);
+}
+
+/* --- status-tinted rows re-state their tint on the frozen column, as an
+       OPAQUE fill (the shared dark values are translucent rgba() washes).
+       The values live in variables so these rules stay at the same
+       specificity in both themes: they beat the zebra stripe (declared
+       earlier) but still lose to a hovered row. ----------------------- */
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr td.sgrid-pin.po-status-bg-pending,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr td.sgrid-pin.po-status-bg-submitted,
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr td.sgrid-pin.po-cpr-pending-highlight {
+  background: var(--sgrid-tint-warning, #fef9f0) !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr td.sgrid-pin.po-status-bg-approved {
+  background: var(--sgrid-tint-success, #f0fdf4) !important;
+}
+.sgrid:is(.sgrid-sales, .sgrid-mkt) > tbody tr td.sgrid-pin.po-status-bg-rejected {
+  background: var(--sgrid-tint-danger, #fef2f2) !important;
+}
+
+/* --- the freeze only has to look frozen while it can actually scroll:
+       when the wrapper is wide enough for the whole table the pinned cells
+       simply sit in place. (No rule needed — sticky degrades to static
+       layout automatically.) ------------------------------------------- */
+
+
+/* =====================================================================
+   SHARED ROW-ACTION TRIGGER — the plain three-dot (⋮) control
+   ---------------------------------------------------------------------
+   ONE look for the Actions-column trigger on every list/table in the ERP:
+
+       Actions
+          ⋮            ← icon only, no box
+
+   The button keeps an invisible 30x30 hit area (mouse / touch / keyboard
+   target) but paints NO border, NO background, NO shadow and NO card or
+   button chrome at rest. Only hover / open / focus states get a soft tint
+   so the control still reads as interactive.
+
+   Applied by `components/Common/ActionMenu` consumers (CRM, CPR, Sales,
+   Marketing, Documents) and mirrored by the Production
+   `RowActionsDropdown`; the icon is normalised to 16px so the pinned
+   Actions column lines up across every module.
+   ===================================================================== */
+.erp-row-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: #6b7280;
+  line-height: 1;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.erp-row-action-btn:hover,
+.erp-row-action-btn[aria-expanded="true"] {
+  background: #e8f0ee;
+  color: #0b4a3d;
+}
+.erp-row-action-btn:focus-visible {
+  outline: 2px solid #0b4a3d;
+  outline-offset: 2px;
+}
+.erp-row-action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+.dark .erp-row-action-btn {
+  color: #94a3b8;
+}
+.dark .erp-row-action-btn:hover,
+.dark .erp-row-action-btn[aria-expanded="true"] {
+  background: rgba(11, 74, 61, 0.25);
+  color: #6ee7b7;
+}
+
+
+/* =====================================================================
+   SHARED SORT INDICATOR — the one `⇅` symbol
+   ---------------------------------------------------------------------
+   Every sortable column header in the ERP renders exactly ONE glyph,
+   always this one:
+
+       Column Name ⇅
+
+   `⇅` and nothing else — never ˄ / ˅, never ↕, never ⇵, never a pair of
+   separate up/down arrows and never a custom connecting-line SVG. The
+   direction is still reported to assistive tech via `aria-sort` on the
+   <th>; the only visual emphasis is opacity, so the symbol never changes
+   shape or gets swapped for another icon library glyph.
+
+   Rendered by `components/Common/SortIcon` on every existing table
+   (CRM, CPR, Cost/Profit Workout, Sales, reports). `color: inherit` +
+   `font-size: .95em` keep it on the header's own typography and colour,
+   so the dark-green list headers and the light report tables both match.
+   Spacing/alignment are fixed here so no module can drift. Presentation
+   only — sort keys, handlers and data are untouched.
+   ===================================================================== */
+.erp-sort-ind {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 4px;
+  font-size: 0.95em;
+  line-height: 1;
+  vertical-align: middle;
+  color: inherit;
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+  user-select: none;
+}
+.erp-sort-ind.is-active {
+  opacity: 1;
+}
+th:hover > .erp-sort-ind,
+th:hover .erp-sort-ind,
+th:hover > span > .erp-sort-ind {
+  opacity: 0.75;
+}
+th > .erp-sort-ind.is-active,
+th .erp-sort-ind.is-active {
+  opacity: 1;
+}
+
+
+/* =====================================================================
+   PRODUCTION MODULE SCOPE — `.sgrid-prod`
+   ---------------------------------------------------------------------
+   The Production module's list tables use their own shared architecture
+   (`.table-scroll` wrapper + `.data-table` table, styles/table.css) rather
+   than the `.pr-table` / `.cpr-page` one, so they opt into the SAME sticky
+   grid through a third module scope: `sgrid sgrid-prod`.
+
+   MARKUP CONTRACT (the same class names the Sales/Marketing scopes use)
+
+     <table class="data-table sgrid sgrid-prod sgrid-cb sgrid-actions …">
+       <thead><tr>
+         <th class="pt-checkbox-col sgrid-pin sgrid-first">  selection column
+         <th class="sgrid-pin">                              first data column
+         <th class="sgrid-pin-actions">                      trailing Actions
+       <tbody><tr>
+         <td class="pt-checkbox-col sgrid-pin sgrid-first">
+         <td class="sgrid-pin">
+         <td class="sgrid-pin-actions">
+
+     `sgrid-cb` marks a table that HAS a selection column (so the checkbox
+     keeps the thin inner edge and the data column owns the panel shadow);
+     `sgrid-actions` marks a table with a trailing Actions column.
+
+   OFFSETS
+   Unlike CRM (which measures column widths with useStickyColumnLeft),
+   the Production pinned control columns have FIXED widths in CSS —
+   `.pt-checkbox-col` is 40px (32px ≤ 767px) and `.sf-order-expand-col`
+   is 40px — so the offsets are derived from those same widths instead of
+   being guessed, and they never jump between renders:
+
+     --sgrid-prod-cb-w      selection column width (mirrors .pt-checkbox-col)
+     --sgrid-prod-expand-w  shop-floor expand column width
+     .sgrid-first  left: 0
+     .sgrid-pin    left: var(--sgrid-prod-cb-w)
+     .sgrid-pin2   left: cb-w + expand-w   (3rd frozen cell, shop floor: checkbox → expand → Work Order)
+     .sgrid-pin-actions  right: 0
+
+   BACKGROUNDS
+   Pinned body cells use `background: inherit`, so every frozen cell paints
+   EXACTLY the colour its own row currently shows. Base, zebra stripe,
+   hover, `is-selected`, `selected-row` and the Production status tints
+   (`kpi-row-cancelled` / `-production-rejected` / `-admin-rejected`) are
+   all declared on the <tr> by the existing Production stylesheets, so they
+   are inherited automatically and can never drift from the scrolling
+   columns. The single cell-level tint (the pending Work Order highlight
+   `tr.kpi-row-pending td:first-child / .cell-strong`, #FFF7E6) is
+   re-stated for the pinned cells so it survives the freeze unchanged.
+
+   `.data-table` clips its corners with `overflow: hidden`, and an
+   overflow-hidden ancestor becomes the sticky containing block — which
+   would trap the frozen cells inside the table and stop them pinning
+   against `.table-scroll`. Opted-in tables therefore switch it back to
+   `visible`; the corners keep their explicit border-radius rules.
+
+   Border trimming: pinned cells need `border-collapse: separate` (already
+   how `.data-table` is built, border-spacing: 0), so no border maths is
+   needed.
+   ===================================================================== */
+.sgrid.sgrid-prod {
+  --sgrid-prod-cb-w: 40px;      /* mirrors .pt-checkbox-col            */
+  --sgrid-prod-expand-w: 40px;  /* mirrors .sf-order-expand-col        */
+  --sgrid-prod-head-bg: #075E54;
+  --sgrid-prod-edge-shadow: rgba(15, 23, 42, 0.35);
+  --sgrid-prod-hairline: #E2E8F0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+@media (max-width: 767px) {
+  /* .pt-checkbox-col shrinks at this breakpoint (styles/table.css) */
+  .sgrid.sgrid-prod {
+    --sgrid-prod-cb-w: 32px;
+  }
+}
+
+/* The frozen columns can only pin against the scrolling wrapper: an
+   overflow-hidden table would become their containing block instead. */
+.data-table.sgrid.sgrid-prod {
+  overflow: visible;
+}
+
+/* Opaque row base so an inherited pinned background is never transparent.
+   Wrapped in :where() so it contributes ZERO specificity: this stylesheet
+   is imported AFTER the Production stylesheets, so a normal (0,2,2) rule
+   would tie with `.data-table tbody tr:hover` (also (0,2,2)) and — loading
+   later — would silently kill row hover / zebra / status tints. At (0,0,2)
+   it only paints the default white a row shows when nothing else does, and
+   every zebra / hover / selected / status rule still wins. */
+:where(.sgrid.sgrid-prod) > tbody > tr {
+  background-color: #FFFFFF;
+}
+
+/* --- sticky geometry -------------------------------------------------- */
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin,
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin2,
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin-actions,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin2,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin-actions {
+  position: sticky !important;
+}
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin {
+  left: var(--sgrid-prod-cb-w) !important;
+}
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin2,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin2 {
+  left: calc(var(--sgrid-prod-cb-w) + var(--sgrid-prod-expand-w)) !important;
+}
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin-actions,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin-actions {
+  right: 0 !important;
+}
+/* Declared LAST so it beats the .sgrid-pin rule above (an element can carry
+   both classes: `sgrid-pin sgrid-first` on the innermost pinned cell). */
+.sgrid.sgrid-prod > thead > tr > th.sgrid-first,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-first {
+  left: 0 !important;
+}
+
+/* --- layer ladder -----------------------------------------------------
+   scrolling body cells      auto
+   frozen body columns       3 / 4
+   frozen header columns     11 / 12  (the sticky-header ∩ sticky-column
+                                      corner stays on top of everything) */
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin2 {
+  z-index: 3;
+}
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin-actions {
+  z-index: 4;
+}
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin,
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin2 {
+  z-index: 11;
+}
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin-actions {
+  z-index: 12;
+}
+
+/* --- opaque fills ------------------------------------------------------ */
+/* Body cells borrow their own row's colour (base / zebra / hover /
+   selected / status tint), so the freeze never changes what a row looks
+   like. */
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin2,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin-actions {
+  background: inherit;
+}
+/* Header cells stay fully opaque: they must mask whatever scrolls beneath
+   them, whichever palette the table family uses. */
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin,
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin2,
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin-actions {
+  background-color: var(--sgrid-prod-head-bg) !important;
+}
+/* The one cell-level tint that is NOT declared on the row: the pending
+   Work Order highlight. Re-stated here so the frozen cells keep it. */
+.sgrid.sgrid-prod > tbody > tr.kpi-row-pending > td.sgrid-pin,
+.sgrid.sgrid-prod > tbody > tr.kpi-row-pending > td.sgrid-pin2,
+.sgrid.sgrid-prod > tbody > tr.kpi-row-pending > td.sgrid-pin.sgrid-first {
+  background: #FFF7E6 !important;
+}
+
+/* --- separating edges --------------------------------------------------
+   The frozen area reads as a solid panel over the scrolling content: the
+   outermost frozen cell carries a soft shadow, a table WITH a checkbox
+   keeps the thin hairline on the checkbox itself. */
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin,
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin2,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin2,
+.sgrid.sgrid-prod:not(.sgrid-cb) > thead > tr > th.sgrid-first,
+.sgrid.sgrid-prod:not(.sgrid-cb) > tbody > tr > td.sgrid-first {
+  box-shadow: 6px 0 12px -9px var(--sgrid-prod-edge-shadow);
+}
+.sgrid.sgrid-prod > thead > tr > th.sgrid-pin-actions,
+.sgrid.sgrid-prod > tbody > tr > td.sgrid-pin-actions {
+  box-shadow: -6px 0 12px -9px var(--sgrid-prod-edge-shadow);
+}
+.sgrid.sgrid-prod.sgrid-cb > thead > tr > th.sgrid-first {
+  box-shadow: 1px 0 0 0 var(--sgrid-prod-head-bg);
+}
+.sgrid.sgrid-prod.sgrid-cb > tbody > tr > td.sgrid-first {
+  box-shadow: 1px 0 0 0 var(--sgrid-prod-hairline);
+}

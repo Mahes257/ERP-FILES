@@ -1,0 +1,188 @@
+/* Quotation Preview print rules.
+ * Only the live A4 sheet is printed — all app chrome is hidden. The sheet is
+ * rendered at A4 width, so the printed output is identical to the on-screen
+ * preview and to the PDF export (which captures the same element). */
+/* =====================================================================
+   Item grid inside the A4 sheet — the SAME quotation-create item grid the
+   /quotations/new form uses (it-* classes from quotation-create.css).
+   quotation-create.css assumes a wide form, so these sheet-scoped rules let
+   the grid flow at the A4 sheet's real width in view mode (read-only) while
+   keeping the roomy fixed-width form grid in edit mode (horizontal scroll
+   inside the sheet) — identical behaviour to the Sales Document workspace.
+   ===================================================================== */
+#quotation-sheet .salesdoc-item-grid.item-table-section {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  width: 100%;
+}
+/* View (read-only) mode: let the quotation-create grid flow at the A4 sheet's
+   real width instead of the 992px form width. */
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) {
+  overflow: visible;
+}
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) table {
+  min-width: 0 !important;
+  width: 100%;
+  table-layout: auto;
+}
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) thead {
+  position: static;
+}
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) thead tr,
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) thead th {
+  height: auto;
+  padding: 6px 8px;
+}
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) tbody tr,
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) tbody td {
+  height: auto;
+}
+#quotation-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) tbody td {
+  padding: 4px 6px;
+}
+/* Read-only desc values (view mode) — quotation-create only styles inputs */
+#quotation-sheet .salesdoc-item-grid .it-desc-field .sd-desc-value {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--it-text, #1e293b);
+  line-height: 1.5;
+  padding: 2px 0;
+}
+#quotation-sheet .salesdoc-item-grid .it-desc-field.it-desc-main .sd-desc-value {
+  font-weight: 700;
+}
+#quotation-sheet .salesdoc-item-grid .it-desc-stack {
+  gap: 3px;
+  padding: 5px 6px;
+}
+#quotation-sheet .salesdoc-item-grid .it-gst-group .sd-gst-rate {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--it-text, #1e293b);
+  line-height: 1.6;
+}
+/* Edit mode keeps the roomy fixed-width quotation-create grid; the wrap
+   scrolls horizontally inside the sheet exactly like the form grid does. */
+#quotation-sheet .salesdoc-item-grid .salesdoc-edit-wrap {
+  overflow-x: auto;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #quotation-sheet,
+  #quotation-sheet * {
+    visibility: visible !important;
+  }
+
+  #quotation-sheet {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  /* Keep the item-table header on every page and avoid splitting rows. */
+  #quotation-sheet thead {
+    display: table-header-group;
+  }
+
+  /* In edit mode the item table sits in a horizontal-scroll wrapper and gets
+     a min-width so its inputs are never cramped on screen. When printing (or
+     exporting the sheet), render it unclipped at its natural A4 width instead. */
+  #quotation-sheet .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  #quotation-sheet table {
+    min-width: 0 !important;
+  }
+
+  #quotation-sheet tbody tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #quotation-sheet tr,
+  #quotation-sheet table {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #quotation-sheet .salesdoc-item-grid .item-table-wrap {
+    overflow: visible !important;
+  }
+
+  #quotation-sheet .salesdoc-item-grid .item-table-wrap table {
+    min-width: 0 !important;
+    width: 100% !important;
+    table-layout: auto !important;
+  }
+
+  #quotation-sheet .salesdoc-item-grid .item-table-wrap thead th {
+    position: static !important;
+  }
+
+  /* Keep totals, amount-in-words and signature blocks together. */
+  #quotation-sheet .keep-together {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #quotation-sheet {
+    height: auto !important;
+    overflow: visible !important;
+    /* Word-aware wrapping — values are never broken mid-token. */
+    overflow-wrap: break-word;
+  }
+
+  #quotation-sheet .qtn-words,
+  #quotation-sheet .qtn-terms-plain,
+  #quotation-sheet .qtn-term-text,
+  #quotation-sheet .qtn-section-body,
+  #quotation-sheet .qtn-party-value {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  #quotation-sheet .qtn-hsn,
+  #quotation-sheet .qtn-vt-lower,
+  #quotation-sheet .qtn-vt-signature,
+  #quotation-sheet .qtn-vt-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Never split a document section (header, details boxes, party blocks,
+     bank details, remarks/terms, attachments) across pages — overflow moves
+     the whole section to the next page instead of clipping mid-section. */
+  #quotation-sheet .rounded-md {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

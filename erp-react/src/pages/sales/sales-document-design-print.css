@@ -1,0 +1,392 @@
+/* =====================================================================
+   Item grid inside the A4 sheet — the SAME quotation-create item grid the
+   /quotations/new form uses (it-* classes, imported from quotation-create.css
+   by SalesDocumentDesign). quotation-create.css assumes a 992px-wide form, so
+   these sheet-scoped rules let the grid flow at the A4 sheet's real width in
+   view mode (read-only) while keeping the roomy fixed-width form grid in edit
+   mode (horizontal scroll inside the sheet).
+   ===================================================================== */
+#salesdoc-sheet .salesdoc-item-grid.item-table-section {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  width: 100%;
+}
+/* View (read-only) mode: the quotation-create grid was designed for the wide
+   992px form, so let it flow at the A4 sheet's real width. */
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) {
+  overflow: visible;
+}
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) table {
+  min-width: 0 !important;
+  width: 100%;
+  table-layout: auto;
+}
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) thead {
+  position: static;
+}
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) thead tr,
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) thead th {
+  height: auto;
+  padding: 6px 8px;
+}
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) tbody tr,
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) tbody td {
+  height: auto;
+}
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap:not(.salesdoc-edit-wrap) tbody td {
+  padding: 4px 6px;
+}
+/* Read-only desc values (view mode) — quotation-create only styles inputs */
+#salesdoc-sheet .salesdoc-item-grid .it-desc-field .sd-desc-value {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--it-text, #1e293b);
+  line-height: 1.5;
+  padding: 2px 0;
+}
+#salesdoc-sheet .salesdoc-item-grid .it-desc-field.it-desc-main .sd-desc-value {
+  font-weight: 700;
+}
+#salesdoc-sheet .salesdoc-item-grid .it-desc-stack {
+  gap: 3px;
+  padding: 5px 6px;
+}
+#salesdoc-sheet .salesdoc-item-grid .it-gst-group .sd-gst-rate {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--it-text, #1e293b);
+  line-height: 1.6;
+}
+/* Edit mode keeps the roomy fixed-width quotation-create grid; the wrap
+   scrolls horizontally inside the sheet exactly like the form grid does. */
+#salesdoc-sheet .salesdoc-item-grid .salesdoc-edit-wrap {
+  overflow-x: auto;
+}
+
+#salesdoc-sheet {
+  height: auto !important;
+  overflow: visible !important;
+  /* Word-aware wrapping: values that fit are never broken mid-token. */
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+#salesdoc-sheet .keep-together,
+#salesdoc-sheet .salesdoc-item-grid .item-table-footer {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#salesdoc-sheet .salesdoc-item-grid tbody tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#salesdoc-sheet .salesdoc-item-grid .item-table-wrap {
+  overflow: visible;
+}
+
+#salesdoc-sheet td,
+#salesdoc-sheet th,
+#salesdoc-sheet p,
+#salesdoc-sheet span,
+#salesdoc-sheet div {
+  /* Was `anywhere` — that broke money/quantities character-by-character
+     (e.g. `₹3,909.` + `78`). Values now stay whole; prose still wraps. */
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+#salesdoc-sheet .proforma-item-table,
+#salesdoc-sheet .pi-items,
+#salesdoc-sheet .pi-packing {
+  break-inside: auto;
+  page-break-inside: auto;
+}
+
+/* Sales Document Preview (shared workspace) print rules.
+ * Only the live A4 sheet is printed — all app chrome is hidden. The sheet is
+ * rendered at A4 width, so the printed output is identical to the on-screen
+ * preview and to the PDF export (which captures the same element). */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  body * {
+    visibility: hidden !important;
+  }
+
+  #salesdoc-sheet,
+  #salesdoc-sheet * {
+    visibility: visible !important;
+  }
+
+  #salesdoc-sheet {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    border: none !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  /* Keep the item-table header on every page and avoid splitting rows. */
+  #salesdoc-sheet thead {
+    display: table-header-group;
+  }
+
+  /* In edit mode the item table sits in a horizontal-scroll wrapper and gets
+     a min-width so its inputs are never cramped on screen. When printing (or
+     exporting the sheet), render it unclipped at its natural A4 width instead. */
+  #salesdoc-sheet .overflow-x-auto,
+  #salesdoc-sheet .salesdoc-item-grid .item-table-wrap {
+    overflow: visible !important;
+  }
+
+  #salesdoc-sheet .salesdoc-item-grid .item-table-wrap table,
+  #salesdoc-sheet table {
+    min-width: 0 !important;
+    width: 100% !important;
+    table-layout: auto !important;
+  }
+
+  #salesdoc-sheet .salesdoc-item-grid .item-table-wrap thead th {
+    position: static !important;
+  }
+
+  #salesdoc-sheet tbody tr,
+  #salesdoc-sheet tr,
+  #salesdoc-sheet table {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Keep totals, amount-in-words and signature blocks together. */
+  #salesdoc-sheet .keep-together {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Never split a document section (header, details boxes, party blocks,
+     bank details, remarks/terms, attachments) across pages — overflow moves
+     the whole section to the next page instead of clipping mid-section. */
+  #salesdoc-sheet .rounded-md {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* Proforma invoice print pagination: paired sections (Exporter | Invoice
+   Details, Consignee | Buyer, Bank | Terms | Totals) stay together via
+   .keep-together (defined above). The item table is ALLOWED to continue
+   across pages — its header repeats and individual rows never split — instead
+   of being forced whole onto the next page by the generic .rounded-md rule. */
+#salesdoc-sheet .proforma-item-table {
+  break-inside: auto !important;
+  page-break-inside: auto !important;
+  overflow: visible !important;
+}
+#salesdoc-sheet .proforma-item-table thead {
+  display: table-header-group;
+}
+#salesdoc-sheet .proforma-item-table tbody tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Export Invoice reference layout — screen polish for the banner / footer and
+   print-safe grouping. The banner and footer carry their colours inline from
+   the sheet accent; these rules only fix text flow and page-break behaviour. */
+#salesdoc-sheet .export-inv-banner {
+  letter-spacing: 0.2em;
+}
+#salesdoc-sheet .export-inv-footer {
+  border-radius: 0;
+}
+#salesdoc-sheet .export-inv-banner,
+#salesdoc-sheet .export-inv-footer {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Proforma Invoice A4 document — print-safe section and table rules.
+   Fixed sections stay whole; the item / packing tables may split across
+   pages with their header repeated on every page. */
+#salesdoc-sheet .proforma-invoice-doc .pi-head,
+#salesdoc-sheet .proforma-invoice-doc .pi-masthead,
+#salesdoc-sheet .proforma-invoice-doc .pi-exporter,
+#salesdoc-sheet .proforma-invoice-doc .pi-meta,
+#salesdoc-sheet .proforma-invoice-doc .pi-consignee,
+#salesdoc-sheet .proforma-invoice-doc .pi-buyer,
+#salesdoc-sheet .proforma-invoice-doc .pi-shipment,
+#salesdoc-sheet .proforma-invoice-doc .pi-destination,
+#salesdoc-sheet .proforma-invoice-doc .pi-finance,
+#salesdoc-sheet .proforma-invoice-doc .pi-bank,
+#salesdoc-sheet .proforma-invoice-doc .pi-terms,
+#salesdoc-sheet .proforma-invoice-doc .pi-signature,
+#salesdoc-sheet .proforma-invoice-doc .pi-footer {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#salesdoc-sheet .proforma-invoice-doc .pi-items,
+#salesdoc-sheet .proforma-invoice-doc .pi-packing {
+  break-inside: auto !important;
+  page-break-inside: auto !important;
+}
+
+#salesdoc-sheet .proforma-invoice-doc .pi-table {
+  /* Auto layout: numeric columns keep the width their value needs instead of
+     being squeezed by the fixed percentage split. */
+  table-layout: auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+#salesdoc-sheet .proforma-invoice-doc .pi-table thead {
+  display: table-header-group;
+}
+
+#salesdoc-sheet .proforma-invoice-doc .pi-table tbody tr,
+#salesdoc-sheet .proforma-invoice-doc .pi-table tfoot tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Proforma Invoice view-mode polish — inputs and edit controls never appear
+   in the printed invoice. */
+#salesdoc-sheet .proforma-invoice-doc--view .pi-row--editable {
+  display: none;
+}
+
+#salesdoc-sheet .proforma-invoice-doc--view .pi-row,
+#salesdoc-sheet .proforma-invoice-doc--view .pi-fin-row,
+#salesdoc-sheet .proforma-invoice-doc--view .pi-fin-words,
+#salesdoc-sheet .proforma-invoice-doc--view .pi-signature-block,
+#salesdoc-sheet .proforma-invoice-doc--view .pi-masthead,
+#salesdoc-sheet .proforma-invoice-doc--view .pi-footer {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Invoice A4 document (ExportInvoiceDocument) — print-safe section and table
+   rules. Fixed sections stay whole; the item / packing tables may split across
+   pages with their header repeated on every page. */
+#salesdoc-sheet .invoice-doc {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+#salesdoc-sheet .invoice-doc .inv-masthead,
+#salesdoc-sheet .invoice-doc .inv-exporter,
+#salesdoc-sheet .invoice-doc .inv-meta,
+#salesdoc-sheet .invoice-doc .inv-consignee,
+#salesdoc-sheet .invoice-doc .inv-buyer,
+#salesdoc-sheet .invoice-doc .inv-shipment,
+#salesdoc-sheet .invoice-doc .inv-destination,
+#salesdoc-sheet .invoice-doc .inv-finance,
+#salesdoc-sheet .invoice-doc .inv-bank,
+#salesdoc-sheet .invoice-doc .inv-terms,
+#salesdoc-sheet .invoice-doc .inv-signature,
+#salesdoc-sheet .invoice-doc .inv-remarks,
+#salesdoc-sheet .invoice-doc .inv-attachments,
+#salesdoc-sheet .invoice-doc .inv-footer {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#salesdoc-sheet .invoice-doc .inv-items,
+#salesdoc-sheet .invoice-doc .inv-packing {
+  break-inside: auto !important;
+  page-break-inside: auto !important;
+}
+
+#salesdoc-sheet .invoice-doc .inv-table {
+  /* Auto layout: numeric columns keep the width their value needs instead of
+     being squeezed by the fixed percentage split. */
+  table-layout: auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+#salesdoc-sheet .invoice-doc .inv-table thead {
+  display: table-header-group;
+}
+
+#salesdoc-sheet .invoice-doc .inv-table tbody tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* Packing List A4 document (PackingListDocument) — print-safe section and
+   table rules. Fixed sections stay whole; the package / item tables may split
+   across pages with their header repeated on every page. */
+#salesdoc-sheet .packing-list-doc {
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+#salesdoc-sheet .packing-list-doc .pl-masthead,
+#salesdoc-sheet .packing-list-doc .pl-meta,
+#salesdoc-sheet .packing-list-doc .pl-exporter,
+#salesdoc-sheet .packing-list-doc .pl-buyer,
+#salesdoc-sheet .packing-list-doc .pl-totals,
+#salesdoc-sheet .packing-list-doc .pl-status,
+#salesdoc-sheet .packing-list-doc .pl-commercial,
+#salesdoc-sheet .packing-list-doc .pl-shipment,
+#salesdoc-sheet .packing-list-doc .pl-destination,
+#salesdoc-sheet .packing-list-doc .pl-remarks,
+#salesdoc-sheet .packing-list-doc .pl-terms,
+#salesdoc-sheet .packing-list-doc .pl-declaration,
+#salesdoc-sheet .packing-list-doc .pl-signature,
+#salesdoc-sheet .packing-list-doc .pl-attachments,
+#salesdoc-sheet .packing-list-doc .pl-footer {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+#salesdoc-sheet .packing-list-doc .pl-packages,
+#salesdoc-sheet .packing-list-doc .pl-items {
+  break-inside: auto !important;
+  page-break-inside: auto !important;
+}
+
+#salesdoc-sheet .packing-list-doc .pl-table {
+  /* Auto layout: numeric columns keep the width their value needs instead of
+     being squeezed by the fixed percentage split. */
+  table-layout: auto;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+#salesdoc-sheet .packing-list-doc .pl-table thead {
+  display: table-header-group;
+}
+
+#salesdoc-sheet .packing-list-doc .pl-table tbody tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}

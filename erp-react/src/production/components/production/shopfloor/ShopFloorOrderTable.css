@@ -1,0 +1,290 @@
+/* ============================================================
+   Compact shop floor list — Purchase-aligned
+   ============================================================ */
+
+.sf-order-expand-col {
+  width: 40px;
+}
+
+.sf-order-expand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.sf-order-expand-btn:hover {
+  background: #EAF7F3;
+  color: #075E54;
+  border-color: #075E54;
+}
+
+.sf-order-row.is-expanded {
+  background: #EAF7F3;
+}
+.sf-order-row.is-expanded td {
+  border-bottom-color: transparent;
+}
+.sf-order-row.is-selected {
+  background: #EAF7F3;
+}
+
+.sf-order-detail-cell {
+  padding: 0 !important;
+  background: #F7F9FA;
+}
+
+.sf-order-detail {
+  padding: 14px 16px 16px;
+  border-left: 3px solid #075E54;
+}
+
+/* Per-order stage workflow strip */
+.sf-order-workflow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+}
+
+.sf-order-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #64748B;
+  white-space: nowrap;
+}
+.sf-order-step.done {
+  color: #16A34A;
+}
+.sf-order-step.skipped {
+  color: #94A3B8;
+  text-decoration: line-through;
+}
+.sf-order-step.current {
+  color: #075E54;
+}
+.sf-order-step.locked {
+  color: #CBD5E1;
+  opacity: 0.55;
+}
+
+/* Empty expanded order */
+.sf-order-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #FFFFFF;
+  border: 1px dashed #CBD5E1;
+  border-radius: 8px;
+}
+.sf-order-empty-text {
+  margin: 0;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.sf-order-step-arrow {
+  color: #CBD5E1;
+  flex-shrink: 0;
+}
+
+/* Pagination */
+.sf-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #E2E8F0;
+}
+
+.sf-pagination-info {
+  font-size: 12px;
+  color: #64748B;
+}
+
+.sf-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sf-pagination-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.sf-pagination-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sf-pagination-page {
+  font-size: 12px;
+  font-weight: 600;
+  color: #102A2A;
+}
+
+@media (max-width: 640px) {
+  .sf-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .sf-pagination-info {
+    font-size: 11px;
+  }
+  .sf-order-step {
+    font-size: 10px;
+    gap: 3px;
+  }
+  .sf-order-workflow {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+}
+
+/* ============================================================
+   Inline Stage editing (Casting jobs table)
+   ------------------------------------------------------------
+   The stage is a compact, click-to-edit value: a pencil trigger, a
+   native dropdown sized to the cell, and an explicit Cancel. A save
+   in flight disables the value ("Saving…") and a rejected save falls
+   back to the stored stage with a "Not saved" marker.
+   ============================================================ */
+.sf-stage-cell {
+  min-width: 148px;
+}
+
+.sf-stage-cell-inner {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  max-width: 100%;
+}
+
+.sf-stage-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 3px 8px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.sf-stage-trigger:hover,
+.sf-stage-trigger:focus-visible {
+  border-color: #CBD5E1;
+  background: #F8FAFC;
+  outline: none;
+}
+.sf-stage-trigger svg {
+  flex-shrink: 0;
+  color: #64748B;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.sf-stage-trigger:hover svg,
+.sf-stage-trigger:focus-visible svg {
+  opacity: 1;
+}
+
+.sf-stage-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sf-stage-editor {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 100%;
+}
+
+.sf-stage-select {
+  height: 28px;
+  max-width: 168px;
+  padding: 2px 6px;
+  border: 1px solid #075E54;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #102A2A;
+  font-family: var(--font-family);
+  font-size: 12px;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(7, 94, 84, 0.1);
+}
+
+.sf-stage-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  background: #FFFFFF;
+  color: #64748B;
+  cursor: pointer;
+}
+.sf-stage-cancel:hover {
+  border-color: #94A3B8;
+  color: #334155;
+}
+
+.sf-stage-saving {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #64748B;
+}
+
+.sf-stage-spinner {
+  width: 11px;
+  height: 11px;
+  border: 2px solid #CBD5E1;
+  border-top-color: #075E54;
+  border-radius: 50%;
+  animation: sf-stage-spin 0.7s linear infinite;
+}
+
+@keyframes sf-stage-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.sf-stage-error {
+  font-size: 10px;
+  font-weight: 600;
+  color: #B91C1C;
+  white-space: nowrap;
+}
